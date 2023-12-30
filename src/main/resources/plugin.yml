@@ -1,0 +1,4 @@
+name: yHomes
+version: '${project.version}'
+main: me.leonardo.yhomes.Main
+authors: [yLeoft]
