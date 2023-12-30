@@ -1,0 +1,19 @@
+# In the homes section, will be saved all the homes defined by players.
+homes:
+  # This two sections (name and uuid) is the sections that define what save type you defined on config.yml
+  # ALERT! Even though you change it, the homes it will not be transferred to the other one, so all the player will lose their homes if you change that.
+  name:
+    # Here is the name of the player
+    "yLeoft":
+      # Here is the homes of the player, followed by the location serialized.
+      home: world;0.0;0.0;0.0;0.0;0.0
+      test: world;100.0;100.0;100.0;90.0;0.0
+      home2: world;-100.0;100.0;-100.0;-90.0;0.0
+  uuid:
+    # Here is the uuid of the player, in this case of yLeoft, all the uuids can be checked on the player login, and if the player has premium minecraft, you can check on:
+    # https://namemc.com
+    "037729cd-e8f5-436d-96b7-9f6ba6e1a06a":
+      # Here is the homes of the player, followed by the location serialized.
+      home: world;0.0;0.0;0.0;0.0;0.0
+      test: world;100.0;100.0;100.0;90.0;0.0
+      home2: world;-100.0;100.0;-100.0;-90.0;0.0

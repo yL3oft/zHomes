@@ -1,0 +1,14 @@
+# Here in the save options you can change the save options of the plugin
+save-options:
+  # Here you can define your storage-type, in the version you downloaded we still only support yaml!
+  # So please don't change it.
+  storage-type: yaml
+
+  # Here you can change the options for player saving
+  player-saves:
+    # This option defines how the save will be made on homes.yml or on the sql
+    # OPTIONS: [uuid, name] --- DEFAULT: uuid
+    # uuid: Saving as uuid will make that even if players change their minecraft names (Premium minecraft), it will keep the players homes.
+    # name: Saving as name will make that homes will be linked to their minecraft name, so if they change their name (Premium minecraft), they will lose all the homes saved.
+    save-as: uuid
+
