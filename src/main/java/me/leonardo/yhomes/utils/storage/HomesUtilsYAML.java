@@ -5,6 +5,8 @@ import me.leonardo.yhomes.Main;
 import me.leonardo.yhomes.utils.ConfigUtils;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class HomesUtilsYAML extends ConfigUtils {
 
@@ -18,6 +20,12 @@ public class HomesUtilsYAML extends ConfigUtils {
         if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
 
         return fm.cfg.contains(homes+"."+saveas+"."+saveasp+"."+home);
+    }
+
+    public boolean inSameWorld(Location loc, Player p) {
+        World w = loc.getWorld();
+        World w2 = p.getWorld();
+        return w.equals(w2);
     }
 
     public void addHome(OfflinePlayer p, String home, Location loc) {
@@ -36,6 +44,30 @@ public class HomesUtilsYAML extends ConfigUtils {
 
         fm.cfg.set(homes+"."+saveas+"."+saveasp+"."+home, null);
         fm.saveCfg();
+    }
+
+    public void teleportPlayer(Player p, String home) {
+        Location loc = getHomeLoc(p, home);
+        if(!inSameWorld(loc, p)) {
+            // Message
+            return;
+        }
+
+        p.teleport(loc);
+    }
+
+    public Location getHomeLoc(OfflinePlayer p, String home) {
+        String saveas = saveAsType();
+        String saveasp = p.getName();
+        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
+
+        String locS = fm.cfg.getString(homes+"."+saveas+"."+saveasp+"."+home);
+
+        try {
+            return main.deserializeAddDot(locS);
+        }catch (Exception e) {
+        }
+        return null;
     }
 
 }

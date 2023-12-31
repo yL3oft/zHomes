@@ -1,5 +1,6 @@
 package me.leonardo.yhomes;
 
+import me.leonardo.yhomes.utils.ConfigUtils;
 import me.leonardo.yhomes.utils.PluginYAMLManager;
 import me.leonardo.yhomes.expansions.*;
 import me.leonardo.yhomes.utils.storage.HomesUtilsYAML;
@@ -16,6 +17,7 @@ public final class Main extends JavaPlugin {
     public static Main main;
     public static PluginYAMLManager pym;
     public static FileManager fm;
+    public static ConfigUtils cfgu;
     public static HomesUtilsYAML hu;
 
     @Override
@@ -23,6 +25,7 @@ public final class Main extends JavaPlugin {
         main = Main.this;
         pym = new PluginYAMLManager();
         fm = new FileManager();
+        cfgu = new ConfigUtils();
         hu = new HomesUtilsYAML();
 
 
