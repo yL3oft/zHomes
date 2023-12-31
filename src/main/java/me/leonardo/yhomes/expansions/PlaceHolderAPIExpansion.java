@@ -1,6 +1,8 @@
 package me.leonardo.yhomes.expansions;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.leonardo.yhomes.Main;
+import me.leonardo.yhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,10 +35,16 @@ public class PlaceHolderAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public @Nullable String onPlaceholderRequest(Player p, @NotNull String params) {
-        if(params.equals("base")) {
-            return "PlaceHolderAPI request from bases plugin!";
+        String[] split = params.split("_");
+        HomesUtilsYAML hu = Main.hu;
+
+        if(params.startsWith("hashome_")) {
+            return String.valueOf(hu.hasHome(p, split[1]));
+        }
+        if(params.equals("numberofhomes")) {
+            return String.valueOf(hu.numberOfHomes(p));
         }
 
-        return "";
+        return null;
     }
 }

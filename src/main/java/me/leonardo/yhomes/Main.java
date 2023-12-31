@@ -1,9 +1,9 @@
 package me.leonardo.yhomes;
 
-import me.leonardo.yhomes.utils.ConfigUtils;
-import me.leonardo.yhomes.utils.PluginYAMLManager;
+import me.leonardo.yhomes.commands.*;
+import me.leonardo.yhomes.utils.*;
 import me.leonardo.yhomes.expansions.*;
-import me.leonardo.yhomes.utils.storage.HomesUtilsYAML;
+import me.leonardo.yhomes.utils.storage.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -41,6 +41,11 @@ public final class Main extends JavaPlugin {
             }catch (Exception e) {
             }
         }
+
+
+        pym.registerCommand("sethome", new SethomeCommand());
+        pym.registerCommand("delhome", new DelhomeCommand());
+        pym.registerCommand("home", new HomeCommand());
 
 
         if(getServer().getPluginManager().isPluginEnabled("PlaceHolderAPI")) {

@@ -56,6 +56,14 @@ public class HomesUtilsYAML extends ConfigUtils {
         p.teleport(loc);
     }
 
+    public int numberOfHomes(OfflinePlayer p) {
+        String saveas = saveAsType();
+        String saveasp = p.getName();
+        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
+
+        return fm.cfg.getConfigurationSection(homes+"."+saveas+"."+saveasp).getKeys(false).size();
+    }
+
     public Location getHomeLoc(OfflinePlayer p, String home) {
         String saveas = saveAsType();
         String saveasp = p.getName();

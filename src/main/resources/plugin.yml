@@ -3,3 +3,14 @@ version: '${project.version}'
 main: me.leonardo.yhomes.Main
 authors: [yLeoft]
 softdepend: [ PlaceHolderAPI ]
+
+
+commands:
+  sethome:
+    aliases: [ seth, setarhome, setarh ]
+    description: Set a home
+  delhome:
+    aliases: [ delh, deletehome, deletarhome, deletarh]
+    description: Delete a home
+  home:
+    description: Go to a home
