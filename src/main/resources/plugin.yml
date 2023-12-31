@@ -1,6 +1,6 @@
-name: yHomes
+name: zHomes
 version: '${project.version}'
-main: me.leonardo.yhomes.Main
+main: me.leonardo.zhomes.Main
 authors: [yLeoft]
 softdepend: [ PlaceHolderAPI ]
 

@@ -1,9 +1,9 @@
-package me.leonardo.yhomes;
+package me.leonardo.zhomes;
 
-import me.leonardo.yhomes.commands.*;
-import me.leonardo.yhomes.utils.*;
-import me.leonardo.yhomes.expansions.*;
-import me.leonardo.yhomes.utils.storage.*;
+import me.leonardo.zhomes.commands.*;
+import me.leonardo.zhomes.utils.*;
+import me.leonardo.zhomes.expansions.*;
+import me.leonardo.zhomes.utils.storage.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

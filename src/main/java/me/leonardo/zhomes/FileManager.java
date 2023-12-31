@@ -1,4 +1,4 @@
-package me.leonardo.yhomes;
+package me.leonardo.zhomes;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 

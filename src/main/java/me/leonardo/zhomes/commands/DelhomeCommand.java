@@ -1,6 +1,6 @@
-package me.leonardo.yhomes.commands;
+package me.leonardo.zhomes.commands;
 
-import me.leonardo.yhomes.utils.storage.HomesUtilsYAML;
+import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

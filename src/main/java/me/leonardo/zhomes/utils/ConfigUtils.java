@@ -1,7 +1,6 @@
-package me.leonardo.yhomes.utils;
+package me.leonardo.zhomes.utils;
 
-import me.leonardo.yhomes.Main;
-import org.bukkit.configuration.file.FileConfiguration;
+import me.leonardo.zhomes.Main;
 
 public class ConfigUtils {
 

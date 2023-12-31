@@ -1,8 +1,8 @@
-package me.leonardo.yhomes.expansions;
+package me.leonardo.zhomes.expansions;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.leonardo.yhomes.Main;
-import me.leonardo.yhomes.utils.storage.HomesUtilsYAML;
+import me.leonardo.zhomes.Main;
+import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

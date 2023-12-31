@@ -1,14 +1,16 @@
-package me.leonardo.yhomes.commands;
+package me.leonardo.zhomes.commands;
 
-import me.leonardo.yhomes.Main;
-import me.leonardo.yhomes.utils.storage.HomesUtilsYAML;
-import org.bukkit.OfflinePlayer;
+import me.leonardo.zhomes.Main;
+import me.leonardo.zhomes.utils.ConfigUtils;
+import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor{
+public class HomeCommand  extends HomesUtilsYAML implements CommandExecutor {
+
+    ConfigUtils cfgu = Main.cfgu;
 
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
@@ -21,12 +23,8 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor{
         if(args.length >= 1) {
             String home = args[0];
 
-            if(true /**homes limit */) {
-                if(hasHome(p, home)) {
-                    addHome(p, home, p.getLocation());
-                }else {
-                    // Message
-                }
+            if(hasHome(p, home)) {
+                teleportPlayer(p, home);
             }else {
                 // Message
             }
