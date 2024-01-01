@@ -3,6 +3,8 @@ package me.leonardo.zhomes.utils.storage;
 import me.leonardo.zhomes.FileManager;
 import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.utils.ConfigUtils;
+import me.leonardo.zhomes.utils.LanguageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
@@ -22,9 +24,8 @@ public class HomesUtilsYAML extends ConfigUtils {
         return fm.cfg.contains(homes+"."+saveas+"."+saveasp+"."+home);
     }
 
-    public boolean inSameWorld(Location loc, Player p) {
-        World w = loc.getWorld();
-        World w2 = p.getWorld();
+    public boolean inSameWorld(String w, Player p) {
+        String w2 = p.getWorld().getName();
         return w.equals(w2);
     }
 
@@ -48,9 +49,12 @@ public class HomesUtilsYAML extends ConfigUtils {
 
     public void teleportPlayer(Player p, String home) {
         Location loc = getHomeLoc(p, home);
-        if(!inSameWorld(loc, p)) {
-            // Message
-            return;
+        if(!canDimensionalTeleport()) {
+            if(!inSameWorld(getHomeWorld(p, home), p)) {
+                LanguageUtils.Homes lang = new LanguageUtils.Homes();
+                lang.sendMsg(p, lang.getCantDimensionalTeleport());
+                return;
+            }
         }
 
         p.teleport(loc);
@@ -98,6 +102,21 @@ public class HomesUtilsYAML extends ConfigUtils {
 
         try {
             return main.deserializeAddDot(locS);
+        }catch (Exception e) {
+        }
+        return null;
+    }
+
+    public String getHomeWorld(OfflinePlayer p, String home) {
+        String saveas = saveAsType();
+        String saveasp = p.getName();
+        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
+
+        String locS = fm.cfg.getString(homes+"."+saveas+"."+saveasp+"."+home);
+        String[] locP = locS.split(";");
+
+        try {
+            return locP[0];
         }catch (Exception e) {
         }
         return null;

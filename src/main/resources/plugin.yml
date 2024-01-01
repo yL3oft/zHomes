@@ -18,3 +18,18 @@ commands:
   homes:
     aliases: [ myhomes ]
     description: See all your homes
+
+
+permissions:
+  zhomes.commands.sethome:
+    description: Permission to execute /sethome
+    default: true
+  zhomes.commands.delhome:
+    description: Permission to execute /delhome
+    default: true
+  zhomes.commands.home:
+    description: Permission to execute /home
+    default: true
+  zhomes.commands.homes:
+    description: Permission to execute /homes
+    default: true

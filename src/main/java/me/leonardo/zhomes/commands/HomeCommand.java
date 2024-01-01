@@ -1,6 +1,8 @@
 package me.leonardo.zhomes.commands;
 
 import me.leonardo.zhomes.Main;
+import me.leonardo.zhomes.api.events.ExecuteHomeCommandEvent;
+import me.leonardo.zhomes.api.events.PreExecuteHomeCommandEvent;
 import me.leonardo.zhomes.utils.ConfigUtils;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
@@ -20,11 +22,17 @@ public class HomeCommand  extends HomesUtilsYAML implements CommandExecutor {
             return false;
         }
         Player p = (Player)s;
+        PreExecuteHomeCommandEvent preevent = new PreExecuteHomeCommandEvent(p);
+        if(preevent.isCancelled()) return false;
+
         LanguageUtils.Home lang = new LanguageUtils.Home();
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if(args.length >= 1) {
             String home = args[0];
+            ExecuteHomeCommandEvent event = new ExecuteHomeCommandEvent(p, home);
+            if(event.isCancelled()) return false;
+            home = event.getHome();
 
             if(hasHome(p, home)) {
                 lang.sendMsg(p, lang.getOutput(home));

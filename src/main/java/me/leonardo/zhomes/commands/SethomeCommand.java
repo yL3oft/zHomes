@@ -1,5 +1,7 @@
 package me.leonardo.zhomes.commands;
 
+import me.leonardo.zhomes.api.events.ExecuteSethomeCommandEvent;
+import me.leonardo.zhomes.api.events.PreExecuteSethomeCommandEvent;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.command.Command;
@@ -16,11 +18,17 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor {
             return false;
         }
         Player p = (Player)s;
+        PreExecuteSethomeCommandEvent preevent = new PreExecuteSethomeCommandEvent(p);
+        if(preevent.isCancelled()) return false;
+
         LanguageUtils.Sethome lang = new LanguageUtils.Sethome();
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if(args.length >= 1) {
             String home = args[0];
+            ExecuteSethomeCommandEvent event = new ExecuteSethomeCommandEvent(p, home);
+            if(event.isCancelled()) return false;
+            home = event.getHome();
 
             if(true /**homes limit */) {
                 if(!hasHome(p, home)) {

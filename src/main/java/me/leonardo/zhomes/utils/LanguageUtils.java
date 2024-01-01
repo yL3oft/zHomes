@@ -146,6 +146,11 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%homes%", new HomesUtilsYAML().homes(p));
         }
 
+        public String getCantDimensionalTeleport() {
+            String path = formPath(cmds, getCmd(), "cant-dimensional-teleport");
+            return cfg.getString(path);
+        }
+
     }
 
     public static class CommandsMSG implements Helper {

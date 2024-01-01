@@ -1,5 +1,6 @@
 package me.leonardo.zhomes.commands;
 
+import me.leonardo.zhomes.api.events.ExecuteHomesCommandEvent;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.command.Command;
@@ -16,6 +17,9 @@ public class HomesCommand extends HomesUtilsYAML implements CommandExecutor {
             return false;
         }
         Player p = (Player)s;
+        ExecuteHomesCommandEvent event = new ExecuteHomesCommandEvent(p);
+        if(event.isCancelled()) return false;
+
         LanguageUtils.Homes lang = new LanguageUtils.Homes();
 
         lang.sendMsg(p, lang.getOutput(p));

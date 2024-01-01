@@ -1,6 +1,7 @@
 package me.leonardo.zhomes;
 
 import me.leonardo.zhomes.commands.*;
+import me.leonardo.zhomes.events.PluginCommandsEvents;
 import me.leonardo.zhomes.utils.*;
 import me.leonardo.zhomes.expansions.*;
 import me.leonardo.zhomes.utils.storage.*;
@@ -74,15 +75,17 @@ public final class Main extends JavaPlugin {
 
 
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&7[&9z&cHomes&7] &fAttempting to load commands..."
+                "&7[&9z&cHomes&7] &fAttempting to load commands & events..."
         ));
         try {
             pym.registerCommand("sethome", new SethomeCommand());
             pym.registerCommand("delhome", new DelhomeCommand());
             pym.registerCommand("home", new HomeCommand());
             pym.registerCommand("homes", new HomesCommand());
+
+            pym.registerEvent(new PluginCommandsEvents());
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&7[&9z&cHomes&7] &fAll commands have been loaded. (If not it will be a message up)"
+                    "&7[&9z&cHomes&7] &fAll commands & events have been loaded. (If not it will be a message up)"
             ));
         }catch (Exception e) {
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',

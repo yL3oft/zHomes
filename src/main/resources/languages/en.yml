@@ -13,5 +13,6 @@ commands:
   home:
     usage: "&c-> /home (Home | Player:Home)"
     output: "&aTeleporting to &e'%home%'&a..."
+    cant-dimensional-teleport: "&cYour teleport was cancelled! Dimensional teleportation is not enable."
   homes:
     output: "&7Your homes: &e%homes%"
