@@ -8,3 +8,5 @@ commands:
   home:
     usage: "&c-> /home (Home | Player:Home)"
     output: "&aTeleporting to &e'%home%'&a..."
+  homes:
+    output: "&7Your homes: &e%homes%"

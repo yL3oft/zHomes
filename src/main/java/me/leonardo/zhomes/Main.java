@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -79,12 +80,13 @@ public final class Main extends JavaPlugin {
             pym.registerCommand("sethome", new SethomeCommand());
             pym.registerCommand("delhome", new DelhomeCommand());
             pym.registerCommand("home", new HomeCommand());
+            pym.registerCommand("homes", new HomeCommand());
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&7[&9z&cHomes&7] &fAll commands have been loaded. (If not it will be a message up)"
             ));
         }catch (Exception e) {
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&7[&9z&cHomes&7] &fAttempting to load commands..."
+                    "&7[&9z&cHomes&7] &fError loading commands!"
             ));
         }
 
@@ -106,9 +108,11 @@ public final class Main extends JavaPlugin {
             ));
         }
 
+
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&7[&9z&cHomes&7] &fPlugin loaded successfully."
+                "&7[&9z&cHomes&7] &cChecking if plugin is up-to-date..."
         ));
+        isUpdated();
     }
 
     @Override
@@ -164,6 +168,33 @@ public final class Main extends JavaPlugin {
         serialized = serialized.replaceAll("_", ".");
 
         return deserialize(serialized);
+    }
+
+    public void isUpdated() {
+        new UpdateChecker(104825).getVersion(version ->{
+            if(!getDescription().getVersion().equals(version)) {
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7[&9z&cHomes&7] &cPlugin is not up-to-date!"
+                ));
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7[&9z&cHomes&7] &fNew version: &e"+version
+                ));
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7[&9z&cHomes&7] &fYour version: &e"+getDescription().getVersion()
+                ));
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7[&9z&cHomes&7] &fYou can update your plugin here: &ehttps://www.spigotmc.org/resources/zhomes-under-development.104825/"
+                ));
+            }else {
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7[&9z&cHomes&7] &aPlugin is up-to-date!"
+                ));
+            }
+        });
+
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7[&9z&cHomes&7] &fPlugin loaded successfully."
+        ));
     }
 
 }

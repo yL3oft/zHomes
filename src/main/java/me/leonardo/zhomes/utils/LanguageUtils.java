@@ -1,7 +1,9 @@
 package me.leonardo.zhomes.utils;
 
 import me.leonardo.zhomes.Main;
+import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -59,6 +61,11 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%home%", home);
         }
 
+        @Override
+        public String getOutput(OfflinePlayer home) {
+            return null;
+        }
+
     }
 
     public static class Delhome implements Commands {
@@ -79,6 +86,11 @@ public class LanguageUtils extends ConfigUtils {
             String path = formPath(cmds, getCmd(), "output");
             return cfg.getString(path)
                     .replace("%home%", home);
+        }
+
+        @Override
+        public String getOutput(OfflinePlayer home) {
+            return null;
         }
 
     }
@@ -103,6 +115,37 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%home%", home);
         }
 
+        @Override
+        public String getOutput(OfflinePlayer home) {
+            return null;
+        }
+
+    }
+
+    public static class Homes implements Commands {
+
+        @Override
+        public String getCmd() {
+            return "homes";
+        }
+
+        @Override
+        public String getUsage() {
+            return null;
+        }
+
+        @Override
+        public String getOutput(String home) {
+            return null;
+        }
+
+        @Override
+        public String getOutput(OfflinePlayer p) {
+            String path = formPath(cmds, getCmd(), "output");
+            return cfg.getString(path)
+                    .replace("%homes%", new HomesUtilsYAML().homes(p));
+        }
+
     }
 
     public interface Commands {
@@ -112,6 +155,7 @@ public class LanguageUtils extends ConfigUtils {
         public String getUsage();
 
         public String getOutput(String home);
+        public String getOutput(OfflinePlayer home);
 
         public default void sendMsg(Player p, String text) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', text));

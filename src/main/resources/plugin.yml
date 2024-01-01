@@ -15,3 +15,6 @@ commands:
     description: Delete a home
   home:
     description: Go to a home
+  homes:
+    aliases: [ myhomes ]
+    description: See all your homes

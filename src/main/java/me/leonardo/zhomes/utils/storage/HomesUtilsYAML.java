@@ -56,6 +56,31 @@ public class HomesUtilsYAML extends ConfigUtils {
         p.teleport(loc);
     }
 
+    public String homes(OfflinePlayer p) {
+        String saveas = saveAsType();
+        String saveasp = p.getName();
+        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
+
+        String returned = "";
+        try {
+            if(main.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
+                for (String home : main.getConfig().getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false)) {
+                    if (returned == "") {
+                        returned = home;
+                        continue;
+                    }
+                    returned += ", " + home;
+                }
+            }else {
+                returned = "None";
+            }
+        }catch (Exception e) {
+            returned = "None";
+        }
+
+        return returned;
+    }
+
     public int numberOfHomes(OfflinePlayer p) {
         String saveas = saveAsType();
         String saveasp = p.getName();
