@@ -44,6 +44,9 @@ public class PlaceHolderAPIExpansion extends PlaceholderExpansion {
         if(params.equals("numberofhomes")) {
             return String.valueOf(hu.numberOfHomes(p));
         }
+        if(params.equals("homes")) {
+            return String.valueOf(hu.homes(p));
+        }
 
         return null;
     }

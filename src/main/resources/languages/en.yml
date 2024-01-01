@@ -1,4 +1,9 @@
 commands:
+  # Up here you will find messages that can be used in multiple commands
+  home-already-exist: "&cYou already have a home with this name."
+  home-doesnt-exist: "&cYou don't have any home with this name."
+
+  # Below you will find messages specific for the commands
   sethome:
     usage: "&c-> /sethome (Home)"
     output: "&aHome &e'%home%' &aset to your position."

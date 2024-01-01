@@ -80,7 +80,7 @@ public final class Main extends JavaPlugin {
             pym.registerCommand("sethome", new SethomeCommand());
             pym.registerCommand("delhome", new DelhomeCommand());
             pym.registerCommand("home", new HomeCommand());
-            pym.registerCommand("homes", new HomeCommand());
+            pym.registerCommand("homes", new HomesCommand());
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&7[&9z&cHomes&7] &fAll commands have been loaded. (If not it will be a message up)"
             ));
@@ -185,16 +185,18 @@ public final class Main extends JavaPlugin {
                 getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&7[&9z&cHomes&7] &fYou can update your plugin here: &ehttps://www.spigotmc.org/resources/zhomes-under-development.104825/"
                 ));
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7[&9z&cHomes&7] &fPlugin loaded successfully."
+                ));
             }else {
                 getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&7[&9z&cHomes&7] &aPlugin is up-to-date!"
                 ));
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7[&9z&cHomes&7] &fPlugin loaded successfully."
+                ));
             }
         });
-
-        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&7[&9z&cHomes&7] &fPlugin loaded successfully."
-        ));
     }
 
 }

@@ -17,6 +17,7 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor {
         }
         Player p = (Player)s;
         LanguageUtils.Sethome lang = new LanguageUtils.Sethome();
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if(args.length >= 1) {
             String home = args[0];
@@ -26,7 +27,7 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor {
                     addHome(p, home, p.getLocation());
                     lang.sendMsg(p, lang.getOutput(home));
                 }else {
-                    // Message
+                    lang.sendMsg(p, cmdm.getHomeAlreadyExist());
                 }
             }else {
                 // Message

@@ -21,6 +21,7 @@ public class HomeCommand  extends HomesUtilsYAML implements CommandExecutor {
         }
         Player p = (Player)s;
         LanguageUtils.Home lang = new LanguageUtils.Home();
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if(args.length >= 1) {
             String home = args[0];
@@ -29,7 +30,7 @@ public class HomeCommand  extends HomesUtilsYAML implements CommandExecutor {
                 lang.sendMsg(p, lang.getOutput(home));
                 teleportPlayer(p, home);
             }else {
-                // Message
+                lang.sendMsg(p, cmdm.getHomeDoesntExist());
             }
         }else {
             lang.sendMsg(p, lang.getUsage());

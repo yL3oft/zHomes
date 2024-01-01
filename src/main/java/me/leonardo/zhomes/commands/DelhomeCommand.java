@@ -17,6 +17,7 @@ public class DelhomeCommand extends HomesUtilsYAML implements CommandExecutor {
         }
         Player p = (Player)s;
         LanguageUtils.Delhome lang = new LanguageUtils.Delhome();
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if(args.length >= 1) {
             String home = args[0];
@@ -25,7 +26,7 @@ public class DelhomeCommand extends HomesUtilsYAML implements CommandExecutor {
                 delHome(p, home);
                 lang.sendMsg(p, lang.getOutput(home));
             }else {
-                // Message
+                lang.sendMsg(p, cmdm.getHomeDoesntExist());
             }
         }else {
             lang.sendMsg(p, lang.getUsage());

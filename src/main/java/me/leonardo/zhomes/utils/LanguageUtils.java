@@ -148,7 +148,21 @@ public class LanguageUtils extends ConfigUtils {
 
     }
 
-    public interface Commands {
+    public static class CommandsMSG implements Helper {
+
+        public String getHomeAlreadyExist() {
+            String path = formPath(cmds, "home-already-exist");
+            return cfg.getString(path);
+        }
+
+        public String getHomeDoesntExist() {
+            String path = formPath(cmds, "home-doesnt-exist");
+            return cfg.getString(path);
+        }
+
+    }
+
+    public interface Commands extends Helper {
         
         public String getCmd();
 
@@ -156,6 +170,10 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getOutput(String home);
         public String getOutput(OfflinePlayer home);
+
+    }
+
+    public interface Helper {
 
         public default void sendMsg(Player p, String text) {
             p.sendMessage(ChatColor.translateAlternateColorCodes('&', text));

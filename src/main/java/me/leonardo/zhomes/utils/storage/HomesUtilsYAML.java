@@ -63,8 +63,8 @@ public class HomesUtilsYAML extends ConfigUtils {
 
         String returned = "";
         try {
-            if(main.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
-                for (String home : main.getConfig().getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false)) {
+            if(fm.cfg.contains(homes+"."+saveas+"."+saveasp)) {
+                for (String home : fm.cfg.getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false)) {
                     if (returned == "") {
                         returned = home;
                         continue;
