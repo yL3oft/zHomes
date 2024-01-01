@@ -1,0 +1,10 @@
+commands:
+  sethome:
+    usage: "&c-> /sethome (Home)"
+    output: "&aHome &e'%home%' &aset to your position."
+  delhome:
+    usage: "&c-> /delhome (Home)"
+    output: "&cHome &e'%home%' &cdeleted."
+  home:
+    usage: "&c-> /home (Home | Player:Home)"
+    output: "&aTeleporting to &e'%home%'&a..."

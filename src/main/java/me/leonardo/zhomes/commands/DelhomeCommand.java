@@ -1,5 +1,6 @@
 package me.leonardo.zhomes.commands;
 
+import me.leonardo.zhomes.utils.LanguageUtils;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -15,17 +16,19 @@ public class DelhomeCommand extends HomesUtilsYAML implements CommandExecutor {
             return false;
         }
         Player p = (Player)s;
+        LanguageUtils.Delhome lang = new LanguageUtils.Delhome();
 
         if(args.length >= 1) {
             String home = args[0];
 
             if(hasHome(p, home)) {
                 delHome(p, home);
+                lang.sendMsg(p, lang.getOutput(home));
             }else {
                 // Message
             }
         }else {
-            // Message
+            lang.sendMsg(p, lang.getUsage());
         }
     return false;
     }

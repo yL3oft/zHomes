@@ -27,4 +27,8 @@ public class ConfigUtils {
         return "uuid";
     }
 
+    public String langType() {
+        return main.getConfig().getString("language");
+    }
+
 }

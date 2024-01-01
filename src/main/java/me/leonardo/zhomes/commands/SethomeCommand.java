@@ -1,12 +1,13 @@
 package me.leonardo.zhomes.commands;
 
+import me.leonardo.zhomes.utils.LanguageUtils;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor{
+public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
@@ -15,13 +16,15 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor{
             return false;
         }
         Player p = (Player)s;
+        LanguageUtils.Sethome lang = new LanguageUtils.Sethome();
 
         if(args.length >= 1) {
             String home = args[0];
 
             if(true /**homes limit */) {
-                if(hasHome(p, home)) {
+                if(!hasHome(p, home)) {
                     addHome(p, home, p.getLocation());
+                    lang.sendMsg(p, lang.getOutput(home));
                 }else {
                     // Message
                 }
@@ -29,7 +32,7 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor{
                 // Message
             }
         }else {
-            // Message
+            lang.sendMsg(p, lang.getUsage());
         }
     return false;
     }

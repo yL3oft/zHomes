@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public class PlaceHolderAPIExpansion extends PlaceholderExpansion {
     @Override
     public @NotNull String getIdentifier() {
-        return "yhomes";
+        return "zhomes";
     }
 
     @Override

@@ -20,7 +20,7 @@ public class PluginYAMLManager {
         if(file.getCommands().containsKey(command)) {
             main.getCommand(command).setExecutor(ce);
         }else {
-            main.getLogger().severe("§4Couldn't load command §e"+command);
+            main.getLogger().severe("§7[§9z§cHomes§7] §4Couldn't load command §e"+command);
         }
     }
 

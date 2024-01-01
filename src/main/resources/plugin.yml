@@ -2,7 +2,8 @@ name: zHomes
 version: '${project.version}'
 main: me.leonardo.zhomes.Main
 authors: [yLeoft]
-softdepend: [ PlaceHolderAPI ]
+softdepend:
+  - PlaceholderAPI
 
 
 commands:

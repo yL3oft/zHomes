@@ -5,6 +5,7 @@ import me.leonardo.zhomes.utils.*;
 import me.leonardo.zhomes.expansions.*;
 import me.leonardo.zhomes.utils.storage.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,6 +23,10 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7[&9z&cHomes&7] &fPlugin Started loading..."
+        ));
+
         main = Main.this;
         pym = new PluginYAMLManager();
         fm = new FileManager();
@@ -29,28 +34,81 @@ public final class Main extends JavaPlugin {
         hu = new HomesUtilsYAML();
 
 
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7[&9z&cHomes&7] &fChecking if files exist..."
+        ));
         File f = new File(getDataFolder(), "config.yml");
         File f2 = new File(getDataFolder(), "homes.example.yml");
+        File f3 = new File(getDataFolder(), "languages/en.yml");
         if(!f.exists()) {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &econfig.yml &fdoesn't exist, attempting to create it..."
+            ));
             saveDefaultConfig();
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &econfig.yml &fhave been created!"
+            ));
         }
         if(!f2.exists()) {
-            YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f2);
-            try {
-                cfg = YamlConfiguration.loadConfiguration(f2);
-            }catch (Exception e) {
-            }
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &ehomes.example.yml &fdoesn't exist, attempting to create it..."
+            ));
+            saveResource("homes.example.yml", false);
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &ehomes.example.yml &fhave been created!"
+            ));
+        }
+        if(!f3.exists()) {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &eLanguage 'en' &fdoesn't exist, attempting to create it..."
+            ));
+            saveResource("languages/en.yml", false);
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &eLanguage 'en' &fhave been created!"
+            ));
+        }
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7[&9z&cHomes&7] &fAll files have been created!"
+        ));
+
+
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7[&9z&cHomes&7] &fAttempting to load commands..."
+        ));
+        try {
+            pym.registerCommand("sethome", new SethomeCommand());
+            pym.registerCommand("delhome", new DelhomeCommand());
+            pym.registerCommand("home", new HomeCommand());
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &fAll commands have been loaded. (If not it will be a message up)"
+            ));
+        }catch (Exception e) {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &fAttempting to load commands..."
+            ));
         }
 
 
-        pym.registerCommand("sethome", new SethomeCommand());
-        pym.registerCommand("delhome", new DelhomeCommand());
-        pym.registerCommand("home", new HomeCommand());
-
-
-        if(getServer().getPluginManager().isPluginEnabled("PlaceHolderAPI")) {
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7[&9z&cHomes&7] &fChecking if PlaceholderAPI is on the server..."
+        ));
+        if(getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &fAttempting to start PlaceholderAPI Hook..."
+            ));
             new PlaceHolderAPIExpansion().register();
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&7[&9z&cHomes&7] &fPlaceholderAPI hook Loaded successfully."
+            ));
+        }else {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &cPlaceholderAPI is not on the server. Hook was not made."
+            ));
         }
+
+        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7[&9z&cHomes&7] &fPlugin loaded successfully."
+        ));
     }
 
     @Override
