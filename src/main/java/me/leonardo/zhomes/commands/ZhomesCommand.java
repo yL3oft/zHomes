@@ -33,8 +33,8 @@ public class ZhomesCommand implements CommandExecutor {
                     subcmd.equalsIgnoreCase("rl")
             ) {
                 Main.main.reloadConfig();
-                Main.fm.reloadCfg();
-                Main.fm.reloadCfg2();
+                Main.fm.fu.reloadConfig();
+                Main.fm.fu2.reloadConfig();
 
                 lang2.sendMsg(p, lang2.getOutput(p));
             }

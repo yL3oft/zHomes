@@ -6,7 +6,7 @@
 
     <groupId>me.leonardo</groupId>
     <artifactId>zHomes</artifactId>
-    <version>0.6.1</version>
+    <version>0.6.2</version>
     <packaging>jar</packaging>
 
     <name>zHomes</name>

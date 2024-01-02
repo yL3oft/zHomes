@@ -1,6 +1,7 @@
 package me.leonardo.zhomes.utils;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import me.leonardo.zhomes.FileManager;
 import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.ChatColor;
@@ -9,6 +10,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LanguageUtils extends ConfigUtils {
 
@@ -17,12 +20,8 @@ public class LanguageUtils extends ConfigUtils {
     public static File f = new File(main.getDataFolder(), "languages/en.yml");
     public static YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
 
-    public String lang = langType();
-
     public LanguageUtils() {
-        File f = new File(main.getDataFolder(), "languages/"+lang+".yml");
-        if(f.exists()) this.f = f;
-        cfg = YamlConfiguration.loadConfiguration(this.f);
+        cfg = getConfigFile();
     }
 
     public static String formPath(String... strs) {
@@ -42,7 +41,51 @@ public class LanguageUtils extends ConfigUtils {
         return path;
     }
 
+    public static YamlConfiguration getConfigFile() {
+        List<FileUtils> list = new ArrayList<>();
+        list.add(Main.fm.fu3);
+        list.add(Main.fm.fu4);
+        list.add(Main.fm.fuBACKUP);
+        boolean found = false;
+        YamlConfiguration returned = cfg;
+        String lang = langType();
+
+        for(FileUtils fu : list) {
+            if(fu != null) {
+                File f = fu.getFile();
+                if(f.exists()) {
+                    String name = f.getName();
+                    String[] nameS = name.split("\\.");
+                    String langtype = nameS[0];
+                    if (langtype.equals(lang)) {
+                        returned = (YamlConfiguration) fu.getConfig();
+                        found = true;
+                        break;
+                    }
+                }
+            }
+        }
+        if(!found) {
+            String resource = "languages/"+lang+".yml";
+            File f = new File(Main.main.getDataFolder(), resource);
+            if(f.exists()) {
+                Main.fm.fBACKUP = f;
+                Main.fm.fuBACKUP = new FileUtils(f, resource);
+                returned = (YamlConfiguration) Main.fm.fuBACKUP.getConfig();
+            }
+        }
+
+        return returned;
+    }
+
     public static class Sethome implements Commands {
+
+        public File f = new File(main.getDataFolder(), "languages/en.yml");
+        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+
+        public Sethome() {
+            cfg = getConfigFile();
+        }
 
         @Override
         public String getCmd() {
@@ -71,6 +114,13 @@ public class LanguageUtils extends ConfigUtils {
 
     public static class Delhome implements Commands {
 
+        public File f = new File(main.getDataFolder(), "languages/en.yml");
+        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+
+        public Delhome() {
+            cfg = getConfigFile();
+        }
+
         @Override
         public String getCmd() {
             return "delhome";
@@ -98,6 +148,13 @@ public class LanguageUtils extends ConfigUtils {
 
     public static class Home implements Commands {
 
+        public File f = new File(main.getDataFolder(), "languages/en.yml");
+        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+
+        public Home() {
+            cfg = getConfigFile();
+        }
+
         @Override
         public String getCmd() {
             return "home";
@@ -124,6 +181,13 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class Homes implements Commands {
+
+        public File f = new File(main.getDataFolder(), "languages/en.yml");
+        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+
+        public Homes() {
+            cfg = getConfigFile();
+        }
 
         @Override
         public String getCmd() {
@@ -156,6 +220,13 @@ public class LanguageUtils extends ConfigUtils {
 
     public static class Zhomes implements Commands {
 
+        public File f = new File(main.getDataFolder(), "languages/en.yml");
+        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+
+        public Zhomes() {
+            cfg = getConfigFile();
+        }
+
         @Override
         public String getCmd() {
             return "zhomes";
@@ -179,6 +250,13 @@ public class LanguageUtils extends ConfigUtils {
 
 
         public static class ZhomesReload implements Commands {
+
+            public File f = new File(main.getDataFolder(), "languages/en.yml");
+            public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+
+            public ZhomesReload() {
+                cfg = getConfigFile();
+            }
 
             @Override
             public String getCmd() {
@@ -221,6 +299,9 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public interface Commands extends Helper {
+
+        public File f = new File(main.getDataFolder(), "languages/en.yml");
+        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
         
         public String getCmd();
 

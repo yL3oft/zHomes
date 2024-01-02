@@ -25,7 +25,7 @@ public class HomesUtilsYAML extends ConfigUtils {
         String saveasp = p.getName();
         if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
 
-        return fm.cfg.contains(homes+"."+saveas+"."+saveasp+"."+home);
+        return fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp+"."+home);
     }
 
     public boolean inSameWorld(String w, Player p) {
@@ -38,8 +38,8 @@ public class HomesUtilsYAML extends ConfigUtils {
         String saveasp = p.getName();
         if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
 
-        fm.cfg.set(homes+"."+saveas+"."+saveasp+"."+home, main.serializeDelDot(loc));
-        fm.saveCfg();
+        fm.fu.getConfig().set(homes+"."+saveas+"."+saveasp+"."+home, main.serializeDelDot(loc));
+        fm.fu.saveConfig();
     }
 
     public void delHome(OfflinePlayer p, String home) {
@@ -47,8 +47,8 @@ public class HomesUtilsYAML extends ConfigUtils {
         String saveasp = p.getName();
         if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
 
-        fm.cfg.set(homes+"."+saveas+"."+saveasp+"."+home, null);
-        fm.saveCfg();
+        fm.fu.getConfig().set(homes+"."+saveas+"."+saveasp+"."+home, null);
+        fm.fu.saveConfig();
     }
 
     public void teleportPlayer(Player p, String home) {
@@ -77,8 +77,8 @@ public class HomesUtilsYAML extends ConfigUtils {
 
         String returned = "";
         try {
-            if(fm.cfg.contains(homes+"."+saveas+"."+saveasp)) {
-                for (String home : fm.cfg.getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false)) {
+            if(fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
+                for (String home : fm.fu.getConfig().getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false)) {
                     if (returned == "") {
                         returned = home;
                         continue;
@@ -102,8 +102,8 @@ public class HomesUtilsYAML extends ConfigUtils {
 
         List<String> returned = new ArrayList<>();
         try {
-            if(fm.cfg.contains(homes+"."+saveas+"."+saveasp)) {
-                returned.addAll(fm.cfg.getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false));
+            if(fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
+                returned.addAll(fm.fu.getConfig().getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false));
             }
         }catch (Exception e) {
         }
@@ -116,7 +116,7 @@ public class HomesUtilsYAML extends ConfigUtils {
         String saveasp = p.getName();
         if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
 
-        return fm.cfg.getConfigurationSection(homes+"."+saveas+"."+saveasp).getKeys(false).size();
+        return fm.fu.getConfig().getConfigurationSection(homes+"."+saveas+"."+saveasp).getKeys(false).size();
     }
 
     public Location getHomeLoc(OfflinePlayer p, String home) {
@@ -124,7 +124,7 @@ public class HomesUtilsYAML extends ConfigUtils {
         String saveasp = p.getName();
         if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
 
-        String locS = fm.cfg.getString(homes+"."+saveas+"."+saveasp+"."+home);
+        String locS = fm.fu.getConfig().getString(homes+"."+saveas+"."+saveasp+"."+home);
 
         try {
             return main.deserializeAddDot(locS);
@@ -138,7 +138,7 @@ public class HomesUtilsYAML extends ConfigUtils {
         String saveasp = p.getName();
         if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
 
-        String locS = fm.cfg.getString(homes+"."+saveas+"."+saveasp+"."+home);
+        String locS = fm.fu.getConfig().getString(homes+"."+saveas+"."+saveasp+"."+home);
         String[] locP = locS.split(";");
 
         try {

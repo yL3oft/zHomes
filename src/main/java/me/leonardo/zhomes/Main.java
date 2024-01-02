@@ -6,8 +6,6 @@ import me.leonardo.zhomes.events.*;
 import me.leonardo.zhomes.utils.*;
 import me.leonardo.zhomes.expansions.*;
 import me.leonardo.zhomes.utils.storage.*;
-import org.bstats.charts.SimplePie;
-import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,7 +13,6 @@ import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.concurrent.Callable;
 
 public final class Main extends JavaPlugin {
 
@@ -47,12 +44,12 @@ public final class Main extends JavaPlugin {
         ));
         File f = new File(getDataFolder(), "config.yml");
         File f2 = new File(getDataFolder(), "homes.example.yml");
-        File f3 = new File(getDataFolder(), "languages/en.yml");
         if(!f.exists()) {
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&7[&9z&cHomes&7] &econfig.yml &fdoesn't exist, attempting to create it..."
             ));
             saveDefaultConfig();
+            reloadConfig();
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&7[&9z&cHomes&7] &econfig.yml &fhave been created!"
             ));
@@ -66,15 +63,10 @@ public final class Main extends JavaPlugin {
                     "&7[&9z&cHomes&7] &ehomes.example.yml &fhave been created!"
             ));
         }
-        if(!f3.exists()) {
-            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&7[&9z&cHomes&7] &eLanguage 'en' &fdoesn't exist, attempting to create it..."
-            ));
-            saveResource("languages/en.yml", false);
-            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&7[&9z&cHomes&7] &eLanguage 'en' &fhave been created!"
-            ));
-        }
+        fm.fu3.saveDefaultConfig();
+        fm.fu3.reloadConfig();
+        fm.fu4.saveDefaultConfig();
+        fm.fu4.reloadConfig();
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 "&7[&9z&cHomes&7] &fAll files have been created!"
         ));
@@ -211,6 +203,19 @@ public final class Main extends JavaPlugin {
                 ));
             }
         });
+    }
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+
+        saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+    }
+
+    public File getFileJava() {
+        return getFile();
     }
 
 }
