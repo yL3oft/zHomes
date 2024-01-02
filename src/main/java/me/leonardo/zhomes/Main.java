@@ -5,15 +5,16 @@ import me.leonardo.zhomes.events.PluginCommandsEvents;
 import me.leonardo.zhomes.utils.*;
 import me.leonardo.zhomes.expansions.*;
 import me.leonardo.zhomes.utils.storage.*;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 public final class Main extends JavaPlugin {
 
@@ -34,6 +35,10 @@ public final class Main extends JavaPlugin {
         fm = new FileManager();
         cfgu = new ConfigUtils();
         hu = new HomesUtilsYAML();
+
+
+        int pluginId = 20621;
+        Metrics metrics = new Metrics(this, pluginId);
 
 
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
