@@ -154,6 +154,58 @@ public class LanguageUtils extends ConfigUtils {
 
     }
 
+    public static class Zhomes implements Commands {
+
+        @Override
+        public String getCmd() {
+            return "zhomes";
+        }
+
+        @Override
+        public String getUsage() {
+            String path = formPath(cmds, getCmd(), "usage");
+            return cfg.getString(path);
+        }
+
+        @Override
+        public String getOutput(String home) {
+            return null;
+        }
+
+        @Override
+        public String getOutput(OfflinePlayer p) {
+            return null;
+        }
+
+
+        public static class ZhomesReload implements Commands {
+
+            @Override
+            public String getCmd() {
+                return "zhomes.reload";
+            }
+
+            @Override
+            public String getUsage() {
+                return null;
+            }
+
+            @Override
+            public String getOutput(String home) {
+                return null;
+            }
+
+            @Override
+            public String getOutput(OfflinePlayer p) {
+                String path = formPath(cmds, getCmd(), "output");
+                return cfg.getString(path);
+            }
+
+        }
+
+
+    }
+
     public static class CommandsMSG implements Helper {
 
         public String getHomeAlreadyExist() {

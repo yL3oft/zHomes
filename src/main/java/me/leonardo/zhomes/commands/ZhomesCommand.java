@@ -2,6 +2,7 @@ package me.leonardo.zhomes.commands;
 
 import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.api.events.ExecuteZhomesCommandEvent;
+import me.leonardo.zhomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -21,6 +22,9 @@ public class ZhomesCommand implements CommandExecutor {
         Bukkit.getPluginManager().callEvent(event);
         if(event.isCancelled()) return false;
 
+        LanguageUtils.Zhomes lang = new LanguageUtils.Zhomes();
+        LanguageUtils.Zhomes.ZhomesReload lang2 = new LanguageUtils.Zhomes.ZhomesReload();
+
         if(args.length >= 1) {
             String subcmd = args[0];
 
@@ -31,7 +35,11 @@ public class ZhomesCommand implements CommandExecutor {
                 Main.main.reloadConfig();
                 Main.fm.reloadCfg();
                 Main.fm.reloadCfg2();
+
+                lang2.sendMsg(p, lang2.getOutput(p));
             }
+        }else {
+            lang.sendMsg(p, lang.getUsage());
         }
     return false;
     }

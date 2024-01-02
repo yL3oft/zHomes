@@ -16,3 +16,7 @@ commands:
     cant-dimensional-teleport: "&cYour teleport was cancelled! Dimensional teleportation is not enable."
   homes:
     output: "&7Your homes: &e%homes%"
+  zhomes:
+    usage: "&c-> /zhomes (reload|rl)"
+    reload:
+      output: "&aThe plugin has been reloaded successfully."
