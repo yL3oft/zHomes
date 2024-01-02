@@ -41,7 +41,6 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.zip.GZIPOutputStream;
 import javax.net.ssl.HttpsURLConnection;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -121,7 +120,7 @@ public class Metrics {
      *
      * @param chart The chart to add.
      */
-    public void addCustomChart(org.bstats.charts.SingleLineChart chart) {
+    public void addCustomChart(CustomChart chart) {
         metricsBase.addCustomChart(chart);
     }
 
@@ -189,7 +188,7 @@ public class Metrics {
 
         private final boolean logResponseStatusText;
 
-        private final Set<org.bstats.charts.SingleLineChart> customCharts = new HashSet<org.bstats.charts.SingleLineChart>();
+        private final Set<CustomChart> customCharts = new HashSet<>();
 
         private final boolean enabled;
 
@@ -257,7 +256,7 @@ public class Metrics {
             }
         }
 
-        public void addCustomChart(org.bstats.charts.SingleLineChart chart) {
+        public void addCustomChart(CustomChart chart) {
             this.customCharts.add(chart);
         }
 

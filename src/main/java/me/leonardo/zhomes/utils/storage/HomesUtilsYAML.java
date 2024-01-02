@@ -55,6 +55,7 @@ public class HomesUtilsYAML extends ConfigUtils {
             isDimensionalTeleport = true;
         }
         TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport);
+        Bukkit.getPluginManager().callEvent(event);
         if(event.isCancelled()) return;
 
         if(isDimensionalTeleport && !canDimensionalTeleport()) {

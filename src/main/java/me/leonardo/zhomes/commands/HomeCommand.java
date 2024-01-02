@@ -6,6 +6,7 @@ import me.leonardo.zhomes.api.events.PreExecuteHomeCommandEvent;
 import me.leonardo.zhomes.utils.ConfigUtils;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -23,6 +24,7 @@ public class HomeCommand  extends HomesUtilsYAML implements CommandExecutor {
         }
         Player p = (Player)s;
         PreExecuteHomeCommandEvent preevent = new PreExecuteHomeCommandEvent(p);
+        Bukkit.getPluginManager().callEvent(preevent);
         if(preevent.isCancelled()) return false;
 
         LanguageUtils.Home lang = new LanguageUtils.Home();
@@ -31,6 +33,7 @@ public class HomeCommand  extends HomesUtilsYAML implements CommandExecutor {
         if(args.length >= 1) {
             String home = args[0];
             ExecuteHomeCommandEvent event = new ExecuteHomeCommandEvent(p, home);
+            Bukkit.getPluginManager().callEvent(event);
             if(event.isCancelled()) return false;
             home = event.getHome();
 

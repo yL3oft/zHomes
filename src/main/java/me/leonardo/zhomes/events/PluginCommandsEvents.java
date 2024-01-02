@@ -31,7 +31,7 @@ public class PluginCommandsEvents implements Listener {
     @EventHandler
     public void onPlayerExecuteHomesCommandEvent(ExecuteHomesCommandEvent e) {
         Player p = e.getPlayer();
-        if(!p.hasPermission("zhomes.commands.home")) e.setCancelled(true);
+        if(!p.hasPermission("zhomes.commands.homes")) e.setCancelled(true);
     }
 
 }

@@ -4,6 +4,7 @@ import me.leonardo.zhomes.api.events.ExecuteDelhomeCommandEvent;
 import me.leonardo.zhomes.api.events.PreExecuteDelhomeCommandEvent;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,6 +20,7 @@ public class DelhomeCommand extends HomesUtilsYAML implements CommandExecutor {
         }
         Player p = (Player)s;
         PreExecuteDelhomeCommandEvent preevent = new PreExecuteDelhomeCommandEvent(p);
+        Bukkit.getPluginManager().callEvent(preevent);
         if(preevent.isCancelled()) return false;
 
         LanguageUtils.Delhome lang = new LanguageUtils.Delhome();
@@ -27,6 +29,7 @@ public class DelhomeCommand extends HomesUtilsYAML implements CommandExecutor {
         if(args.length >= 1) {
             String home = args[0];
             ExecuteDelhomeCommandEvent event = new ExecuteDelhomeCommandEvent(p, home);
+            Bukkit.getPluginManager().callEvent(event);
             if(event.isCancelled()) return false;
             home = event.getHome();
 
