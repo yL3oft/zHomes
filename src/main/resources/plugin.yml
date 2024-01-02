@@ -18,6 +18,9 @@ commands:
   homes:
     aliases: [ myhomes ]
     description: See all your homes
+  zhomes:
+    aliases: [ zhome ]
+    description: Configurate the plugin via command
 
 
 permissions:
@@ -33,3 +36,6 @@ permissions:
   zhomes.commands.homes:
     description: Permission to execute /homes
     default: true
+  zhomes.commands.zhomes:
+    description: Permission to execute /zhomes
+    default: false

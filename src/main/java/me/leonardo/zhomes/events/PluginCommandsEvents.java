@@ -1,9 +1,6 @@
 package me.leonardo.zhomes.events;
 
-import me.leonardo.zhomes.api.events.ExecuteHomesCommandEvent;
-import me.leonardo.zhomes.api.events.PreExecuteDelhomeCommandEvent;
-import me.leonardo.zhomes.api.events.PreExecuteHomeCommandEvent;
-import me.leonardo.zhomes.api.events.PreExecuteSethomeCommandEvent;
+import me.leonardo.zhomes.api.events.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +29,12 @@ public class PluginCommandsEvents implements Listener {
     public void onPlayerExecuteHomesCommandEvent(ExecuteHomesCommandEvent e) {
         Player p = e.getPlayer();
         if(!p.hasPermission("zhomes.commands.homes")) e.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onPlayerExecuteZhomesCommandEvent(ExecuteZhomesCommandEvent e) {
+        Player p = e.getPlayer();
+        if(!p.hasPermission("zhomes.commands.zhomes")) e.setCancelled(true);
     }
 
 }

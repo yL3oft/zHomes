@@ -11,6 +11,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomesUtilsYAML extends ConfigUtils {
 
     Main main = Main.main;
@@ -87,6 +90,22 @@ public class HomesUtilsYAML extends ConfigUtils {
             }
         }catch (Exception e) {
             returned = "None";
+        }
+
+        return returned;
+    }
+
+    public List<String> homesW(OfflinePlayer p) {
+        String saveas = saveAsType();
+        String saveasp = p.getName();
+        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
+
+        List<String> returned = new ArrayList<>();
+        try {
+            if(fm.cfg.contains(homes+"."+saveas+"."+saveasp)) {
+                returned.addAll(fm.cfg.getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false));
+            }
+        }catch (Exception e) {
         }
 
         return returned;

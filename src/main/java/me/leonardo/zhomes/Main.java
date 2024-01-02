@@ -1,7 +1,8 @@
 package me.leonardo.zhomes;
 
+import me.leonardo.zhomes.tabcompleters.*;
 import me.leonardo.zhomes.commands.*;
-import me.leonardo.zhomes.events.PluginCommandsEvents;
+import me.leonardo.zhomes.events.*;
 import me.leonardo.zhomes.utils.*;
 import me.leonardo.zhomes.expansions.*;
 import me.leonardo.zhomes.utils.storage.*;
@@ -87,8 +88,13 @@ public final class Main extends JavaPlugin {
             pym.registerCommand("delhome", new DelhomeCommand());
             pym.registerCommand("home", new HomeCommand());
             pym.registerCommand("homes", new HomesCommand());
+            pym.registerCommand("zhomes", new ZhomesCommand());
 
             pym.registerEvent(new PluginCommandsEvents());
+
+            pym.registerCommandTabCompleter("delhome", new HomeCommandsTabCompleter());
+            pym.registerCommandTabCompleter("home", new HomeCommandsTabCompleter());
+            pym.registerCommandTabCompleter("zhomes", new ZhomeCommandTabCompleter());
             getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     "&7[&9z&cHomes&7] &fAll commands & events have been loaded. (If not it will be a message up)"
             ));

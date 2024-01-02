@@ -1,5 +1,6 @@
 package me.leonardo.zhomes.utils;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.ChatColor;
@@ -181,7 +182,9 @@ public class LanguageUtils extends ConfigUtils {
     public interface Helper {
 
         public default void sendMsg(Player p, String text) {
-            p.sendMessage(ChatColor.translateAlternateColorCodes('&', text));
+            text = ChatColor.translateAlternateColorCodes('&', text);
+            text = PlaceholderAPI.setPlaceholders(p, text);
+            p.sendMessage(text);
         }
 
     }

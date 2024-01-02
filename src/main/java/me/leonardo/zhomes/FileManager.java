@@ -36,4 +36,11 @@ public class FileManager {
         }
     }
 
+    public void reloadCfg2() {
+        try {
+            cfg2 = YamlConfiguration.loadConfiguration(f2);
+        }catch (Exception e) {
+        }
+    }
+
 }
