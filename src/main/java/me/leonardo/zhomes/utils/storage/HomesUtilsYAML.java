@@ -2,6 +2,7 @@ package me.leonardo.zhomes.utils.storage;
 
 import me.leonardo.zhomes.FileManager;
 import me.leonardo.zhomes.Main;
+import me.leonardo.zhomes.api.events.TeleportToHomeEvent;
 import me.leonardo.zhomes.utils.ConfigUtils;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
@@ -49,12 +50,17 @@ public class HomesUtilsYAML extends ConfigUtils {
 
     public void teleportPlayer(Player p, String home) {
         Location loc = getHomeLoc(p, home);
-        if(!canDimensionalTeleport()) {
-            if(!inSameWorld(getHomeWorld(p, home), p)) {
-                LanguageUtils.Homes lang = new LanguageUtils.Homes();
-                lang.sendMsg(p, lang.getCantDimensionalTeleport());
-                return;
-            }
+        boolean isDimensionalTeleport = false;
+        if(!inSameWorld(getHomeWorld(p, home), p)) {
+            isDimensionalTeleport = true;
+        }
+        TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport);
+        if(event.isCancelled()) return;
+
+        if(isDimensionalTeleport && !canDimensionalTeleport()) {
+            LanguageUtils.Homes lang = new LanguageUtils.Homes();
+            lang.sendMsg(p, lang.getCantDimensionalTeleport());
+            return;
         }
 
         p.teleport(loc);
