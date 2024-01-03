@@ -53,15 +53,14 @@ public final class Main extends JavaPlugin {
 
         try {
             SQL.connect();
+
+            if(SQL.isConnected()) {
+                SQLSaver saver = new SQLSaver();
+                saver.createServerTable();
+                saver.createServer(getIP(), String.valueOf(getServer().getPort()));
+            }
         }catch (ClassNotFoundException | SQLException e) {
             //e.printStackTrace();
-        }
-
-
-        if(SQL.isConnected()) {
-            SQLSaver saver = new SQLSaver();
-            saver.createServerTable();
-            saver.createServer(getIP(), String.valueOf(getServer().getPort()));
         }
 
 

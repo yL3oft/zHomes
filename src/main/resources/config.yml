@@ -17,7 +17,7 @@ auto-update: true
 # Here you can change the save options of the plugin
 save-options:
   # Here you can define your storage-type, in the version you downloaded we still only support yaml!
-  # So please don't change it.
+  # So please don't change it if you don't know what you're doing.
   storage-type: yaml
 
   # Here you can change the options for player saving
@@ -28,7 +28,21 @@ save-options:
     # name: Saving as name will make that homes will be linked to their minecraft name, so if they change their name (Premium minecraft), they will lose all the homes saved.
     save-as: uuid
 
-    #
+    # Here you can define the limit of homes for the players based on permissions.
+    limits:
+      # This options defines if homes should have a limit or not.
+      # OPTIONS: [true, false] --- DEFAULT: false
+      enabled: false
+
+      # From here if will be the permissions and the limits
+      # First you put the <number>:
+      # and then add the permission with "- " behind it like in the examples:
+      5:
+        - "group.default"
+        - "group.anothergroup"
+      10:
+        - "group.vip"
+        - "group.mvp"
 
 # In this section you can change the teleport options for the players
 teleport-options:

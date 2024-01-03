@@ -39,4 +39,4 @@ permissions:
     default: true
   zhomes.commands.zhomes:
     description: Permission to execute /zhomes
-    default: false
+    default: op

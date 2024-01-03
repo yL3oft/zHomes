@@ -78,7 +78,7 @@ public class LanguageUtils extends ConfigUtils {
         return returned;
     }
 
-    public static class Sethome implements Commands {
+    public static class Sethome extends HomesUtilsYAML implements Commands {
 
         public File f = new File(main.getDataFolder(), "languages/en.yml");
         public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
@@ -108,6 +108,12 @@ public class LanguageUtils extends ConfigUtils {
         @Override
         public String getOutput(OfflinePlayer home) {
             return null;
+        }
+
+        public String getLimitReached(Player p) {
+            String path = formPath(cmds, getCmd(), "limit-reached");
+            return cfg.getString(path)
+                    .replace("%limit%", String.valueOf(getMaxLimit(p)));
         }
 
     }
@@ -178,6 +184,11 @@ public class LanguageUtils extends ConfigUtils {
             return null;
         }
 
+        public String getCantDimensionalTeleport() {
+            String path = formPath(cmds, getCmd(), "cant-dimensional-teleport");
+            return cfg.getString(path);
+        }
+
     }
 
     public static class Homes implements Commands {
@@ -209,11 +220,6 @@ public class LanguageUtils extends ConfigUtils {
             String path = formPath(cmds, getCmd(), "output");
             return cfg.getString(path)
                     .replace("%homes%", new HomesUtilsYAML().homes(p));
-        }
-
-        public String getCantDimensionalTeleport() {
-            String path = formPath(cmds, getCmd(), "cant-dimensional-teleport");
-            return cfg.getString(path);
         }
 
     }
@@ -293,6 +299,11 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getHomeDoesntExist() {
             String path = formPath(cmds, "home-doesnt-exist");
+            return cfg.getString(path);
+        }
+
+        public String getNoPermission() {
+            String path = formPath(cmds, "no-permission");
             return cfg.getString(path);
         }
 

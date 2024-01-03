@@ -33,7 +33,7 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor {
             if(event.isCancelled()) return false;
             home = event.getHome();
 
-            if(true /**homes limit */) {
+            if(!inMaxLimit(p)) {
                 if(!hasHome(p, home)) {
                     addHome(p, home, p.getLocation());
                     lang.sendMsg(p, lang.getOutput(home));
@@ -41,7 +41,7 @@ public class SethomeCommand extends HomesUtilsYAML implements CommandExecutor {
                     lang.sendMsg(p, cmdm.getHomeAlreadyExist());
                 }
             }else {
-                // Message
+                lang.sendMsg(p, lang.getLimitReached(p));
             }
         }else {
             lang.sendMsg(p, lang.getUsage());

@@ -35,10 +35,13 @@ public class ZhomesCommand implements CommandExecutor {
             ) {
                 Main.main.reloadConfig();
                 Main.fm.fu.reloadConfig();
-                Main.fm.fu2.reloadConfig();
+                Main.fm.fu3.reloadConfig();
+                Main.fm.fu4.reloadConfig();
                 Main.cfgu = new ConfigUtils();
 
-                lang2.sendMsg(p, lang2.getOutput(p));
+                lang.sendMsg(p, lang2.getOutput(p));
+            }else {
+                lang.sendMsg(p, lang.getUsage());
             }
         }else {
             lang.sendMsg(p, lang.getUsage());

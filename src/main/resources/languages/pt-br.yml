@@ -2,11 +2,13 @@ commands:
   # Aqui em cima voce vai achar mensagens que podem ser utilizadas em varios comandos
   home-already-exist: "&cVoce ja tem uma home com este nome."
   home-doesnt-exist: "&cVoce nao tem nenhuma home com este nome."
+  no-permission: "&cVoce nao tem permissao para executar este comando."
 
   # Aqui embaixo vai achar mensagens especificas de alguns comandos.
   sethome:
     usage: "&c-> /sethome (Home)"
     output: "&aA home &e'%home%' &afoi setada para sua posicao."
+    limit-reached: "&cVocê não pode setar mais homes, pois chegou no seu limite de homes &e(%limit% homes)&c!"
   delhome:
     usage: "&c-> /delhome (Home)"
     output: "&cA home &e'%home%' &cfoi deletada."

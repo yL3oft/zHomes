@@ -19,6 +19,7 @@ public class HomesUtilsYAML extends ConfigUtils {
     Main main = Main.main;
     FileManager fm = Main.fm;
     String homes = "homes";
+    String limits = "limits";
 
     public boolean hasHome(OfflinePlayer p, String home) {
         String saveas = saveAsType();
@@ -31,6 +32,26 @@ public class HomesUtilsYAML extends ConfigUtils {
     public boolean inSameWorld(String w, Player p) {
         String w2 = p.getWorld().getName();
         return w.equals(w2);
+    }
+
+    public boolean inMaxLimit(Player p) {
+        if(needsLimit()) {
+            return getLimit(p) >= getMaxLimit(p);
+        }
+
+        return false;
+    }
+
+    public int getLimit(OfflinePlayer p) {
+        String saveas = saveAsType();
+        String saveasp = p.getName();
+        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
+
+        if(fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
+            return fm.fu.getConfig().getConfigurationSection(homes+"."+saveas+"."+saveasp).getKeys(false).size();
+        }
+
+        return 0;
     }
 
     public void addHome(OfflinePlayer p, String home, Location loc) {
@@ -62,7 +83,7 @@ public class HomesUtilsYAML extends ConfigUtils {
         if(event.isCancelled()) return;
 
         if(isDimensionalTeleport && !canDimensionalTeleport()) {
-            LanguageUtils.Homes lang = new LanguageUtils.Homes();
+            LanguageUtils.Home lang = new LanguageUtils.Home();
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }

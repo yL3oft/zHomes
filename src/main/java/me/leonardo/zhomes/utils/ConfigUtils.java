@@ -1,12 +1,15 @@
 package me.leonardo.zhomes.utils;
 
 import me.leonardo.zhomes.Main;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.entity.Player;
 
 public class ConfigUtils {
 
     Main main = Main.main;
     String svo = "save-options";
     String pls = "player-saves";
+    String lim = "limits";
     String tpo = "teleport-options";
 
     public boolean isSaveAsTypeUuid() {
@@ -22,6 +25,32 @@ public class ConfigUtils {
 
     public boolean canDimensionalTeleport() {
         return main.getConfig().getBoolean(tpo+".dimensional-teleportation");
+    }
+
+    public boolean needsLimit() {
+        return main.getConfig().getBoolean(svo+"."+pls+"."+lim+".enabled");
+    }
+
+    public int getMaxLimit(Player p) {
+        String path = svo+"."+pls+"."+lim;
+        int returned = 0;
+
+        for(String str : main.getConfig().getConfigurationSection(path).getKeys(false)) {
+            if(str.equals("enabled")) continue;
+            try {
+                int i = Integer.parseInt(str);
+                for(String perm : main.getConfig().getStringList(path+"."+i)) {
+                    if(p.hasPermission(perm)) {
+                        if(i >= returned) returned = i;
+                        break;
+                    }
+                }
+            }catch (Exception e) {
+                System.out.println("[zHomes] Somethings off in config.yml");
+            }
+        }
+
+        return returned;
     }
 
     public String saveAsType() {
