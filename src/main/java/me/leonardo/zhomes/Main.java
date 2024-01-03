@@ -1,5 +1,6 @@
 package me.leonardo.zhomes;
 
+import me.leonardo.zhomes.mysql.*;
 import me.leonardo.zhomes.tabcompleters.*;
 import me.leonardo.zhomes.commands.*;
 import me.leonardo.zhomes.events.*;
@@ -12,11 +13,20 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Inet4Address;
+import java.net.URL;
+import java.net.UnknownHostException;
+import java.sql.SQLException;
 
 public final class Main extends JavaPlugin {
 
     public static Main main;
+    public static MySql SQL;
+    public static SQLGetter Getter;
     public static PluginYAMLManager pym;
     public static FileManager fm;
     public static ConfigUtils cfgu;
@@ -29,6 +39,8 @@ public final class Main extends JavaPlugin {
         ));
 
         main = Main.this;
+        SQL = new MySql();
+        Getter = new SQLGetter();
         pym = new PluginYAMLManager();
         fm = new FileManager();
         cfgu = new ConfigUtils();
@@ -37,6 +49,20 @@ public final class Main extends JavaPlugin {
 
         int pluginId = 20621;
         Metrics metrics = new Metrics(this, pluginId);
+
+
+        try {
+            SQL.connect();
+        }catch (ClassNotFoundException | SQLException e) {
+            //e.printStackTrace();
+        }
+
+
+        if(SQL.isConnected()) {
+            SQLSaver saver = new SQLSaver();
+            saver.createServerTable();
+            saver.createServer(getIP(), String.valueOf(getServer().getPort()));
+        }
 
 
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -123,7 +149,10 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        try {
+            SQL.disconnect();
+        }catch (Exception e) {
+        }
     }
 
     public String delDot(String text) {
@@ -216,6 +245,15 @@ public final class Main extends JavaPlugin {
 
     public File getFileJava() {
         return getFile();
+    }
+
+    public static String getIP() {
+        try {
+            return new BufferedReader(new InputStreamReader(new URL("https://checkip.amazonaws.com").openStream())).readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }

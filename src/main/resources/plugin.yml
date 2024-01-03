@@ -2,6 +2,7 @@ name: zHomes
 version: '${project.version}'
 main: me.leonardo.zhomes.Main
 authors: [yLeoft]
+website: https://github.com/yL3oft/zHomes
 softdepend:
   - PlaceholderAPI
 
