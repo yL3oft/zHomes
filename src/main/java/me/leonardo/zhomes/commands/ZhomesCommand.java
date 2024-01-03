@@ -2,6 +2,7 @@ package me.leonardo.zhomes.commands;
 
 import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.api.events.ExecuteZhomesCommandEvent;
+import me.leonardo.zhomes.utils.ConfigUtils;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -35,6 +36,7 @@ public class ZhomesCommand implements CommandExecutor {
                 Main.main.reloadConfig();
                 Main.fm.fu.reloadConfig();
                 Main.fm.fu2.reloadConfig();
+                Main.cfgu = new ConfigUtils();
 
                 lang2.sendMsg(p, lang2.getOutput(p));
             }

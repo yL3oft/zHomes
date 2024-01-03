@@ -206,32 +206,52 @@ public final class Main extends JavaPlugin {
     }
 
     public void isUpdated() {
-        new UpdateChecker(104825).getVersion(version ->{
-            if(!getDescription().getVersion().equals(version)) {
+        UpdateChecker checker = new UpdateChecker();
+        String version = checker.getVersion();
+
+        if(!getDescription().getVersion().equals(version)) {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &cPlugin is not up-to-date!"
+            ));
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &fNew version: &e"+version
+            ));
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &fYour version: &e"+getDescription().getVersion()
+            ));
+            if(cfgu.isAutoUpdate()) {
                 getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7[&9z&cHomes&7] &cPlugin is not up-to-date!"
+                        "&7[&9z&cHomes&7] &6Attempting to auto-update it..."
                 ));
-                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7[&9z&cHomes&7] &fNew version: &e"+version
-                ));
-                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7[&9z&cHomes&7] &fYour version: &e"+getDescription().getVersion()
-                ));
+                try {
+                    checker.update();
+                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&7[&9z&cHomes&7] &aPlugin updated! Restart to make changes."
+                    ));
+                }catch (Exception e) {
+                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&7[&9z&cHomes&7] &cCould not auto-update it."
+                    ));
+                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            "&7[&9z&cHomes&7] &fYou can update your plugin here: &ehttps://www.spigotmc.org/resources/zhomes-under-development.104825/"
+                    ));
+                }
+            }else {
                 getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&7[&9z&cHomes&7] &fYou can update your plugin here: &ehttps://www.spigotmc.org/resources/zhomes-under-development.104825/"
                 ));
-                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7[&9z&cHomes&7] &fPlugin loaded successfully."
-                ));
-            }else {
-                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7[&9z&cHomes&7] &aPlugin is up-to-date!"
-                ));
-                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7[&9z&cHomes&7] &fPlugin loaded successfully."
-                ));
             }
-        });
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &fPlugin loaded successfully."
+            ));
+        }else {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &aPlugin is up-to-date!"
+            ));
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[&9z&cHomes&7] &fPlugin loaded successfully."
+            ));
+        }
     }
 
     @Override

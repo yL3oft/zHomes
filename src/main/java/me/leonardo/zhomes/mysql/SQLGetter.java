@@ -62,7 +62,7 @@ public class SQLGetter {
                     + " WHERE "
                     + columnName
                     + "=?"
-                    + "AND"
+                    + "AND "
                     + columnName2
                     + "=?");
 

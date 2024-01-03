@@ -10,6 +10,10 @@
 # OPTIONS: [en] --- DEFAULT: en
 language: en
 
+# Defines it the plugin should auto-update
+# OPTIONS: [true, false] --- DEFAULT: true
+auto-update: true
+
 # Here you can change the save options of the plugin
 save-options:
   # Here you can define your storage-type, in the version you downloaded we still only support yaml!

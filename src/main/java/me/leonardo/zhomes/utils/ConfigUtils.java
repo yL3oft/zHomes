@@ -16,6 +16,10 @@ public class ConfigUtils {
         return true;
     }
 
+    public boolean isAutoUpdate() {
+        return main.getConfig().getBoolean("auto-update");
+    }
+
     public boolean canDimensionalTeleport() {
         return main.getConfig().getBoolean(tpo+".dimensional-teleportation");
     }
