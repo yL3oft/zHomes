@@ -333,7 +333,9 @@ public class LanguageUtils extends ConfigUtils {
 
         public default void sendMsg(Player p, String text) {
             text = ChatColor.translateAlternateColorCodes('&', text);
-            text = PlaceholderAPI.setPlaceholders(p, text);
+            if(Main.main.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                text = PlaceholderAPI.setPlaceholders(p, text);
+            }
             p.sendMessage(text);
         }
 
@@ -341,7 +343,9 @@ public class LanguageUtils extends ConfigUtils {
             text = ChatColor.translateAlternateColorCodes('&', text);
             if(s instanceof Player) {
                 Player p = (Player)s;
-                text = PlaceholderAPI.setPlaceholders(p, text);
+                if(Main.main.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                    text = PlaceholderAPI.setPlaceholders(p, text);
+                }
             }
             s.sendMessage(text);
         }
