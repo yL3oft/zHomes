@@ -22,6 +22,8 @@ commands:
   zhomes:
     aliases: [ zhome ]
     description: Configurate the plugin via command
+  zhomesver:
+    description: Version of the plugin
 
 
 permissions:

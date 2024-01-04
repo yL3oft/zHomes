@@ -27,6 +27,7 @@ public final class Main extends JavaPlugin {
     public static Main main;
     public static MySql SQL;
     public static SQLGetter Getter;
+    public static SQLSaver Saver;
     public static PluginYAMLManager pym;
     public static FileManager fm;
     public static ConfigUtils cfgu;
@@ -41,6 +42,7 @@ public final class Main extends JavaPlugin {
         main = Main.this;
         SQL = new MySql();
         Getter = new SQLGetter();
+        Saver = new SQLSaver();
         pym = new PluginYAMLManager();
         fm = new FileManager();
         cfgu = new ConfigUtils();
@@ -58,10 +60,9 @@ public final class Main extends JavaPlugin {
             SQL.connect();
 
             if(SQL.isConnected()) {
-                SQLSaver saver = new SQLSaver();
-                saver.createServerTable();
-                saver.createServer(getIP(), String.valueOf(getServer().getPort()));
-                saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "online");
+                Saver.createServerTable();
+                Saver.createServer(getIP(), String.valueOf(getServer().getPort()), getVersion(), getDescription().getVersion());
+                Saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "online");
             }
         }catch (Exception e) {
             //e.printStackTrace();
@@ -110,6 +111,7 @@ public final class Main extends JavaPlugin {
             pym.registerCommand("home", new HomeCommand());
             pym.registerCommand("homes", new HomesCommand());
             pym.registerCommand("zhomes", new ZhomesCommand());
+            pym.registerCommand("zhomesver", new ZhomesverCommand());
 
             pym.registerEvent(new PluginCommandsEvents());
 
@@ -154,16 +156,23 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
         try {
             if(SQL.isConnected()) {
-                SQLSaver saver = new SQLSaver();
-                saver.createServerTable();
-                saver.createServer(getIP(), String.valueOf(getServer().getPort()));
-                saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "offline");
+                Saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "offline");
             }
+        }catch (Exception e) {
+            //e.printStackTrace();
+        }
 
+        try {
             SQL.disconnect();
         }catch (Exception e) {
             //e.printStackTrace();
         }
+    }
+
+    public String getVersion() {
+        String[] split = Bukkit.getBukkitVersion().split("-");
+        String version = split[0];
+        return version;
     }
 
     public String delDot(String text) {

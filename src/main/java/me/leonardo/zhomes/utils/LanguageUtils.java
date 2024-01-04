@@ -6,6 +6,8 @@ import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.utils.storage.HomesUtilsYAML;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -281,6 +283,10 @@ public class LanguageUtils extends ConfigUtils {
 
             @Override
             public String getOutput(OfflinePlayer p) {
+                return null;
+            }
+
+            public String getOutput() {
                 String path = formPath(cmds, getCmd(), "output");
                 return cfg.getString(path);
             }
@@ -329,6 +335,15 @@ public class LanguageUtils extends ConfigUtils {
             text = ChatColor.translateAlternateColorCodes('&', text);
             text = PlaceholderAPI.setPlaceholders(p, text);
             p.sendMessage(text);
+        }
+
+        public default void sendMsg(CommandSender s, String text) {
+            text = ChatColor.translateAlternateColorCodes('&', text);
+            if(s instanceof Player) {
+                Player p = (Player)s;
+                text = PlaceholderAPI.setPlaceholders(p, text);
+            }
+            s.sendMessage(text);
         }
 
     }

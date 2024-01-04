@@ -14,14 +14,12 @@ public class ZhomesCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
-        if (!(s instanceof Player)) {
-
-            return false;
+        if(s instanceof Player) {
+            Player p = (Player) s;
+            ExecuteZhomesCommandEvent event = new ExecuteZhomesCommandEvent(p);
+            Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) return false;
         }
-        Player p = (Player)s;
-        ExecuteZhomesCommandEvent event = new ExecuteZhomesCommandEvent(p);
-        Bukkit.getPluginManager().callEvent(event);
-        if(event.isCancelled()) return false;
 
         LanguageUtils.Zhomes lang = new LanguageUtils.Zhomes();
         LanguageUtils.Zhomes.ZhomesReload lang2 = new LanguageUtils.Zhomes.ZhomesReload();
@@ -39,12 +37,12 @@ public class ZhomesCommand implements CommandExecutor {
                 Main.fm.fu4.reloadConfig();
                 Main.cfgu = new ConfigUtils();
 
-                lang.sendMsg(p, lang2.getOutput(p));
+                lang.sendMsg(s, lang2.getOutput());
             }else {
-                lang.sendMsg(p, lang.getUsage());
+                lang.sendMsg(s, lang.getUsage());
             }
         }else {
-            lang.sendMsg(p, lang.getUsage());
+            lang.sendMsg(s, lang.getUsage());
         }
     return false;
     }

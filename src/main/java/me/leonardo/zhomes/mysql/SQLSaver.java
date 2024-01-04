@@ -17,17 +17,21 @@ public class SQLSaver {
         Main.Getter.createTable("servers", "(" +
                 "IP VARCHAR(100)," +
                 "PORT VARCHAR(100)," +
+                "VERSION VARCHAR(100)," +
+                "PLVERSION VARCHAR(100)," +
                 "STATUS VARCHAR(100)" +
                 ")");
     }
 
-    public void createServer(String ip, String port) {
+    public void createServer(String ip, String port, String version, String plversion) {
         try {
             if(!existsServer(ip, port)) {
                 PreparedStatement ps2 = Main.SQL.getConnection().prepareStatement("INSERT IGNORE INTO servers"
-                        + " (IP,PORT) VALUES (?,?)");
+                        + " (IP,PORT,VERSION,PLVERSION) VALUES (?,?,?,?)");
                 ps2.setString(1, ip);
                 ps2.setString(2, port);
+                ps2.setString(3, version);
+                ps2.setString(4, plversion);
                 ps2.executeUpdate();
 
                 return;
@@ -39,9 +43,10 @@ public class SQLSaver {
     public void setStatus(String ip, String port, String status) {
         try {
             if(existsServer(ip, port)) {
-                PreparedStatement ps2 = Main.main.SQL.getConnection().prepareStatement("UPDATE servers SET STATUS=? WHERE IP=?");
+                PreparedStatement ps2 = Main.main.SQL.getConnection().prepareStatement("UPDATE servers SET STATUS=? WHERE IP=? AND PORT=?");
                 ps2.setString(1, status);
                 ps2.setString(2, ip);
+                ps2.setString(3, port);
                 ps2.executeUpdate();
 
                 return;
