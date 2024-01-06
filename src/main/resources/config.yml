@@ -50,3 +50,15 @@ teleport-options:
   # OPTIONS: [true, false] --- DEFAULT: true
   dimensional-teleportation: true
 
+commands-config:
+  decimal-points: 2
+  sethome:
+    cooldown: 3.0
+  delhome:
+    cooldown: 3.0
+  home:
+    cooldown: 3.0
+  homes:
+    cooldown: 3.0
+  zhomes:
+    cooldown: 3.0

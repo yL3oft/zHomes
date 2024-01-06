@@ -56,6 +56,22 @@ public class SQLSaver {
         }
     }
 
+    public void setVersion(String ip, String port, String ver) {
+        try {
+            if(existsServer(ip, port)) {
+                PreparedStatement ps2 = Main.main.SQL.getConnection().prepareStatement("UPDATE servers SET PLVERSION=? WHERE IP=? AND PORT=?");
+                ps2.setString(1, ver);
+                ps2.setString(2, ip);
+                ps2.setString(3, port);
+                ps2.executeUpdate();
+
+                return;
+            }
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean existsServer(String ip, String port) {
         try {
             if(Main.Getter.existsTableColumnValue("servers", "IP", "PORT", ip, port)) return true;

@@ -11,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.BufferedReader;
@@ -21,6 +22,7 @@ import java.net.Inet4Address;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.HashMap;
 
 public final class Main extends JavaPlugin {
 
@@ -32,6 +34,12 @@ public final class Main extends JavaPlugin {
     public static FileManager fm;
     public static ConfigUtils cfgu;
     public static HomesUtilsYAML hu;
+
+    public static HashMap<Player, Long> SethomeCooldown = new HashMap<>();
+    public static HashMap<Player, Long> DelhomeCooldown = new HashMap<>();
+    public static HashMap<Player, Long> HomeCooldown = new HashMap<>();
+    public static HashMap<Player, Long> HomesCooldown = new HashMap<>();
+    public static HashMap<Player, Long> ZhomesCooldown = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -63,6 +71,7 @@ public final class Main extends JavaPlugin {
                 Saver.createServerTable();
                 Saver.createServer(getIP(), String.valueOf(getServer().getPort()), getVersion(), getDescription().getVersion());
                 Saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "online");
+                Saver.setVersion(getIP(), String.valueOf(getServer().getPort()), getDescription().getVersion());
             }
         }catch (Exception e) {
             //e.printStackTrace();

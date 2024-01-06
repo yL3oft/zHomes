@@ -1,6 +1,7 @@
 package me.leonardo.zhomes.api.events;
 
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -13,7 +14,9 @@ public class TeleportToHomeEvent extends PlayerEvent implements Cancellable {
     protected Location from;
     protected Location to;
     protected boolean isDimensionalTeleport;
+    protected boolean playerOwnHome = true;
     protected String home;
+    protected OfflinePlayer owner;
 
     public TeleportToHomeEvent(final Player who, final String home, Location from, Location to, boolean isDimensionalTeleport) {
         super(who);
@@ -21,6 +24,17 @@ public class TeleportToHomeEvent extends PlayerEvent implements Cancellable {
         this.from = from;
         this.to = to;
         this.isDimensionalTeleport = isDimensionalTeleport;
+        this.owner = who;
+    }
+
+    public TeleportToHomeEvent(final Player who, final String home, Location from, Location to, boolean isDimensionalTeleport, boolean playerOwnHome, OfflinePlayer owner) {
+        super(who);
+        this.home = home;
+        this.from = from;
+        this.to = to;
+        this.isDimensionalTeleport = isDimensionalTeleport;
+        this.playerOwnHome = playerOwnHome;
+        this.owner = owner;
     }
 
     public static HandlerList getHandlerList() {
@@ -55,6 +69,14 @@ public class TeleportToHomeEvent extends PlayerEvent implements Cancellable {
     @Override
     public boolean isCancelled() {
         return this.isCancelled;
+    }
+
+    public boolean doesPlayerOwnHome() {
+        return this.playerOwnHome;
+    }
+
+    public OfflinePlayer getHomeOwner() {
+        return this.owner;
     }
 
     @Override

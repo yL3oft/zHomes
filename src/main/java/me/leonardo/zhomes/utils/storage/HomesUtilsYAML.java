@@ -91,6 +91,25 @@ public class HomesUtilsYAML extends ConfigUtils {
         p.teleport(loc);
     }
 
+    public void teleportPlayer(Player p, OfflinePlayer t, String home) {
+        Location loc = getHomeLoc(t, home);
+        boolean isDimensionalTeleport = false;
+        if(!inSameWorld(getHomeWorld(t, home), p)) {
+            isDimensionalTeleport = true;
+        }
+        TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport, false, t);
+        Bukkit.getPluginManager().callEvent(event);
+        if(event.isCancelled()) return;
+
+        if(isDimensionalTeleport && !canDimensionalTeleport()) {
+            LanguageUtils.Home lang = new LanguageUtils.Home();
+            lang.sendMsg(p, lang.getCantDimensionalTeleport());
+            return;
+        }
+
+        p.teleport(loc);
+    }
+
     public String homes(OfflinePlayer p) {
         String saveas = saveAsType();
         String saveasp = p.getName();

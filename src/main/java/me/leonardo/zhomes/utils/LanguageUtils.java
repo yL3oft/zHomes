@@ -19,6 +19,7 @@ public class LanguageUtils extends ConfigUtils {
 
     public static Main main = Main.main;
     public static String cmds = "commands";
+    public static String cmdscfg = "commands-config";
     public static File f = new File(main.getDataFolder(), "languages/en.yml");
     public static YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
 
@@ -112,6 +113,12 @@ public class LanguageUtils extends ConfigUtils {
             return null;
         }
 
+        @Override
+        public double getCooldown() {
+            String path = formPath(cmdscfg, getCmd(), "cooldown");
+            return Main.main.getConfig().getDouble(path);
+        }
+
         public String getLimitReached(Player p) {
             String path = formPath(cmds, getCmd(), "limit-reached");
             return cfg.getString(path)
@@ -145,6 +152,12 @@ public class LanguageUtils extends ConfigUtils {
             String path = formPath(cmds, getCmd(), "output");
             return cfg.getString(path)
                     .replace("%home%", home);
+        }
+
+        @Override
+        public double getCooldown() {
+            String path = formPath(cmdscfg, getCmd(), "cooldown");
+            return Main.main.getConfig().getInt(path);
         }
 
         @Override
@@ -186,6 +199,12 @@ public class LanguageUtils extends ConfigUtils {
             return null;
         }
 
+        @Override
+        public double getCooldown() {
+            String path = formPath(cmdscfg, getCmd(), "cooldown");
+            return Main.main.getConfig().getInt(path);
+        }
+
         public String getCantDimensionalTeleport() {
             String path = formPath(cmds, getCmd(), "cant-dimensional-teleport");
             return cfg.getString(path);
@@ -224,6 +243,12 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%homes%", new HomesUtilsYAML().homes(p));
         }
 
+        @Override
+        public double getCooldown() {
+            String path = formPath(cmdscfg, getCmd(), "cooldown");
+            return Main.main.getConfig().getInt(path);
+        }
+
     }
 
     public static class Zhomes implements Commands {
@@ -254,6 +279,12 @@ public class LanguageUtils extends ConfigUtils {
         @Override
         public String getOutput(OfflinePlayer p) {
             return null;
+        }
+
+        @Override
+        public double getCooldown() {
+            String path = formPath(cmdscfg, getCmd(), "cooldown");
+            return Main.main.getConfig().getDouble(path);
         }
 
 
@@ -291,12 +322,24 @@ public class LanguageUtils extends ConfigUtils {
                 return cfg.getString(path);
             }
 
+            @Override
+            public double getCooldown() {
+                return 0D;
+            }
+
         }
 
 
     }
 
     public static class CommandsMSG implements Helper {
+
+        public File f = new File(main.getDataFolder(), "languages/en.yml");
+        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
+
+        public CommandsMSG() {
+            cfg = getConfigFile();
+        }
 
         public String getHomeAlreadyExist() {
             String path = formPath(cmds, "home-already-exist");
@@ -308,9 +351,36 @@ public class LanguageUtils extends ConfigUtils {
             return cfg.getString(path);
         }
 
+        public String getHomeDoesntExistOthers(OfflinePlayer p) {
+            String path = formPath(cmds, "home-doesnt-exist-others");
+            return cfg.getString(path)
+                    .replace("%player%", p.getName());
+        }
+
         public String getNoPermission() {
             String path = formPath(cmds, "no-permission");
             return cfg.getString(path);
+        }
+
+        public String getCooldown(String time) {
+            String path = formPath(cmds, "cooldown");
+            return cfg.getString(path)
+                    .replace("%time%", time);
+        }
+
+        public String getCantUse2Dot() {
+            String path = formPath(cmds, "cant-use-2dot");
+            return cfg.getString(path);
+        }
+
+        public String getCantFindPlayer() {
+            String path = formPath(cmds, "cant-find-player");
+            return cfg.getString(path);
+        }
+
+        public int getDecimalPoints() {
+            String path = formPath(cmdscfg, "decimal-points");
+            return Main.main.getConfig().getInt(path);
         }
 
     }
@@ -326,6 +396,7 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getOutput(String home);
         public String getOutput(OfflinePlayer home);
+        public double getCooldown();
 
     }
 

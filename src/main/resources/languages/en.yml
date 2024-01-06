@@ -2,7 +2,11 @@ commands:
   # Up here you will find messages that can be used in multiple commands
   home-already-exist: "&cYou already have a home with this name."
   home-doesnt-exist: "&cYou don't have any home with this name."
+  home-doesnt-exist-others: "&e%player% &cdon't have any home with this name."
   no-permission: "&cYou don't have permission to execute this command."
+  cooldown: "&cYou need to wait %time% seconds to execute this command again."
+  cant-use-2dot: "&cYou can't use &e':' &cin this command."
+  cant-find-player: "&cThis player was not found."
 
   # Below you will find messages specific for the commands
   sethome:
