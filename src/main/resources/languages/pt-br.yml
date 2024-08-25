@@ -6,7 +6,7 @@ commands:
   no-permission: "&cVoce nao tem permissao para executar este comando."
   cooldown: "&cVoce precisa esperar %time% segundos para executar este comanda novamente."
   cant-use-2dot: "&cVoce nao pode usar &e':' &cneste comando."
-  cant-find-player: "&cEsse player nao foi encontrado."
+  cant-find-player: "&cEste jogador nao foi encontrado."
 
   # Aqui embaixo vai achar mensagens especificas de alguns comandos.
   sethome:

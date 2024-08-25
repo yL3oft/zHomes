@@ -11,6 +11,7 @@ public class ConfigUtils {
     String pls = "player-saves";
     String lim = "limits";
     String tpo = "teleport-options";
+    protected String databasePath = svo+"database.";
 
     public boolean isSaveAsTypeUuid() {
         if(main.getConfig().getString(svo+"."+pls+".save-as").equalsIgnoreCase("name")) {
@@ -33,10 +34,10 @@ public class ConfigUtils {
 
     public int getMaxLimit(Player p) {
         String path = svo+"."+pls+"."+lim;
-        int returned = 0;
+        int returned = main.getConfig().getInt(svo+"."+pls+"."+lim+".default");
 
         for(String str : main.getConfig().getConfigurationSection(path).getKeys(false)) {
-            if(str.equals("enabled")) continue;
+            if(str.equals("enabled") || str.equals("default")) continue;
             try {
                 int i = Integer.parseInt(str);
                 for(String perm : main.getConfig().getStringList(path+"."+i)) {
@@ -63,5 +64,32 @@ public class ConfigUtils {
     public static String langType() {
         return Main.main.getConfig().getString("language");
     }
+
+    //<editor-fold desc="Database">
+    public Boolean databaseEnabled() {
+        return Main.main.getConfig().getBoolean(databasePath+"enabled");
+    }
+    public String databaseHost() {
+        return Main.main.getConfig().getString(databasePath+"host");
+    }
+    public Integer databasePort() {
+        return Main.main.getConfig().getInt(databasePath+"port");
+    }
+    public String databaseDatabase() {
+        return Main.main.getConfig().getString(databasePath+"database");
+    }
+    public String databaseUsername() {
+        return Main.main.getConfig().getString(databasePath+"username");
+    }
+    public String databasePassword() {
+        return Main.main.getConfig().getString(databasePath+"password");
+    }
+    public String databaseTable() {
+        return Main.main.getConfig().getString(databasePath+"table").toUpperCase();
+    }
+    public boolean isLocal() {
+        return Main.main.getConfig().getBoolean(databasePath+"local")==true;
+    }
+    //</editor-fold>
 
 }

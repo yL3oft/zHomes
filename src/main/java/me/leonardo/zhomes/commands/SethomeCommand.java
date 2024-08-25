@@ -1,5 +1,6 @@
 package me.leonardo.zhomes.commands;
 
+import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.api.events.ExecuteSethomeCommandEvent;
 import me.leonardo.zhomes.api.events.PreExecuteSethomeCommandEvent;
 import me.leonardo.zhomes.utils.LanguageUtils;

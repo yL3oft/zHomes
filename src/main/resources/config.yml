@@ -7,7 +7,7 @@
 # email me: maehara.leonardo@gmail.com
 
 # Here you can define the language of the plugin, all languages can be find on languages directory.
-# OPTIONS: [en] --- DEFAULT: en
+# DEFAULT OPTIONS: [en, pt-br] --- DEFAULT: en
 language: en
 
 # Defines it the plugin should auto-update
@@ -16,9 +16,22 @@ auto-update: true
 
 # Here you can change the save options of the plugin
 save-options:
-  # Here you can define your storage-type, in the version you downloaded we still only support yaml!
-  # So please don't change it if you don't know what you're doing.
-  storage-type: yaml
+  # Here you can define your storage-type!
+  # And DO NOT change it if you don't know what you're doing.
+  # OPTIONS: [mysql, yaml] --- DEFAULT: mysql
+  storage-type: mysql
+
+  # Edit your mysql database config here
+  database:
+    # Database connection configuration
+    local: true
+    host: localhost
+    port: 3306
+    database: db
+    username: root
+    password: pass
+    # Other database configurations
+    table: zHomes
 
   # Here you can change the options for player saving
   player-saves:
@@ -32,15 +45,18 @@ save-options:
     limits:
       # This options defines if homes should have a limit or not.
       # OPTIONS: [true, false] --- DEFAULT: false
-      enabled: false
+      enabled: true
 
+      # The default limit of homes a player can have
+      # OPTIONS: [>=0] --- DEFAULT: 10
+      default: 10
       # From here if will be the permissions and the limits
       # First you put the <number>:
       # and then add the permission with "- " behind it like in the examples:
-      5:
+      15:
         - "group.default"
         - "group.anothergroup"
-      10:
+      25:
         - "group.vip"
         - "group.mvp"
 

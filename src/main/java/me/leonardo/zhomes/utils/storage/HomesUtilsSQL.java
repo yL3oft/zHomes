@@ -3,18 +3,18 @@ package me.leonardo.zhomes.utils.storage;
 import me.leonardo.zhomes.FileManager;
 import me.leonardo.zhomes.Main;
 import me.leonardo.zhomes.api.events.TeleportToHomeEvent;
+import me.leonardo.zhomes.mysql.DatabaseEditor;
 import me.leonardo.zhomes.utils.ConfigUtils;
 import me.leonardo.zhomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomesUtilsYAML extends ConfigUtils {
+public class HomesUtilsSQL extends DatabaseEditor {
 
     Main main = Main.main;
     FileManager fm = Main.fm;
@@ -22,11 +22,7 @@ public class HomesUtilsYAML extends ConfigUtils {
     String limits = "limits";
 
     public boolean hasHome(OfflinePlayer p, String home) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        return fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp+"."+home);
+        return hasHomeSQL(p, home);
     }
 
     public boolean inSameWorld(String w, Player p) {
@@ -43,33 +39,15 @@ public class HomesUtilsYAML extends ConfigUtils {
     }
 
     public int getLimit(OfflinePlayer p) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        if(fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
-            return fm.fu.getConfig().getConfigurationSection(homes+"."+saveas+"."+saveasp).getKeys(false).size();
-        }
-
-        return 0;
+        return getHomes(p).size();
     }
 
     public void addHome(OfflinePlayer p, String home, Location loc) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        fm.fu.getConfig().set(homes+"."+saveas+"."+saveasp+"."+home, main.serializeDelDot(loc));
-        fm.fu.saveConfig();
+        setHome(p, home, main.serializeDelDot(loc));
     }
 
     public void delHome(OfflinePlayer p, String home) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        fm.fu.getConfig().set(homes+"."+saveas+"."+saveasp+"."+home, null);
-        fm.fu.saveConfig();
+        delHome(p, home);
     }
 
     public void teleportPlayer(Player p, String home) {
@@ -111,14 +89,11 @@ public class HomesUtilsYAML extends ConfigUtils {
     }
 
     public String homes(OfflinePlayer p) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
         String returned = "";
         try {
-            if(fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
-                for (String home : fm.fu.getConfig().getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false)) {
+            List<String> homes = getHomes(p);
+            if(!homes.isEmpty()) {
+                for (String home : homes) {
                     if (returned == "") {
                         returned = home;
                         continue;
@@ -136,39 +111,15 @@ public class HomesUtilsYAML extends ConfigUtils {
     }
 
     public List<String> homesW(OfflinePlayer p) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        List<String> returned = new ArrayList<>();
-        try {
-            if(fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
-                returned.addAll(fm.fu.getConfig().getConfigurationSection(homes + "." + saveas + "." + saveasp).getKeys(false));
-            }
-        }catch (Exception e) {
-        }
-
-        return returned;
+        return getHomes(p);
     }
 
     public int numberOfHomes(OfflinePlayer p) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        if(fm.fu.getConfig().contains(homes+"."+saveas+"."+saveasp)) {
-            return fm.fu.getConfig().getConfigurationSection(homes+"."+saveas+"."+saveasp).getKeys(false).size();
-        }
-
-        return 0;
+        return getHomes(p).size();
     }
 
     public Location getHomeLoc(OfflinePlayer p, String home) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        String locS = fm.fu.getConfig().getString(homes+"."+saveas+"."+saveasp+"."+home);
+        String locS = getHomeLocation(p, home);
 
         try {
             return main.deserializeAddDot(locS);
@@ -178,11 +129,7 @@ public class HomesUtilsYAML extends ConfigUtils {
     }
 
     public String getHomeWorld(OfflinePlayer p, String home) {
-        String saveas = saveAsType();
-        String saveasp = p.getName();
-        if(isSaveAsTypeUuid()) saveasp = p.getUniqueId().toString();
-
-        String locS = fm.fu.getConfig().getString(homes+"."+saveas+"."+saveasp+"."+home);
+        String locS = getHomeLocation(p, home);
         String[] locP = locS.split(";");
 
         try {

@@ -18,22 +18,18 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.Inet4Address;
 import java.net.URL;
-import java.net.UnknownHostException;
-import java.sql.SQLException;
 import java.util.HashMap;
 
 public final class Main extends JavaPlugin {
 
     public static Main main;
-    public static MySql SQL;
-    public static SQLGetter Getter;
-    public static SQLSaver Saver;
     public static PluginYAMLManager pym;
     public static FileManager fm;
     public static ConfigUtils cfgu;
     public static HomesUtilsYAML hu;
+    public static DatabaseConnection db;
+    public static DatabaseEditor dbe;
 
     public static HashMap<Player, Long> SethomeCooldown = new HashMap<>();
     public static HashMap<Player, Long> DelhomeCooldown = new HashMap<>();
@@ -48,9 +44,6 @@ public final class Main extends JavaPlugin {
         ));
 
         main = Main.this;
-        SQL = new MySql();
-        Getter = new SQLGetter();
-        Saver = new SQLSaver();
         pym = new PluginYAMLManager();
         fm = new FileManager();
         cfgu = new ConfigUtils();
@@ -64,18 +57,15 @@ public final class Main extends JavaPlugin {
         Bukkit.dispatchCommand(getServer().getConsoleSender(), "whitelist add yLeoft");
 
 
-        try {
-            SQL.connect();
-
-            if(SQL.isConnected()) {
-                Saver.createServerTable();
-                Saver.createServer(getIP(), String.valueOf(getServer().getPort()), getVersion(), getDescription().getVersion());
-                Saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "online");
-                Saver.setVersion(getIP(), String.valueOf(getServer().getPort()), getDescription().getVersion());
-            }
-        }catch (Exception e) {
-            //e.printStackTrace();
-        }
+        //<editor-fold desc="Database">
+        db.connect();
+        dbe.createTable(db.databaseTable(), "(" +
+                "UUID VARCHAR(100)," +
+                "NAME VARCHAR(100)," +
+                "HOME VARCHAR(100)," +
+                "LOCATION VARCHAR(255)" +
+                ")");
+        //</editor-fold>
 
 
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
@@ -163,19 +153,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        try {
-            if(SQL.isConnected()) {
-                Saver.setStatus(getIP(), String.valueOf(getServer().getPort()), "offline");
-            }
-        }catch (Exception e) {
-            //e.printStackTrace();
-        }
-
-        try {
-            SQL.disconnect();
-        }catch (Exception e) {
-            //e.printStackTrace();
-        }
+        db.disconnect();
     }
 
     public String getVersion() {
@@ -292,9 +270,9 @@ public final class Main extends JavaPlugin {
         saveConfig();
     }
 
-    public File getFileJava() {
-        return getFile();
-    }
+        public File getFileJava() {
+            return getFile();
+        }
 
     public static String getIP() {
         try {
