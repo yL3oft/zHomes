@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="zHomes">
+    <output-path>$PROJECT_DIR$/../../Projetos Prontos</output-path>
+    <root id="archive" name="zHomes.jar">
+      <element id="module-output" name="zHomes" />
+    </root>
+  </artifact>
+</component>

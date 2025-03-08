@@ -1,0 +1,51 @@
+commands:
+  # Aqui em cima Você vai achar mensagens que podem ser utilizadas em varios comandos
+  home-already-exist: "&cVocê já tem uma home com este nome."
+  home-doesnt-exist: "&cVocê não tem nenhuma home com este nome."
+  home-doesnt-exist-others: "&e%player% &cnão tem nenhuma home com este nome."
+  no-permission: "&cVocê não tem permissao para executar este comando."
+  cooldown: "&cVocê precisa esperar %time% segundos para executar este comanda novamente."
+  cant-use-2dot: "&cVocê não pode usar &e':' &cneste comando."
+  cant-find-player: "&cEste jogador não foi encontrado."
+
+  # Aqui embaixo vai achar mensagens especificas de alguns comandos.
+  main:
+    help:
+      help-perm: |-
+        %prefix% &bUsos de &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &amigrate &7Migra do banco de dados local para o banco de dados MySQL
+      help-noperm: |-
+        %prefix% &bUsos de &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix% &bVersatual: &a%version%"
+    reload:
+      usage: |-
+        %prefix% &bUsos de &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix% &aPlugin recarregado em &b%time%ms!"
+      commands:
+        output: "%prefix% &aTodos comandos do plugin foram recarregados em &b%time%ms!"
+      config:
+        output: "%prefix% &aA configurado plugin foi recarregada em &b%time%ms!"
+      languages:
+        output: |-
+          %prefix% &aAs linguas do plugin foram recarregadas em &b%time%ms!
+          &7Nota: Isso não ira recarregar a lingua no config.yml, use '/%command% reload config' para isso.
+  sethome:
+    usage: "&c-> &e/sethome &a(Home)"
+    output: "%prefix%&aCasa &e%home% &adefinida na posicao atual."
+    limit-reached: "&cVocê não pode definir mais casas, pois chegou no seu limite &e(%limit% homes)&c!"
+  delhome:
+    usage: "&c-> &e/delhome &a(Home)"
+    output: "%prefix%&cA casa &e%home% &cfoi removida."
+  home:
+    usage: "&c-> &e/home &a(Home)"
+    output: "%prefix%&aTeleportando para &e%home%&a..."
+    cant-dimensional-teleport: "&cSeu teleporte foi cancelado! Teleportacao interdimensional estdesativada."
+  homes:
+    output: "%prefix%&7Suas homes: &f%homes%"

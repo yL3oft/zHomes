@@ -1,0 +1,88 @@
+prefix: "&8[&4zHomes&8] "
+
+# Edit your mysql database config here
+database:
+  enabled: false
+  host: localhost
+  port: 3306
+  database: db
+  username: root
+  password: pass
+  # -------------------- #
+  # WARNING: DO NOT CHANGE TABLE NAME UNLESS NECESSARY FOR SOME REASON
+  table: zHomes
+
+general:
+  language: "en"
+
+# In this section you can change the teleport options for the players
+teleport-options:
+  # This option defines if the players can teleport to other dimensions with homes.
+  # OPTIONS: [true, false] --- DEFAULT: true
+  dimensional-teleportation: true # There is also a permission to bypass: zhomes.bypass.dimensionalteleportation
+
+limits:
+  # This options defines if homes should have a limit or not.
+  # OPTIONS: [true, false] --- DEFAULT: false
+  enabled: true
+
+  # The default limit of homes a player can have
+  # OPTIONS: [>=0] --- DEFAULT: 10
+  default: 10
+  # From here if will be the permissions and the limits
+  # First you put the <number>:
+  # and then add the permission with "- " behind it like in the examples:
+  # 15:
+  #   - "group.default"
+  #   - "group.anothergroup"
+  # 25:
+  #   - "group.vip"
+  #   - "group.mvp"
+
+commands:
+  main:
+    command: zhomes
+    description: "The main command for the plugin"
+    permission: zhomes.command.main
+    aliases:
+      - zh
+    # Sub command - Help
+    help:
+      permission: "zhomes.command.main.help" # Only OP by default
+    # Sub command - Version
+    version:
+      permission: "zhomes.command.main.version" # True by default
+    # Sub command - Reload
+    reload:
+      permission: "zhomes.command.main.reload" # Only OP by default
+    # Sub command - Reload
+    migrate:
+      permission: "zhomes.command.main.migrate" # Only OP by default
+  sethome:
+    command: sethome
+    description: "Sethome"
+    permission: "zhomes.command.sethome" # True by default
+    aliases:
+      - seth
+  delhome:
+    command: delhome
+    description: "Delhome"
+    permission: "zhomes.command.delhome" # True by default
+    aliases:
+      - deletehome
+      - delh
+    others:
+      permission: "zhomes.command.delhome.others" # Only OP by default
+  homes:
+    command: homes
+    description: "Homes"
+    permission: "zhomes.command.homes" # True by default
+    aliases:
+      - myhomes
+  home:
+    command: home
+    description: "Home"
+    permission: "zhomes.command.home" # True by default
+    aliases: []
+    others:
+      permission: "zhomes.command.home.others" # Only OP by default

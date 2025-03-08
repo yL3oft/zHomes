@@ -1,0 +1,51 @@
+commands:
+  # Up here you will find messages that can be used in multiple commands
+  home-already-exist: "&cYou already have a home with this name."
+  home-doesnt-exist: "&cYou don't have any home with this name."
+  home-doesnt-exist-others: "&e%player% &cdon't have any home with this name."
+  no-permission: "&cYou don't have permission to execute this command."
+  cooldown: "&cYou need to wait %time% seconds to execute this command again."
+  cant-use-2dot: "&cYou can't use &e':' &cin this command."
+  cant-find-player: "&cThis player was not found."
+
+  # Below you will find messages specific for the commands
+  main:
+    help:
+      help-perm: |-
+        %prefix% &bUsages of &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &amigrate &7Migrates from local database to MySQL database
+      help-noperm: |-
+        %prefix% &bUsages of &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix% &bCurrent version: &a%version%"
+    reload:
+      usage: |-
+        %prefix% &bUsages of &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix% &aReloaded plugin in &b%time%ms&a."
+      commands:
+        output: "%prefix% &aReloaded all plugin commands in &b%time%ms&a."
+      config:
+        output: "%prefix% &aReloaded plugin config file in &b%time%ms&a."
+      languages:
+        output: |-
+          %prefix% &aReloaded plugin languages in &b%time%ms&a.
+          &7Note: This will not update the language from config.yml, use '/%command% reload config' to do that.
+  sethome:
+    usage: "&c-> &e/sethome &a(Home)"
+    output: "%prefix%&aHome &e%home% &aset to your position."
+    limit-reached: "&cYou can't set more homes because you reached your limit &e(%limit% homes)&c!"
+  delhome:
+    usage: "&c-> &e/delhome &a(Home)"
+    output: "%prefix%&cHome &e%home% &cdeleted."
+  home:
+    usage: "&c-> &e/home &a(Home)"
+    output: "%prefix%&aTeleporting to &e%home%&a..."
+    cant-dimensional-teleport: "&cYour teleport was cancelled! Dimensional teleportation is disabled."
+  homes:
+    output: "%prefix%&7Your homes: &f%homes%"
