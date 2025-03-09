@@ -2,6 +2,7 @@ name: zHomes
 version: '1.0'
 main: me.yleoft.zHomes.Main
 author: yLeoft
-api-version: '1.20.4'
-soft-depends:
-  - PlaceholderAPI
+api-version: "1.13"
+softdepend: [PlaceholderAPI]
+commands: {}
+permissions: {}

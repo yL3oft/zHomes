@@ -34,6 +34,7 @@ public final class Main extends JavaPlugin {
     public String pluginName = getDescription().getName();
     public String coloredPluginName = this.pluginName;
     public String pluginVer = getDescription().getVersion();
+    public static int bStatsId = 25021;
 
     public void onEnable() {
         coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.<String>requireNonNull(getConfig().getString("prefix")));
@@ -52,6 +53,14 @@ public final class Main extends JavaPlugin {
         db.connect();
         dbe.createTable(db.databaseTable(), "(UUID VARCHAR(36),HOME VARCHAR(100),LOCATION VARCHAR(255))");
         db.disconnect();
+        //</editor-fold>
+        //<editor-fold desc="Metrics">
+        if(cfgu.hasMetrics()) {
+            Metrics metrics = new Metrics(this, bStatsId);
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    coloredPluginName+"&aMetrics enabled."
+            ));
+        }
         //</editor-fold>
         //<editor-fold desc="Files">
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fChecking if files exist..."));

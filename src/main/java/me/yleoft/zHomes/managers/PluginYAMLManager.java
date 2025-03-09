@@ -74,8 +74,10 @@ public class PluginYAMLManager {
                 if (check.getValue().equals(mappedCommand)) {
                     mappedCommand.unregister(commandMap);
                     knownCommands.remove(check.getKey());
-                } else if (check.getValue() instanceof PluginCommand checkPCmd) {
-                    if (mappedCommand instanceof PluginCommand mappedPCmd) {
+                } else if (check.getValue() instanceof PluginCommand) {
+                    PluginCommand checkPCmd = (PluginCommand) check.getValue();
+                    if (mappedCommand instanceof PluginCommand) {
+                        PluginCommand mappedPCmd = (PluginCommand) mappedCommand;
                         CommandExecutor mappedExec = mappedPCmd.getExecutor();
 
                         if (mappedExec != null && mappedExec.equals(checkPCmd.getExecutor())) {

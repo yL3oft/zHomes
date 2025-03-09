@@ -13,7 +13,13 @@ database:
   table: zHomes
 
 general:
+  # Here you can define the language of the plugin, all languages can be found, edited and created on languages' directory.
+  # DEFAULT OPTIONS: [en, pt-br] --- DEFAULT: en
   language: "en"
+  # Here you can define if metrics should be on or off.
+  # !WARNING: This option does not work with reload.
+  # OPTIONS: [true, false] --- DEFAULT: true
+  metrics: true
 
 # In this section you can change the teleport options for the players
 teleport-options:
@@ -22,22 +28,17 @@ teleport-options:
   dimensional-teleportation: true # There is also a permission to bypass: zhomes.bypass.dimensionalteleportation
 
 limits:
+  # Limit example:
+  # '15':
+  #   - group.vip
+  #   - group.mvp
   # This options defines if homes should have a limit or not.
   # OPTIONS: [true, false] --- DEFAULT: false
-  enabled: true
+  enabled: false
 
   # The default limit of homes a player can have
   # OPTIONS: [>=0] --- DEFAULT: 10
   default: 10
-  # From here if will be the permissions and the limits
-  # First you put the <number>:
-  # and then add the permission with "- " behind it like in the examples:
-  # 15:
-  #   - "group.default"
-  #   - "group.anothergroup"
-  # 25:
-  #   - "group.vip"
-  #   - "group.mvp"
 
 commands:
   main:

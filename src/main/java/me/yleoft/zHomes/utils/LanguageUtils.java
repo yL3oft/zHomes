@@ -453,7 +453,8 @@ public class LanguageUtils extends ConfigUtils {
         default void sendMsg(CommandSender s, String text) {
             text = ChatColor.translateAlternateColorCodes('&', text
                     .replace("%prefix%", Main.cfgu.prefix()));
-            if (s instanceof Player p) {
+            if (s instanceof Player) {
+                Player p = (Player)s;
                 text = ChatColor.translateAlternateColorCodes('&', text
                         .replace("%limit%", String.valueOf(Main.cfgu.getMaxLimit(p)))
                         .replace("%numberofhomes%", String.valueOf(Main.hu.numberOfHomes(p)))

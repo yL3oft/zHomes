@@ -15,6 +15,9 @@ public class ConfigUtils {
     public static String langType() {
         return main.getConfig().getString("general.language");
     }
+    public Boolean hasMetrics() {
+        return main.getConfig().getBoolean("general.metrics");
+    }
     public String prefix() {
         return main.getConfig().getString("prefix");
     }

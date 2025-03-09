@@ -6,13 +6,13 @@
 
   <groupId>me.yleoft</groupId>
   <artifactId>zHomes</artifactId>
-  <version>1.0</version>
+  <version>1.0.0</version>
   <packaging>jar</packaging>
 
   <name>zHomes</name>
 
   <properties>
-    <java.version>17</java.version>
+    <java.version>8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -69,7 +69,7 @@
       <dependency>
           <groupId>org.spigotmc</groupId>
           <artifactId>spigot-api</artifactId>
-          <version>1.20.4-R0.1-SNAPSHOT </version>
+          <version>1.21-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
       </dependency>
       <dependency>
@@ -90,5 +90,6 @@
           <version>3.41.2.2</version>
           <scope>provided</scope>
       </dependency>
+
   </dependencies>
 </project>
