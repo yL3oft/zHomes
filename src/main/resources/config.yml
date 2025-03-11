@@ -14,8 +14,11 @@ database:
 
 general:
   # Here you can define the language of the plugin, all languages can be found, edited and created on languages' directory.
-  # DEFAULT OPTIONS: [en, pt-br] --- DEFAULT: en
+  # DEFAULT OPTIONS: [en, pt-br, <custom>] --- DEFAULT: en
   language: "en"
+  # Define it the plugin should be updated automatically
+  # OPTIONS: [true, false] --- DEFAULT: true
+  auto-update: true
   # Here you can define if metrics should be on or off.
   # !WARNING: This option does not work with reload.
   # OPTIONS: [true, false] --- DEFAULT: true
@@ -80,6 +83,8 @@ commands:
     permission: "zhomes.command.homes" # True by default
     aliases:
       - myhomes
+    others:
+      permission: "zhomes.command.homes.others" # Only OP by default
   home:
     command: home
     description: "Home"

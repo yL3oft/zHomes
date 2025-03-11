@@ -224,9 +224,10 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getOutput(OfflinePlayer p) {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+            String path = LanguageUtils.formPath(cmds, getCmd(), "others.output");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdHomesCommand())
+                    .replace("%homes%", Main.hu.homes(p))
                     .replace("%player%", p.getName());
         }
 

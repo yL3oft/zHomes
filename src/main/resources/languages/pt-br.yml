@@ -59,3 +59,5 @@ commands:
     cant-dimensional-teleport: "&cSeu teleporte foi cancelado! Teleportacao interdimensional estdesativada."
   homes:
     output: "%prefix%&7Suas homes: &f%homes%"
+    others:
+      output: "%prefix%&7Homes de &e%player%&7: &f%homes%"

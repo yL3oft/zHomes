@@ -15,6 +15,9 @@ public class ConfigUtils {
     public static String langType() {
         return main.getConfig().getString("general.language");
     }
+    public Boolean isAutoUpdate() {
+        return main.getConfig().getBoolean("general.auto-update");
+    }
     public Boolean hasMetrics() {
         return main.getConfig().getBoolean("general.metrics");
     }
@@ -115,6 +118,9 @@ public class ConfigUtils {
     }
     public List<String> CmdHomesAliases() {
         return main.getConfig().getStringList(this.cmdPath + "homes.aliases");
+    }
+    public String CmdHomesOthersPermission() {
+        return main.getConfig().getString(this.cmdPath + "homes.others.permission");
     }
     //</editor-fold>
     //<editor-fold desc="Home Command">

@@ -26,7 +26,7 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
 
         if (args.length >= 1) {
             String player = args[0];
-            if (p.hasPermission("zhomes.commands.homes.others")) {
+            if (p.hasPermission(CmdHomesOthersPermission())) {
                 OfflinePlayer t = Bukkit.getOfflinePlayer(player);
                 if (t == null) {
                     lang.sendMsg(p, cmdm.getCantFindPlayer());

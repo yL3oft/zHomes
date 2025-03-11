@@ -6,7 +6,7 @@
 
   <groupId>me.yleoft</groupId>
   <artifactId>zHomes</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <packaging>jar</packaging>
 
   <name>zHomes</name>
@@ -82,7 +82,7 @@
           <groupId>org.bstats</groupId>
           <artifactId>bstats-bukkit</artifactId>
           <version>3.0.2</version>
-          <scope>compile</scope>
+          <scope>provided</scope>
       </dependency>
       <dependency>
           <groupId>org.xerial</groupId>
@@ -90,6 +90,7 @@
           <version>3.41.2.2</version>
           <scope>provided</scope>
       </dependency>
+
 
   </dependencies>
 </project>

@@ -34,6 +34,7 @@ public final class Main extends JavaPlugin {
     public String pluginName = getDescription().getName();
     public String coloredPluginName = this.pluginName;
     public String pluginVer = getDescription().getVersion();
+    public String site = "https://www.spigotmc.org/resources/zhomes.123141/";
     public static int bStatsId = 25021;
 
     public void onEnable() {
@@ -49,6 +50,7 @@ public final class Main extends JavaPlugin {
         db = new DatabaseConnection();
         dbe = new DatabaseEditor();
         //</editor-fold>
+        updatePlugin();
         //<editor-fold desc="Database">
         db.connect();
         dbe.createTable(db.databaseTable(), "(UUID VARCHAR(36),HOME VARCHAR(100),LOCATION VARCHAR(255),PRIMARY KEY (UUID, HOME))");
@@ -93,6 +95,52 @@ public final class Main extends JavaPlugin {
         db.disconnect();
     }
 
+    public void updatePlugin() {
+        UpdateChecker checker = new UpdateChecker();
+        String version = checker.getVersion();
+        String pf = "&8&l|> &r";
+
+        if(!getDescription().getVersion().equals(version)) {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    coloredPluginName+"&cPlugin is not up-to-date!"
+            ));
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    pf+"&fNew version: &e"+version
+            ));
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    pf+"&fYour version: &e"+getDescription().getVersion()
+            ));
+            if(cfgu.isAutoUpdate()) {
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        pf+"&fAttempting to auto-update it..."
+                ));
+                try {
+                    String path = checker.update(version);
+                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            pf+"&aPlugin updated! &7Saved in: "+path
+                    ));getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            pf+"&aRestart the server to apply changes."
+                    ));
+                }catch (Exception e) {
+                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            pf+"&cCould not auto-update it."
+                    ));
+                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                            pf+"&fYou can update your plugin here: &e"+site
+                    ));
+                }
+            }else {
+                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        pf+"&fYou can update your plugin here: &e"+site
+                ));
+            }
+        }else {
+            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    coloredPluginName+"&aPlugin is up-to-date!"
+            ));
+        }
+    }
+
     public void loadCommands() {
         getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', coloredPluginName + "§fTrying to load commands, permissions & events..."));
         //<editor-fold desc="Commands">
@@ -101,7 +149,7 @@ public final class Main extends JavaPlugin {
             pym.registerCommand(cfgu.CmdMainCommand(), new MainCommand(), new MainCompleter(), cfgu.CmdMainDescription(), cfgu.CmdMainAliases().toArray(new String[0]));
             pym.registerCommand(cfgu.CmdSethomeCommand(), new SethomeCommand(), cfgu.CmdSethomeDescription(), cfgu.CmdSethomeAliases().toArray(new String[0]));
             pym.registerCommand(cfgu.CmdDelhomeCommand(), new DelhomeCommand(), new DelhomeCompleter(), cfgu.CmdDelhomeDescription(), cfgu.CmdDelhomeAliases().toArray(new String[0]));
-            pym.registerCommand(cfgu.CmdHomesCommand(), new HomesCommand(), cfgu.CmdHomesDescription(), cfgu.CmdHomesAliases().toArray(new String[0]));
+            pym.registerCommand(cfgu.CmdHomesCommand(), new HomesCommand(), new HomesCompleter(), cfgu.CmdHomesDescription(), cfgu.CmdHomesAliases().toArray(new String[0]));
             pym.registerCommand(cfgu.CmdHomeCommand(), new HomeCommand(), new HomeCompleter(), cfgu.CmdHomeDescription(), cfgu.CmdHomeAliases().toArray(new String[0]));
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,6 +171,7 @@ public final class Main extends JavaPlugin {
             pym.registerPermission(cfgu.CmdDelhomePermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + "' command", PermissionDefault.TRUE);
             pym.registerPermission(cfgu.CmdDelhomeOthersPermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
             pym.registerPermission(cfgu.CmdHomesPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + "' command", PermissionDefault.TRUE);
+            pym.registerPermission(cfgu.CmdHomesOthersPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + " (Player)' command", PermissionDefault.OP);
             pym.registerPermission(cfgu.CmdHomePermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + "' command", PermissionDefault.TRUE);
             pym.registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
             pym.registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
