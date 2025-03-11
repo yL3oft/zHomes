@@ -12,7 +12,7 @@
   <name>zHomes</name>
 
   <properties>
-    <java.version>8</java.version>
+    <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -90,7 +90,5 @@
           <version>3.41.2.2</version>
           <scope>provided</scope>
       </dependency>
-
-
   </dependencies>
 </project>
