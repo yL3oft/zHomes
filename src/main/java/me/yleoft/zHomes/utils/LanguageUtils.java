@@ -96,7 +96,8 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getUsage() {
             String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
-            return this.cfg.getString(path);
+            return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdSethomeCommand());
         }
 
         public String getOutput() {
@@ -106,6 +107,7 @@ public class LanguageUtils extends ConfigUtils {
         public String getOutput(String home) {
             String path = LanguageUtils.formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdSethomeCommand())
                     .replace("%home%", home);
         }
 
@@ -116,7 +118,8 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getLimitReached(Player p) {
             String path = LanguageUtils.formPath(cmds, getCmd(), "limit-reached");
-            return this.cfg.getString(path);
+            return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdSethomeCommand());
         }
     }
 
@@ -135,7 +138,8 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getUsage() {
             String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
-            return this.cfg.getString(path);
+            return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdDelhomeCommand());
         }
 
         public String getOutput() {
@@ -145,6 +149,7 @@ public class LanguageUtils extends ConfigUtils {
         public String getOutput(String home) {
             String path = LanguageUtils.formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdDelhomeCommand())
                     .replace("%home%", home);
         }
 
@@ -169,7 +174,8 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getUsage() {
             String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
-            return this.cfg.getString(path);
+            return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdHomeCommand());
         }
 
         public String getOutput() {
@@ -179,6 +185,7 @@ public class LanguageUtils extends ConfigUtils {
         public String getOutput(String home) {
             String path = LanguageUtils.formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdHomeCommand())
                     .replace("%home%", home);
         }
 
@@ -211,12 +218,16 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getOutput() {
-            return null;
+            String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+            return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdHomesCommand());
         }
 
         public String getOutput(OfflinePlayer p) {
             String path = LanguageUtils.formPath(cmds, getCmd(), "output");
-            return this.cfg.getString(path);
+            return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdHomesCommand())
+                    .replace("%player%", p.getName());
         }
 
         public double getCooldown() {
@@ -278,7 +289,7 @@ public class LanguageUtils extends ConfigUtils {
 
             public String getOutput() {
                 String path = LanguageUtils.formPath(cmds, getCmd(), "output");
-                return ((String) Objects.<String>requireNonNull(this.cfg.getString(path)))
+                return this.cfg.getString(path)
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion());
             }
 
@@ -306,7 +317,7 @@ public class LanguageUtils extends ConfigUtils {
 
             public String getOutput() {
                 String path = LanguageUtils.formPath(cmds, getCmd(), "output");
-                return ((String) Objects.<String>requireNonNull(this.cfg.getString(path)))
+                return this.cfg.getString(path)
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion());
             }
 
@@ -364,6 +375,42 @@ public class LanguageUtils extends ConfigUtils {
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand())
                         .replace("%time%", String.valueOf(time));
+            }
+
+            public double getCooldown() {
+                return 0.0D;
+            }
+        }
+
+        public static class MainConverter implements LanguageUtils.Commands {
+            public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
+
+            public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+
+            public MainConverter() {
+                this.cfg = LanguageUtils.getConfigFile();
+            }
+
+            public String getCmd() {
+                return "main.converter";
+            }
+
+            public String getUsage() {
+                String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
+                return this.cfg.getString(path)
+                        .replace("%command%", Main.cfgu.CmdMainCommand());
+            }
+
+            public String getOutput() {
+                String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+                return this.cfg.getString(path)
+                        .replace("%command%", Main.cfgu.CmdMainCommand());
+            }
+
+            public String getError() {
+                String path = LanguageUtils.formPath(cmds, getCmd(), "error");
+                return this.cfg.getString(path)
+                        .replace("%command%", Main.cfgu.CmdMainCommand());
             }
 
             public double getCooldown() {

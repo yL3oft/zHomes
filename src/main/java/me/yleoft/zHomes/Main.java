@@ -51,7 +51,7 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         //<editor-fold desc="Database">
         db.connect();
-        dbe.createTable(db.databaseTable(), "(UUID VARCHAR(36),HOME VARCHAR(100),LOCATION VARCHAR(255))");
+        dbe.createTable(db.databaseTable(), "(UUID VARCHAR(36),HOME VARCHAR(100),LOCATION VARCHAR(255),PRIMARY KEY (UUID, HOME))");
         db.disconnect();
         //</editor-fold>
         //<editor-fold desc="Metrics">
@@ -118,7 +118,7 @@ public final class Main extends JavaPlugin {
             pym.registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
             pym.registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
             pym.registerPermission(cfgu.CmdMainReloadPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
-            pym.registerPermission(cfgu.CmdMainMigratePermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " migrate' command", PermissionDefault.OP);
+            pym.registerPermission(cfgu.CmdMainConverterPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " converter' command", PermissionDefault.OP);
             pym.registerPermission(cfgu.CmdSethomePermission(), "Permission to use the '/" + cfgu.CmdSethomeCommand() + "' command", PermissionDefault.TRUE);
             pym.registerPermission(cfgu.CmdDelhomePermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + "' command", PermissionDefault.TRUE);
             pym.registerPermission(cfgu.CmdDelhomeOthersPermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
@@ -144,6 +144,9 @@ public final class Main extends JavaPlugin {
         String serialized = w+";"+x+";"+y+";"+z+";"+yaw+";"+pitch+";";
 
         return serialized;
+    }
+    public String serialize(String w, double x, double y, double z, float yaw, float pitch) {
+        return w+";"+x+";"+y+";"+z+";"+yaw+";"+pitch+";";
     }
 
     public Location deserialize(String serialized) {

@@ -36,7 +36,7 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
                 return true;
             }
         }
-        lang.sendMsg(p, lang.getOutput((OfflinePlayer)p));
+        lang.sendMsg(p, lang.getOutput());
         return false;
     }
 

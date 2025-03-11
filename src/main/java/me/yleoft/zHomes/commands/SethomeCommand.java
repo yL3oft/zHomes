@@ -34,8 +34,8 @@ public class SethomeCommand extends HomesUtils implements CommandExecutor {
             home = event.getHome();
 
             if (!inMaxLimit(p)) {
-                if (!hasHome((OfflinePlayer)p, home)) {
-                    addHome((OfflinePlayer)p, home, p.getLocation());
+                if (!hasHome(p, home)) {
+                    addHome(p, home, p.getLocation());
                     lang.sendMsg(p, lang.getOutput(home));
                 } else {
                     lang.sendMsg(p, cmdm.getHomeAlreadyExist());

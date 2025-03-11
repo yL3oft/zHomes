@@ -27,6 +27,7 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
         LanguageUtils.MainCMD.MainReload lang2 = new LanguageUtils.MainCMD.MainReload();
         LanguageUtils.MainCMD.MainVersion lang3 = new LanguageUtils.MainCMD.MainVersion();
         LanguageUtils.MainCMD.MainHelp lang4 = new LanguageUtils.MainCMD.MainHelp();
+        LanguageUtils.MainCMD.MainConverter lang5 = new LanguageUtils.MainCMD.MainConverter();
 
         //<editor-fold desc="Checks">
         if (p != null &&
@@ -75,12 +76,17 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                 }
                 lang.sendMsg(s, lang2.getUsage());
                 return false;
-            case "migrate":
-                if (p != null && !p.hasPermission(CmdMainMigratePermission())) {
+            case "converter":
+                if (p != null && !p.hasPermission(CmdMainConverterPermission())) {
                     lang.sendMsg(s, cmdm.getNoPermission());
                     return false;
                 }
-                Main.db.migrateData(p);
+                if (args.length == 1) {
+                    lang.sendMsg(s, lang5.getUsage());
+                    return false;
+                }
+                if(p != null) Main.db.migrateData(p, args[1]);
+                else Main.db.migrateData(null, args[1]);
                 return false;
             case "version":
             case "ver":

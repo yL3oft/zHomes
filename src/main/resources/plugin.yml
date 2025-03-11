@@ -1,5 +1,5 @@
 name: zHomes
-version: '1.0'
+version: '1.1.0'
 main: me.yleoft.zHomes.Main
 author: yLeoft
 api-version: "1.13"

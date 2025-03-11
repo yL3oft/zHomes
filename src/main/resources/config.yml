@@ -57,8 +57,8 @@ commands:
     reload:
       permission: "zhomes.command.main.reload" # Only OP by default
     # Sub command - Reload
-    migrate:
-      permission: "zhomes.command.main.migrate" # Only OP by default
+    converter:
+      permission: "zhomes.command.main.converter" # Only OP by default
   sethome:
     command: sethome
     description: "Sethome"

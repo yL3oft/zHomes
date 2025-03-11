@@ -68,8 +68,8 @@ public class ConfigUtils {
     public String CmdMainReloadPermission() {
         return main.getConfig().getString(this.cmdPath + "main.reload.permission");
     }
-    public String CmdMainMigratePermission() {
-        return main.getConfig().getString(this.cmdPath + "main.migrate.permission");
+    public String CmdMainConverterPermission() {
+        return main.getConfig().getString(this.cmdPath + "main.converter.permission");
     }
     //</editor-fold>
     //<editor-fold desc="Sethome Command">

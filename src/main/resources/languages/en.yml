@@ -12,39 +12,49 @@ commands:
   main:
     help:
       help-perm: |-
-        %prefix% &bUsages of &e/%command%&b:
+        %prefix%&bUsages of &e/%command%&b:
         &c-> &e/%command% &a(help|?)
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver)
-        &c-> &e/%command% &amigrate &7Migrates from local database to MySQL database
+        &c-> &e/%command% &aconverter (converter-type) &7Convert data from one place to another
       help-noperm: |-
-        %prefix% &bUsages of &e/%command%&b:
+        %prefix%&bUsages of &e/%command%&b:
         &c-> &e/%command% &a(help|?)
         &c-> &e/%command% &a(version|ver)
     version:
-      output: "%prefix% &bCurrent version: &a%version%"
+      output: "%prefix%&bCurrent version: &a%version%"
     reload:
       usage: |-
-        %prefix% &bUsages of &e/%command% &a(reload|rl)&b:
+        %prefix%&bUsages of &e/%command% &a(reload|rl)&b:
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
-      output: "%prefix% &aReloaded plugin in &b%time%ms&a."
+      output: "%prefix%&aReloaded plugin in &b%time%ms&a."
       commands:
-        output: "%prefix% &aReloaded all plugin commands in &b%time%ms&a."
+        output: "%prefix%&aReloaded all plugin commands in &b%time%ms&a."
       config:
-        output: "%prefix% &aReloaded plugin config file in &b%time%ms&a."
+        output: "%prefix%&aReloaded plugin config file in &b%time%ms&a."
       languages:
         output: |-
-          %prefix% &aReloaded plugin languages in &b%time%ms&a.
+          %prefix%&aReloaded plugin languages in &b%time%ms&a.
           &7Note: This will not update the language from config.yml, use '/%command% reload config' to do that.
+    converter:
+      usage: |-
+        %prefix%&bUsages of &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter essentials
+        &c-> &e/%command% &aconverter sethome
+        &c-> &e/%command% &aconverter ultimatehomes
+      output: "%prefix%&aAll data converted!"
+      error: "%prefix%&cSomething went wrong converting the data, please check your server console."
   sethome:
-    usage: "&c-> &e/sethome &a(Home)"
+    usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &aset to your position."
     limit-reached: "&cYou can't set more homes because you reached your limit &e(%limit% homes)&c!"
   delhome:
-    usage: "&c-> &e/delhome &a(Home)"
+    usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&cHome &e%home% &cdeleted."
   home:
-    usage: "&c-> &e/home &a(Home)"
+    usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aTeleporting to &e%home%&a..."
     cant-dimensional-teleport: "&cYour teleport was cancelled! Dimensional teleportation is disabled."
   homes:

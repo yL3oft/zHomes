@@ -24,16 +24,31 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                 commands.add("reload");
             if (p.hasPermission(CmdMainVersionPermission()))
                 commands.add("version");
-            if (p.hasPermission(CmdMainVersionPermission()))
-                commands.add("migrate");
+            if (p.hasPermission(CmdMainConverterPermission()))
+                commands.add("converter");
             StringUtil.copyPartialMatches(args[0], commands, completions);
         } else if (args.length == 2) {
-            if ((args[0].equalsIgnoreCase("reload") || args[0].equalsIgnoreCase("rl")) &&
-                    p.hasPermission(CmdMainReloadPermission())) {
-                commands.add("all");
-                commands.add("commands");
-                commands.add("config");
-                commands.add("languages");
+            switch (args[0]) {
+                case "reload":
+                case "rl": {
+                    if (p.hasPermission(CmdMainReloadPermission())) {
+                        commands.add("all");
+                        commands.add("commands");
+                        commands.add("config");
+                        commands.add("languages");
+                    }
+                    break;
+                }
+                case "converter": {
+                    if (p.hasPermission(CmdMainConverterPermission())) {
+                        commands.add("sqlitetomysql");
+                        commands.add("mysqltosqlite");
+                        commands.add("essentials");
+                        commands.add("sethome");
+                        commands.add("ultimatehomes");
+                    }
+                    break;
+                }
             }
             StringUtil.copyPartialMatches(args[1], commands, completions);
         }
