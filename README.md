@@ -1,7 +1,7 @@
 ![About the Project](https://cdn.modrinth.com/data/cached_images/2939adae27590da621f6332a61d92a12bd474204.png)
 **zHomes** is a plugin for Spigot servers to make player transportation easier and 100% customizable.
 
-It's 100% free, and only maintained by [yLeoft](https://modrinth.com/user/yleoft), has support for PlaceholderAPI, customizable commands, permissions, messages and more.
+It's 100% free, and only maintained by [yLeoft](https://github.com/yL3oft), has support for PlaceholderAPI, customizable commands, permissions, messages and more.
 
 THANK YOU for using zHomes, if you want to support the project, or have any questions, consider joining our [Discord](https://discord.gg/yCdhVDgn4K) :)
 
