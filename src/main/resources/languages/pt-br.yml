@@ -22,7 +22,7 @@ commands:
         &c-> &e/%command% &a(help|?)
         &c-> &e/%command% &a(version|ver)
     version:
-      output: "%prefix%&bVersatual: &a%version%"
+      output: "%prefix%&bVersão atual: &a%version%"
     reload:
       usage: |-
         %prefix%&bUsos de &e/%command% &a(reload|rl)&b:

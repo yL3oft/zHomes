@@ -20,14 +20,20 @@ public class HomeCompleter extends HomesUtils implements TabCompleter {
         List<String> completions = new ArrayList<>();
         List<String> commands = new ArrayList<>();
 
-        if (args[0].contains(":")) {
-            if (p.hasPermission(CmdHomeOthersPermission())) {
-                String[] as = args[0].split(":");
-                OfflinePlayer t = Bukkit.getOfflinePlayer(as[0]);
-                if (t != null) commands.addAll(homesWDD(t));
+        if (args.length == 1) {
+            if (args[0].contains(":")) {
+                if (p.hasPermission(CmdHomeOthersPermission())) {
+                    String[] as = args[0].split(":");
+                    OfflinePlayer t = Bukkit.getOfflinePlayer(as[0]);
+                    if (t != null) commands.addAll(homesWDD(t));
+                }
+            }
+            if (commands.isEmpty()) {
+                commands.addAll(homesW(p));
+                if (p.hasPermission(CmdHomeOthersPermission()))
+                    Bukkit.getOnlinePlayers().forEach((on -> commands.add(on.getName() + ":")));
             }
         }
-        if(commands.isEmpty()) commands.addAll(homesW(p));
 
         StringUtil.copyPartialMatches(args[0], commands, completions);
         Collections.sort(commands);

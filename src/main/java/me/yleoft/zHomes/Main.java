@@ -95,7 +95,7 @@ public final class Main extends JavaPlugin {
         db.disconnect();
     }
 
-    public void updatePlugin() {
+    public boolean updatePlugin() {
         UpdateChecker checker = new UpdateChecker();
         String version = checker.getVersion();
         String pf = "&8&l|> &r";
@@ -121,6 +121,7 @@ public final class Main extends JavaPlugin {
                     ));getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                             pf+"&aRestart the server to apply changes."
                     ));
+                    return true;
                 }catch (Exception e) {
                     getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                             pf+"&cCould not auto-update it."
@@ -139,6 +140,7 @@ public final class Main extends JavaPlugin {
                     coloredPluginName+"&aPlugin is up-to-date!"
             ));
         }
+        return false;
     }
 
     public void loadCommands() {

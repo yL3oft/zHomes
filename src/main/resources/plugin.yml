@@ -1,7 +1,8 @@
 name: zHomes
-version: '1.2.0'
+version: '1.2.1'
 main: me.yleoft.zHomes.Main
 author: yLeoft
+website: 'https://github.com/yL3oft/zHomes'
 api-version: "1.13"
 softdepend: [PlaceholderAPI]
 commands: {}
