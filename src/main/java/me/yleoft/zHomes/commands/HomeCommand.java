@@ -1,8 +1,8 @@
 package me.yleoft.zHomes.commands;
 
 import me.yleoft.zHomes.Main;
-import me.yleoft.zHomes.api.events.ExecuteHomeCommandEvent;
-import me.yleoft.zHomes.api.events.PreExecuteHomeCommandEvent;
+import com.zhomes.api.event.player.ExecuteHomeCommandEvent;
+import com.zhomes.api.event.player.PreExecuteHomeCommandEvent;
 import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;

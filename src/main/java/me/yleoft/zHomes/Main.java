@@ -13,7 +13,7 @@ import org.bukkit.World;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -38,11 +38,8 @@ public final class Main extends JavaPlugin {
     public static int bStatsId = 25021;
 
     public void onEnable() {
-        coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.<String>requireNonNull(getConfig().getString("prefix")));
-        getServer().getConsoleSender().sendMessage(coloredPluginName+"§f------------------------------------------------------");
-        getServer().getConsoleSender().sendMessage(coloredPluginName+"§fPlugin started loading...");
         //<editor-fold desc="Variables">
-        main = this;
+        main = Main.this;
         pym = new PluginYAMLManager();
         fm = new FileManager();
         cfgu = new ConfigUtils();
@@ -50,6 +47,11 @@ public final class Main extends JavaPlugin {
         db = new DatabaseConnection();
         dbe = new DatabaseEditor();
         //</editor-fold>
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+        coloredPluginName = cmdm.hex(coloredPluginName);
+        coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.<String>requireNonNull(getConfig().getString("prefix")));
+        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
+        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
         updatePlugin();
         //<editor-fold desc="Database">
         db.connect();
@@ -58,14 +60,14 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         //<editor-fold desc="Metrics">
         if(cfgu.hasMetrics()) {
-            Metrics metrics = new Metrics(this, bStatsId);
-            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+            Metrics metrics = new Metrics(main, bStatsId);
+            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&aMetrics enabled."
             ));
         }
         //</editor-fold>
         //<editor-fold desc="Files">
-        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fChecking if files exist..."));
+        cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fChecking if files exist..."));
         File f = new File(getDataFolder(), "config.yml");
         if (!f.exists()) {
             saveDefaultConfig();
@@ -75,20 +77,20 @@ public final class Main extends JavaPlugin {
         fm.fuLang.reloadConfig();
         fm.fuLang2.saveDefaultConfig();
         fm.fuLang2.reloadConfig();
-        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fAll files have been created!"));
+        cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fAll files have been created!"));
         //</editor-fold>
         loadCommands();
         //<editor-fold desc="Hooks">
-        getServer().getConsoleSender().sendMessage(coloredPluginName + "§fTrying to connect to hooks...");
+        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
         if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             (new PlaceholderAPIExpansion()).register();
-            getServer().getConsoleSender().sendMessage(coloredPluginName + "§ahook connected successfully!");
+            cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§ahook connected successfully!");
         } else {
-            getServer().getConsoleSender().sendMessage(coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
+            cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
         }
         //</editor-fold>
-        getServer().getConsoleSender().sendMessage(coloredPluginName+"§fPlugin started (Any errors will be above this message)");
-        getServer().getConsoleSender().sendMessage(coloredPluginName+"§f------------------------------------------------------");
+        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started (Any errors will be above this message)");
+        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
     }
 
     public void onDisable() {
@@ -96,55 +98,57 @@ public final class Main extends JavaPlugin {
     }
 
     public boolean updatePlugin() {
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
         UpdateChecker checker = new UpdateChecker();
         String version = checker.getVersion();
         String pf = "&8&l|> &r";
 
         if(!getDescription().getVersion().equals(version)) {
-            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&cPlugin is not up-to-date!"
             ));
-            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     pf+"&fNew version: &e"+version
             ));
-            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     pf+"&fYour version: &e"+getDescription().getVersion()
             ));
             if(cfgu.isAutoUpdate()) {
-                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                         pf+"&fAttempting to auto-update it..."
                 ));
                 try {
                     String path = checker.update(version);
-                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&aPlugin updated! &7Saved in: "+path
-                    ));getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    ));
+                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&aRestart the server to apply changes."
                     ));
                     return true;
                 }catch (Exception e) {
-                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&cCould not auto-update it."
                     ));
-                    getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&fYou can update your plugin here: &e"+site
                     ));
                 }
             }else {
-                getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                         pf+"&fYou can update your plugin here: &e"+site
                 ));
             }
         }else {
-            getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&aPlugin is up-to-date!"
             ));
         }
         return false;
     }
-
     public void loadCommands() {
-        getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', coloredPluginName + "§fTrying to load commands, permissions & events..."));
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+        cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "§fTrying to load commands, permissions & events..."));
         //<editor-fold desc="Commands">
         try {
             pym.unregisterCommands();
@@ -155,7 +159,7 @@ public final class Main extends JavaPlugin {
             pym.registerCommand(cfgu.CmdHomeCommand(), new HomeCommand(), new HomeCompleter(), cfgu.CmdHomeDescription(), cfgu.CmdHomeAliases().toArray(new String[0]));
         } catch (Exception e) {
             e.printStackTrace();
-            getServer().getConsoleSender().sendMessage(coloredPluginName + "§cError loading commands!");
+            cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cError loading commands!");
         }
         //</editor-fold>
         //<editor-fold desc="Permissions">
@@ -178,7 +182,7 @@ public final class Main extends JavaPlugin {
             pym.registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
             pym.registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
         } catch (Exception e) {
-            getServer().getConsoleSender().sendMessage(this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");
+            cmdm.sendMsg(getServer().getConsoleSender(), this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");
         }
         //</editor-fold>
     }
@@ -214,7 +218,6 @@ public final class Main extends JavaPlugin {
         return new Location(w, x, y, z, yaw, pitch);
     }
     //</editor-fold>
-
     //<editor-fold desc="Java Overrides">
     @Override
     public void reloadConfig() {

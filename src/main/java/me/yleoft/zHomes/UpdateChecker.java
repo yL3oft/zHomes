@@ -3,10 +3,8 @@ package me.yleoft.zHomes;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 

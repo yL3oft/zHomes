@@ -148,8 +148,8 @@ public class ConfigUtils {
     //</editor-fold>
 
     //<editor-fold desc="Database">
-    public Boolean databaseEnabled() {
-        return Boolean.valueOf(main.getConfig().getBoolean(this.databasePath + "enabled"));
+    public String databaseType() {
+        return main.getConfig().getString(this.databasePath + "type");
     }
     public String databaseHost() {
         return main.getConfig().getString(this.databasePath + "host");

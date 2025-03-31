@@ -1,7 +1,7 @@
-package me.yleoft.zHomes.api.examples;
+package com.zhomes.api.examples;
 
-import me.yleoft.zHomes.api.events.ExecuteSethomeCommandEvent;
-import me.yleoft.zHomes.api.events.PreExecuteSethomeCommandEvent;
+import com.zhomes.api.event.player.ExecuteSethomeCommandEvent;
+import com.zhomes.api.event.player.PreExecuteSethomeCommandEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

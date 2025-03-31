@@ -1,11 +1,10 @@
 package me.yleoft.zHomes.commands;
 
-import me.yleoft.zHomes.api.events.ExecuteSethomeCommandEvent;
-import me.yleoft.zHomes.api.events.PreExecuteSethomeCommandEvent;
+import com.zhomes.api.event.player.ExecuteSethomeCommandEvent;
+import com.zhomes.api.event.player.PreExecuteSethomeCommandEvent;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

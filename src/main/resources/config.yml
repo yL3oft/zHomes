@@ -2,7 +2,13 @@ prefix: "&8[&4zHomes&8] "
 
 # Edit your mysql database config here
 database:
-  enabled: false
+    # Here you can define how to store the plugin data.
+  # OPTIONS:
+  # - SQLite
+  # - MariaDB (Preferred over MySQL)
+  # - MySQL
+  # DEFAULT: SQLite
+  type: SQLite
   host: localhost
   port: 3306
   database: db

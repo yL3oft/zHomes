@@ -3,7 +3,7 @@ package me.yleoft.zHomes.utils;
 import java.util.ArrayList;
 import java.util.List;
 import me.yleoft.zHomes.Main;
-import me.yleoft.zHomes.api.events.TeleportToHomeEvent;
+import com.zhomes.api.event.player.TeleportToHomeEvent;
 import me.yleoft.zHomes.storage.DatabaseEditor;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

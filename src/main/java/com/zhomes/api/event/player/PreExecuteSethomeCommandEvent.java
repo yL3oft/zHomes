@@ -1,32 +1,21 @@
-package me.yleoft.zHomes.api.events;
+package com.zhomes.api.event.player;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
 
-public class ExecuteSethomeCommandEvent extends PlayerEvent implements Cancellable {
+public class PreExecuteSethomeCommandEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();
 
     private boolean isCancelled;
 
-    protected String home;
-
-    public ExecuteSethomeCommandEvent(Player who, String home) {
+    public PreExecuteSethomeCommandEvent(Player who) {
         super(who);
-        this.home = home;
     }
 
     public static HandlerList getHandlerList() {
         return HANDLERS;
-    }
-
-    public String getHome() {
-        return this.home;
-    }
-
-    public void setHome(String home) {
-        this.home = home;
     }
 
     @Override

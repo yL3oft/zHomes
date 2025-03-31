@@ -35,7 +35,7 @@ public class DatabaseEditor extends DatabaseConnection {
                 ps2.close();
             } else {
                 PreparedStatement ps2 = con.prepareStatement("INSERT OR IGNORE INTO " + databaseTable() + " (UUID,HOME,LOCATION) VALUES (?,?,?)");
-                if (databaseEnabled().booleanValue())
+                if (!type.equalsIgnoreCase("sqlite"))
                     ps2 = con.prepareStatement("INSERT IGNORE INTO " + databaseTable() + " (UUID,HOME,LOCATION) VALUES (?,?,?)");
                 String uuid = p.getUniqueId().toString();
                 ps2.setString(1, uuid);

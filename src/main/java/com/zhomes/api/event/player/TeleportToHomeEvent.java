@@ -1,4 +1,4 @@
-package me.yleoft.zHomes.api.events;
+package com.zhomes.api.event.player;
 
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;

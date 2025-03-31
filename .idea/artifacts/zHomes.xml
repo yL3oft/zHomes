@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/../../Projetos Prontos</output-path>
     <root id="archive" name="zHomes.jar">
       <element id="module-output" name="zHomes" />
+      <element id="file-copy" path="$PROJECT_DIR$/libs/mariadb-java-client-3.5.3.jar" />
     </root>
   </artifact>
 </component>

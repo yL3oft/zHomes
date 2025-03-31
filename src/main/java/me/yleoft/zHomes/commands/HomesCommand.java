@@ -1,6 +1,6 @@
 package me.yleoft.zHomes.commands;
 
-import me.yleoft.zHomes.api.events.ExecuteHomesCommandEvent;
+import com.zhomes.api.event.player.ExecuteHomesCommandEvent;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;

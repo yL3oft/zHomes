@@ -1,7 +1,7 @@
 package me.yleoft.zHomes.commands;
 
 import me.yleoft.zHomes.Main;
-import me.yleoft.zHomes.api.events.ExecuteMainCommandEvent;
+import com.zhomes.api.event.player.ExecuteMainCommandEvent;
 import me.yleoft.zHomes.managers.PluginYAMLManager;
 import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
@@ -10,7 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 
 public class MainCommand extends ConfigUtils implements CommandExecutor {
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {

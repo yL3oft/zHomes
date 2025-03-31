@@ -1,19 +1,14 @@
 package me.yleoft.zHomes.storage;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,22 +20,37 @@ import org.jetbrains.annotations.Nullable;
 public class DatabaseConnection extends ConfigUtils {
 
     private static Connection conn = null;
+    protected static String type = "sqlite";
 
     public static String url = "jdbc:sqlite:" + Main.getInstance().getDataFolder().getPath() + "/database.db";
 
     public void connect() {
         try {
-            Class.forName("org.sqlite.JDBC");
-            if (databaseEnabled().booleanValue()) {
-                conn = DriverManager.getConnection(mysqlUrl(), databaseUsername(), databasePassword());
-            } else {
-                conn = DriverManager.getConnection(url);
+            switch (databaseType().toLowerCase()) {
+                case "mariadb":
+                    type = "mariadb";
+                    Class.forName("org.mariadb.jdbc.Driver");
+                    conn = DriverManager.getConnection(mariadbUrl(), databaseUsername(), databasePassword());
+                    break;
+                case "mysql":
+                    type = "mysql";
+                    Class.forName("com.mysql.cj.jdbc.Driver");
+                    conn = DriverManager.getConnection(mysqlUrl(), databaseUsername(), databasePassword());
+                    break;
+                default:
+                    type = "sqlite";
+                    Class.forName("org.sqlite.JDBC");
+                    conn = DriverManager.getConnection(url);
+                    break;
             }
-        } catch (SQLException|ClassNotFoundException e) {
+        } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public String mariadbUrl() {
+        return "jdbc:mariadb://" + databaseHost() + ":" + databasePort() + "/" + databaseDatabase();
+    }
     public String mysqlUrl() {
         return "jdbc:mysql://" + databaseHost() + ":" + databasePort() + "/" + databaseDatabase();
     }
@@ -178,7 +188,7 @@ public class DatabaseConnection extends ConfigUtils {
                 try {
                     dbConn = getConnection();
                     String insertQuery;
-                    if (databaseEnabled()) {
+                    if (!type.equalsIgnoreCase("sqlite")) {
                         insertQuery = "INSERT INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
                                 + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
                     } else {
@@ -262,7 +272,7 @@ public class DatabaseConnection extends ConfigUtils {
                 try {
                     dbConn = getConnection();
                     String insertQuery;
-                    if (databaseEnabled()) {
+                    if (!type.equalsIgnoreCase("sqlite")) {
                         insertQuery = "INSERT IGNORE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
                                 + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
                     } else {
@@ -346,7 +356,7 @@ public class DatabaseConnection extends ConfigUtils {
                 try {
                     dbConn = getConnection();
                     String insertQuery;
-                    if (databaseEnabled()) {
+                    if (!type.equalsIgnoreCase("sqlite")) {
                         insertQuery = "INSERT INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
                                 + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
                     } else {

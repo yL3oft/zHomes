@@ -1,7 +1,7 @@
 package me.yleoft.zHomes.commands;
 
-import me.yleoft.zHomes.api.events.ExecuteDelhomeCommandEvent;
-import me.yleoft.zHomes.api.events.PreExecuteDelhomeCommandEvent;
+import com.zhomes.api.event.player.ExecuteDelhomeCommandEvent;
+import com.zhomes.api.event.player.PreExecuteDelhomeCommandEvent;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;

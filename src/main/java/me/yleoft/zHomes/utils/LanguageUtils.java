@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.yleoft.zHomes.Main;
 import org.bukkit.Bukkit;
@@ -488,8 +491,9 @@ public class LanguageUtils extends ConfigUtils {
 
     public interface Helper {
         default void sendMsg(Player p, String text) {
+            text = hex(text);
             text = ChatColor.translateAlternateColorCodes('&', text
-                    .replace("%prefix%", Main.cfgu.prefix())
+                    .replace("%prefix%", hex(Main.cfgu.prefix()))
                     .replace("%limit%", String.valueOf(Main.cfgu.getMaxLimit(p)))
                     .replace("%numberofhomes%", String.valueOf(Main.hu.numberOfHomes(p)))
                     .replace("%homes%", Main.hu.homes(p)));
@@ -499,8 +503,9 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         default void sendMsg(CommandSender s, String text) {
+            text = hex(text);
             text = ChatColor.translateAlternateColorCodes('&', text
-                    .replace("%prefix%", Main.cfgu.prefix()));
+                    .replace("%prefix%", hex(Main.cfgu.prefix())));
             if (s instanceof Player) {
                 Player p = (Player)s;
                 text = ChatColor.translateAlternateColorCodes('&', text
@@ -514,10 +519,21 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         default void broadcast(String text) {
+            text = hex(text);
             text = ChatColor.translateAlternateColorCodes('&', text
-                    .replace("%prefix%", Main.cfgu.prefix()));
+                    .replace("%prefix%", hex(Main.cfgu.prefix())));
             text = PlaceholderAPI.setPlaceholders(null, text);
             Bukkit.getServer().broadcastMessage(text);
+        }
+
+        default String hex(String text) {
+            Matcher matcher = Pattern.compile("&#([A-Za-z0-9]{6})").matcher(text);
+            StringBuilder result = new StringBuilder();
+            while (matcher.find()) {
+                String replacement = "&x" + matcher.group(1).replaceAll("(.)", "&$1");
+                matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
+            }
+            return matcher.appendTail(result).toString();
         }
     }
 
