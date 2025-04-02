@@ -24,7 +24,6 @@ public class DatabaseEditor extends DatabaseConnection {
              PreparedStatement ps = con.prepareStatement("ALTER TABLE " + oldtable + " RENAME TO " + newtable)) {
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
         }
     }
 
