@@ -132,7 +132,7 @@ commands:
 </details>
 <details>
 <summary>Language Example (en.yml)</summary>
-  
+
 ```
 commands:
   # Up here you will find messages that can be used in multiple commands
