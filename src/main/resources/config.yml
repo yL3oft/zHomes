@@ -2,8 +2,9 @@ prefix: "&8[&4zHomes&8] "
 
 # Edit your mysql database config here
 database:
-    # Here you can define how to store the plugin data.
+  # Here you can define how to store the plugin data.
   # OPTIONS:
+  # - H2 (Preferred over SQLite)
   # - SQLite
   # - MariaDB (Preferred over MySQL)
   # - MySQL
@@ -15,8 +16,9 @@ database:
   username: root
   password: pass
   # -------------------- #
-  # WARNING: DO NOT CHANGE TABLE NAME UNLESS NECESSARY FOR SOME REASON
-  table: zHomes
+  # WARNING: DO NOT CHANGE ANYTHING BELOW IF YOU DON'T KNOW WHAT YOU'RE DOING
+  pool-size: 10
+  table-prefix: zhomes
 
 general:
   # Here you can define the language of the plugin, all languages can be found, edited and created on languages' directory.

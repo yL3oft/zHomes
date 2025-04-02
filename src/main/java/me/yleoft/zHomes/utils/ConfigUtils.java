@@ -166,8 +166,14 @@ public class ConfigUtils {
     public String databasePassword() {
         return main.getConfig().getString(this.databasePath + "password");
     }
+    public int databasePoolsize() {
+        return main.getConfig().getInt(this.databasePath + "pool-size");
+    }
+    public String databaseTablePrefix() {
+        return main.getConfig().getString(this.databasePath + "table-prefix").toLowerCase();
+    }
     public String databaseTable() {
-        return main.getConfig().getString(this.databasePath + "table").toUpperCase();
+        return databaseTablePrefix()+"_homes";
     }
     //</editor-fold>
 

@@ -14,7 +14,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
 
     @Override
     public String getIdentifier() {
-        return Main.getInstance().pluginName.toLowerCase();
+        return Main.getInstance().getDescription().getName().toLowerCase();
     }
 
     @Override

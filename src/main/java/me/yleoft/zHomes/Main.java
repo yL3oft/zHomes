@@ -10,10 +10,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.event.HandlerList;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -31,15 +37,34 @@ public final class Main extends JavaPlugin {
         return main;
     }
 
+    public static Object papi;
+
     public String pluginName = getDescription().getName();
     public String coloredPluginName = this.pluginName;
     public String pluginVer = getDescription().getVersion();
     public String site = "https://www.spigotmc.org/resources/zhomes.123141/";
     public static int bStatsId = 25021;
 
+    public File libsFolder = new File(getDataFolder(), "libs");
+
+    public final String mysqlVersion = "3.5.3";
+    public final String mysqlJar = "mysql-connector-j-" + mysqlVersion + ".jar";
+    public final String mysqlRepo = "https://mvnrepository.com/artifact/com.mysql/mysql-connector-j/" + mysqlVersion + "/" + mysqlJar;
+
+    public final String mariadbVersion = "3.5.3";
+    public final String mariadbJar = "mariadb-java-client-" + mariadbVersion + ".jar";
+    public final String mariadbRepo = "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/" + mariadbVersion + "/" + mariadbJar;
+
+    public final String h2Version = "2.3.232";
+    public final String h2Jar = "h2-" + h2Version + ".jar";
+    public final String h2Repo = "https://repo1.maven.org/maven2/com/h2database/h2/" + h2Version + "/" + h2Jar;
+
     public void onEnable() {
         //<editor-fold desc="Variables">
         main = Main.this;
+        pluginName = getDescription().getName();
+        coloredPluginName = this.pluginName;
+        pluginVer = getDescription().getVersion();
         pym = new PluginYAMLManager();
         fm = new FileManager();
         cfgu = new ConfigUtils();
@@ -49,14 +74,55 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
         coloredPluginName = cmdm.hex(coloredPluginName);
-        coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.<String>requireNonNull(getConfig().getString("prefix")));
+        coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getConfig().getString("prefix")));
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
         updatePlugin();
+        //<editor-fold desc="Download Libs">
+        if(!libsFolder.exists()) {
+            try {
+                Files.createDirectories(Paths.get(libsFolder.toURI()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        //<editor-fold desc="H2">
+        try {
+            File outputFile = new File(libsFolder, h2Jar);
+            if(!outputFile.exists()) {
+                downloadFile(h2Repo, outputFile);
+                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9H2Database §asaved to "+outputFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //</editor-fold>
+        //<editor-fold desc="MySQL">
+        try {
+            File outputFile = new File(libsFolder, mysqlJar);
+            if(!outputFile.exists()) {
+                downloadFile(mysqlRepo, outputFile);
+                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MySQL §asaved to "+outputFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //</editor-fold>
+        //<editor-fold desc="MariaDB">
+        try {
+            File outputFile = new File(libsFolder, mariadbJar);
+            if(!outputFile.exists()) {
+                downloadFile(mariadbRepo, outputFile);
+                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MariaDB §asaved to "+outputFile.getAbsolutePath());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //</editor-fold>
+        //</editor-fold>
         //<editor-fold desc="Database">
         db.connect();
         dbe.createTable(db.databaseTable(), "(UUID VARCHAR(36),HOME VARCHAR(100),LOCATION VARCHAR(255),PRIMARY KEY (UUID, HOME))");
-        db.disconnect();
         //</editor-fold>
         //<editor-fold desc="Metrics">
         if(cfgu.hasMetrics()) {
@@ -82,11 +148,16 @@ public final class Main extends JavaPlugin {
         loadCommands();
         //<editor-fold desc="Hooks">
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
-        if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            (new PlaceholderAPIExpansion()).register();
-            cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§ahook connected successfully!");
-        } else {
-            cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
+        try {
+            if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                papi = new PlaceholderAPIExpansion();
+                ((PlaceholderAPIExpansion)papi).register();
+                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§ahook connected successfully!");
+            } else {
+                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         //</editor-fold>
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started (Any errors will be above this message)");
@@ -94,7 +165,13 @@ public final class Main extends JavaPlugin {
     }
 
     public void onDisable() {
-        db.disconnect();
+        Bukkit.getScheduler().cancelTasks(this);
+        HandlerList.unregisterAll(this);
+        if (db != null) {
+            db.closePool();
+        }
+        ((PlaceholderAPIExpansion)papi).unregister();
+        main = null;
     }
 
     public boolean updatePlugin() {
@@ -105,7 +182,7 @@ public final class Main extends JavaPlugin {
 
         if(!getDescription().getVersion().equals(version)) {
             cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
-                    coloredPluginName+"&cPlugin is not up-to-date!"
+                    coloredPluginName+"&cPlugin is out-dated!"
             ));
             cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     pf+"&fNew version: &e"+version
@@ -185,6 +262,28 @@ public final class Main extends JavaPlugin {
             cmdm.sendMsg(getServer().getConsoleSender(), this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");
         }
         //</editor-fold>
+    }
+    public static void downloadFile(String fileURL, File saveFilePath) throws IOException {
+        URL url = new URL(fileURL);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        int responseCode = httpConn.getResponseCode();
+
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            InputStream inputStream = httpConn.getInputStream();
+            FileOutputStream outputStream = new FileOutputStream(saveFilePath);
+
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+
+            outputStream.close();
+            inputStream.close();
+        } else {
+            System.out.println("Error downloading libs. HTTP code: " + responseCode);
+        }
+        httpConn.disconnect();
     }
 
     //<editor-fold desc="Location Serialization">
