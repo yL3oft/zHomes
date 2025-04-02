@@ -19,6 +19,15 @@ public class DatabaseEditor extends DatabaseConnection {
         }
     }
 
+    public void renameTable(String oldtable, String newtable) {
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement("ALTER TABLE " + oldtable + " RENAME TO " + newtable)) {
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setHome(OfflinePlayer p, String home, String location) {
         try (Connection con = getConnection()) {
             if (isInTable(p, home)) {
