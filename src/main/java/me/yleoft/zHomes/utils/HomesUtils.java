@@ -1,5 +1,7 @@
 package me.yleoft.zHomes.utils;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import me.yleoft.zHomes.Main;
@@ -66,6 +68,15 @@ public class HomesUtils extends DatabaseEditor {
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }
+        if(Main.getInstance().getServer().getName().contains("Folia")) {
+            try {
+                Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
+                teleportAsyncMethod.invoke(p, loc);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException("Unable to teleport player to home", e);
+            }
+            return;
+        }
         p.teleport(loc);
     }
 
@@ -74,18 +85,24 @@ public class HomesUtils extends DatabaseEditor {
         boolean isDimensionalTeleport = false;
         if (!inSameWorld(getHomeWorld(t, home), p))
             isDimensionalTeleport = true;
-
         TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport, false, t);
         Bukkit.getPluginManager().callEvent((Event)event);
         if (event.isCancelled())
             return;
-
         if (isDimensionalTeleport && !canDimensionalTeleport(p)) {
             LanguageUtils.Home lang = new LanguageUtils.Home();
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }
-
+        if(Main.getInstance().getServer().getName().contains("Folia")) {
+            try {
+                Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
+                teleportAsyncMethod.invoke(p, loc);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException("Unable to teleport player to home", e);
+            }
+            return;
+        }
         p.teleport(loc);
     }
 

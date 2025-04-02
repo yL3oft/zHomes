@@ -97,17 +97,6 @@ public final class Main extends JavaPlugin {
             e.printStackTrace();
         }
         //</editor-fold>
-        //<editor-fold desc="MySQL">
-        try {
-            File outputFile = new File(libsFolder, mysqlJar);
-            if(!outputFile.exists()) {
-                downloadFile(mysqlRepo, outputFile);
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MySQL §asaved to "+outputFile.getAbsolutePath());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //</editor-fold>
         //<editor-fold desc="MariaDB">
         try {
             File outputFile = new File(libsFolder, mariadbJar);
@@ -166,12 +155,16 @@ public final class Main extends JavaPlugin {
     }
 
     public void onDisable() {
-        Bukkit.getScheduler().cancelTasks(this);
+        if (!getServer().getName().contains("Folia")) {
+            Bukkit.getScheduler().cancelTasks(this);
+        }
         HandlerList.unregisterAll(this);
         if (db != null) {
             db.closePool();
         }
-        ((PlaceholderAPIExpansion)papi).unregister();
+        if(papi != null) {
+            ((PlaceholderAPIExpansion)papi).unregister();
+        }
         main = null;
     }
 
