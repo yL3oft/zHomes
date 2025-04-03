@@ -41,13 +41,20 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                 }
                 case "converter": {
                     if (p.hasPermission(CmdMainConverterPermission())) {
+                        commands.add("sqlitetoh2");
                         commands.add("sqlitetomysql");
-                        commands.add("mysqltosqlite");
                         commands.add("sqlitetomariadb");
+                        commands.add("mysqltosqlite");
+                        commands.add("mysqltoh2");
                         commands.add("mariadbtosqlite");
+                        commands.add("mariadbtoh2");
+                        commands.add("h2tosqlite");
+                        commands.add("h2tomysql");
+                        commands.add("h2tomariadb");
                         commands.add("essentials");
                         commands.add("sethome");
                         commands.add("ultimatehomes");
+                        commands.add("xhomes");
                     }
                     break;
                 }

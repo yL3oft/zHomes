@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.zaxxer.hikari.HikariDataSource;
+import me.yleoft.zHomes.Main;
 import org.bukkit.OfflinePlayer;
 
 public class DatabaseEditor extends DatabaseConnection {
@@ -28,6 +31,7 @@ public class DatabaseEditor extends DatabaseConnection {
     }
 
     public void setHome(OfflinePlayer p, String home, String location) {
+        database_type type = Main.type;
         try (Connection con = getConnection()) {
             if (isInTable(p, home)) {
                 try (PreparedStatement ps = con.prepareStatement("UPDATE " + databaseTable() + " SET LOCATION=? WHERE UUID=? AND HOME=?")) {

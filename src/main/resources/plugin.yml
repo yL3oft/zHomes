@@ -1,5 +1,5 @@
 name: zHomes
-version: '1.3.1'
+version: '1.3.2'
 main: me.yleoft.zHomes.Main
 author: yLeoft
 website: 'https://github.com/yL3oft/zHomes'
@@ -9,6 +9,7 @@ softdepend:
   - Essentials
   - UltimateHomes
   - Sethome
+  - Xhomes
 folia-supported: true
 commands: {}
 permissions: {}

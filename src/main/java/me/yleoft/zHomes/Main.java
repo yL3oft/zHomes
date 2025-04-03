@@ -1,5 +1,6 @@
 package me.yleoft.zHomes;
 
+import com.zaxxer.hikari.HikariDataSource;
 import me.yleoft.zHomes.commands.*;
 import me.yleoft.zHomes.hooks.*;
 import me.yleoft.zHomes.managers.*;
@@ -13,13 +14,13 @@ import org.bukkit.World;
 import org.bukkit.event.HandlerList;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Driver;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -37,6 +38,11 @@ public final class Main extends JavaPlugin {
         return main;
     }
 
+    public static HikariDataSource dataSource = null;
+    public static database_type type = database_type.SQLITE;
+    public static Driver mariadbDriver = null;
+    public static Driver h2Driver = null;
+
     public static Object papi;
 
     public String pluginName = getDescription().getName();
@@ -46,10 +52,6 @@ public final class Main extends JavaPlugin {
     public static int bStatsId = 25021;
 
     public File libsFolder = new File(getDataFolder(), "libs");
-
-    public final String mysqlVersion = "3.5.3";
-    public final String mysqlJar = "mysql-connector-j-" + mysqlVersion + ".jar";
-    public final String mysqlRepo = "https://mvnrepository.com/artifact/com.mysql/mysql-connector-j/" + mysqlVersion + "/" + mysqlJar;
 
     public final String mariadbVersion = "3.5.3";
     public final String mariadbJar = "mariadb-java-client-" + mariadbVersion + ".jar";

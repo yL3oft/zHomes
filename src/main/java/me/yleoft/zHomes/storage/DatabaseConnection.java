@@ -14,7 +14,9 @@ import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,55 +27,46 @@ import org.jetbrains.annotations.Nullable;
 
 public class DatabaseConnection extends ConfigUtils {
 
-    private static HikariDataSource dataSource = null;
-    protected static database_type type = database_type.SQLITE;
-
     public void connect() {
         try {
-            if (dataSource == null) {
+            if (Main.mariadbDriver == null) {
+                File mariadbjarFile = new File(Main.getInstance().libsFolder, Main.getInstance().mariadbJar);
+                URL mariadbjarURL = mariadbjarFile.toURI().toURL();
+                URLClassLoader mariadbclassLoader = new URLClassLoader(new URL[]{mariadbjarURL}, Main.class.getClassLoader());
+                Class<?> mariadbdriverClass = Class.forName("org.mariadb.jdbc.Driver", true, mariadbclassLoader);
+                Main.mariadbDriver = (Driver) mariadbdriverClass.getDeclaredConstructor().newInstance();
+                DriverManager.registerDriver(new DriverShim(Main.mariadbDriver));
+            }
+            if (Main.h2Driver == null) {
+                File h2jarFile = new File(Main.getInstance().libsFolder, Main.getInstance().h2Jar);
+                URL h2jarURL = h2jarFile.toURI().toURL();
+                URLClassLoader h2classLoader = new URLClassLoader(new URL[]{h2jarURL}, Main.class.getClassLoader());
+                Class<?> h2driverClass = Class.forName("org.h2.Driver", true, h2classLoader);
+                Main.h2Driver = (Driver) h2driverClass.getDeclaredConstructor().newInstance();
+                DriverManager.registerDriver(new DriverShim(Main.h2Driver));
+            }
+
+            if (Main.dataSource == null || Main.dataSource.isClosed()) {
                 HikariConfig config = new HikariConfig();
-                File jarFile;
-                URL jarURL;
-                URLClassLoader classLoader;
-                Class<?> driverClass;
-                Driver driverInstance;
                 switch (databaseType().toLowerCase()) {
                     case "mariadb":
-                        type = database_type.EXTERNAL;
-                        jarFile = new File(Main.getInstance().libsFolder, Main.getInstance().mariadbJar);
-                        jarURL = jarFile.toURI().toURL();
-                        classLoader = new URLClassLoader(new URL[]{jarURL}, Main.class.getClassLoader());
-                        driverClass = Class.forName("org.mariadb.jdbc.Driver", true, classLoader);
-                        driverInstance = (Driver) driverClass.getDeclaredConstructor().newInstance();
-                        DriverManager.registerDriver(new DriverShim(driverInstance));
+                        Main.type = database_type.EXTERNAL;
                         config.setJdbcUrl(mariadbUrl());
                         config.setUsername(databaseUsername());
                         config.setPassword(databasePassword());
                         break;
                     case "mysql":
-                        type = database_type.EXTERNAL;
-                        jarFile = new File(Main.getInstance().libsFolder, Main.getInstance().mysqlJar);
-                        jarURL = jarFile.toURI().toURL();
-                        classLoader = new URLClassLoader(new URL[]{jarURL}, Main.class.getClassLoader());
-                        driverClass = Class.forName("com.mysql.jdbc.Driver", true, classLoader);
-                        driverInstance = (Driver) driverClass.getDeclaredConstructor().newInstance();
-                        DriverManager.registerDriver(new DriverShim(driverInstance));
+                        Main.type = database_type.EXTERNAL;
                         config.setJdbcUrl(mysqlUrl());
                         config.setUsername(databaseUsername());
                         config.setPassword(databasePassword());
                         break;
                     case "h2":
-                        type = database_type.H2;
-                        jarFile = new File(Main.getInstance().libsFolder, Main.getInstance().h2Jar);
-                        jarURL = jarFile.toURI().toURL();
-                        classLoader = new URLClassLoader(new URL[]{jarURL}, Main.class.getClassLoader());
-                        driverClass = Class.forName("org.h2.Driver", true, classLoader);
-                        driverInstance = (Driver) driverClass.getDeclaredConstructor().newInstance();
-                        DriverManager.registerDriver(new DriverShim(driverInstance));
+                        Main.type = database_type.H2;
                         config.setJdbcUrl(h2Url());
                         break;
                     default:
-                        type = database_type.SQLITE;
+                        Main.type = database_type.SQLITE;
                         config.setJdbcUrl(sqliteUrl());
                         config.setDriverClassName("org.sqlite.JDBC");
                         break;
@@ -83,7 +76,7 @@ public class DatabaseConnection extends ConfigUtils {
                 config.setConnectionTimeout(30000);
                 config.setIdleTimeout(600000);
                 config.setLeakDetectionThreshold(2000);
-                dataSource = new HikariDataSource(config);
+                Main.dataSource = new HikariDataSource(config);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,12 +102,14 @@ public class DatabaseConnection extends ConfigUtils {
     }
 
     public void disconnect() {
+        HikariDataSource dataSource = Main.dataSource;
         if (dataSource != null && !dataSource.isClosed()) {
             dataSource.close();
         }
     }
 
     public Connection getConnection() {
+        HikariDataSource dataSource = Main.dataSource;
         try {
             if (dataSource != null) {
                 return dataSource.getConnection();
@@ -129,197 +124,65 @@ public class DatabaseConnection extends ConfigUtils {
     }
 
     public void closePool() {
+        HikariDataSource dataSource = Main.dataSource;
         if (dataSource != null) {
             dataSource.close();
         }
     }
 
     public void migrateData(@Nullable Player p, @NotNull String type) {new BukkitRunnable() {
+        database_type dbType = Main.type;
         @Override
             public void run() {
             LanguageUtils.MainCMD.MainConverter lang = new LanguageUtils.MainCMD.MainConverter();
-            Connection sqliteConn = null;
-            Connection mysqlConn = null;
-            Connection mariadbConn = null;
-            PreparedStatement pstmt = null;
-            Statement stmt = null;
-            ResultSet resultSet = null;
-            disconnect();
             switch(type) {
+                case "sqlitetoh2": {
+                    migrateLocalDatabase(p, sqliteUrl(), h2Url(),
+                            "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)"
+                    );
+                    break;
+                }
                 case "sqlitetomysql": {
-                    try {
-                        sqliteConn = DriverManager.getConnection(sqliteUrl());
-                        mysqlConn = DriverManager.getConnection(mysqlUrl(), databaseUsername(), databasePassword());
-                        System.out.println("Connected to both SQLite and MySQL.");
-                        stmt = sqliteConn.createStatement();
-                        ResultSet countResult = stmt.executeQuery("SELECT COUNT(*) AS total FROM " + databaseTable());
-                        countResult.next();
-                        int totalRows = countResult.getInt("total");
-                        countResult.close();
-                        if (totalRows == 0) {
-                            System.out.println("No data to migrate.");
-                            return;
-                        }
-                        System.out.println("Starting migration of " + totalRows + " records...");
-                        resultSet = stmt.executeQuery("SELECT UUID, HOME, LOCATION FROM " + databaseTable());
-                        String insertQuery = "INSERT IGNORE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
-                        pstmt = mysqlConn.prepareStatement(insertQuery);
-                        int count = 0;
-                        while (resultSet.next()) {
-                            String uuid = resultSet.getString("UUID");
-                            String home = resultSet.getString("HOME");
-                            String location = resultSet.getString("LOCATION");
-                            pstmt.setString(1, uuid);
-                            pstmt.setString(2, home);
-                            pstmt.setString(3, location);
-                            pstmt.executeUpdate();
-                            count++;
-                            if (p != null) {
-                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + "/" + totalRows + "&8]");
-                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            }
-                        }
-                        if (p != null) {
-                            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + "/" + totalRows + "&8]");
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                        }
-                        System.out.println("\nMigration completed! " + count + " records transferred.");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    migrateDatabase(p, sqliteUrl(), mysqlUrl(), "INSERT IGNORE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)");
                     break;
                 }
                 case "sqlitetomariadb": {
-                    try {
-                        sqliteConn = DriverManager.getConnection(sqliteUrl());
-                        mariadbConn = DriverManager.getConnection(mariadbUrl(), databaseUsername(), databasePassword());
-                        System.out.println("Connected to both SQLite and MariaDB.");
-                        stmt = sqliteConn.createStatement();
-                        ResultSet countResult = stmt.executeQuery("SELECT COUNT(*) AS total FROM " + databaseTable());
-                        countResult.next();
-                        int totalRows = countResult.getInt("total");
-                        countResult.close();
-                        if (totalRows == 0) {
-                            System.out.println("No data to migrate.");
-                            return;
-                        }
-                        System.out.println("Starting migration of " + totalRows + " records...");
-                        resultSet = stmt.executeQuery("SELECT UUID, HOME, LOCATION FROM " + databaseTable());
-                        String insertQuery = "INSERT IGNORE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
-                        pstmt = mariadbConn.prepareStatement(insertQuery);
-                        int count = 0;
-                        while (resultSet.next()) {
-                            String uuid = resultSet.getString("UUID");
-                            String home = resultSet.getString("HOME");
-                            String location = resultSet.getString("LOCATION");
-                            pstmt.setString(1, uuid);
-                            pstmt.setString(2, home);
-                            pstmt.setString(3, location);
-                            pstmt.executeUpdate();
-                            count++;
-                            if (p != null) {
-                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + "/" + totalRows + "&8]");
-                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            }
-                        }
-                        if (p != null) {
-                            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + "/" + totalRows + "&8]");
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                        }
-                        System.out.println("\nMigration completed! " + count + " records transferred.");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    migrateDatabase(p, sqliteUrl(), mariadbUrl(), "INSERT IGNORE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)");
                     break;
                 }
                 case "mysqltosqlite": {
-                    try {
-                        sqliteConn = DriverManager.getConnection(sqliteUrl());
-                        mysqlConn = DriverManager.getConnection(mysqlUrl(), databaseUsername(), databasePassword());
-                        System.out.println("Connected to both SQLite and MySQL.");
-                        stmt = mysqlConn.createStatement();
-                        ResultSet countResult = stmt.executeQuery("SELECT COUNT(*) AS total FROM " + databaseTable());
-                        countResult.next();
-                        int totalRows = countResult.getInt("total");
-                        countResult.close();
-                        if (totalRows == 0) {
-                            System.out.println("No data to migrate.");
-                            return;
-                        }
-                        System.out.println("Starting migration of " + totalRows + " records...");
-                        resultSet = stmt.executeQuery("SELECT UUID, HOME, LOCATION FROM " + databaseTable());
-                        String insertQuery = "INSERT OR REPLACE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?)";
-                        pstmt = sqliteConn.prepareStatement(insertQuery);
-                        int count = 0;
-                        while (resultSet.next()) {
-                            String uuid = resultSet.getString("UUID");
-                            String home = resultSet.getString("HOME");
-                            String location = resultSet.getString("LOCATION");
-                            pstmt.setString(1, uuid);
-                            pstmt.setString(2, home);
-                            pstmt.setString(3, location);
-                            pstmt.executeUpdate();
-                            count++;
-                            if (p != null) {
-                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + "/" + totalRows + "&8]");
-                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            }
-                        }
-                        if (p != null) {
-                            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + "/" + totalRows + "&8]");
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                        }
-                        System.out.println("\nMigration completed! " + count + " records transferred.");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    migrateDatabase2(p, mysqlUrl(), sqliteUrl(), "INSERT OR REPLACE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?)");
+                    break;
+                }
+                case "mysqltoh2": {
+                    migrateDatabase2(p, mysqlUrl(), h2Url(),
+                            "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)"
+                    );
                     break;
                 }
                 case "mariadbtosqlite": {
-                    try {
-                        sqliteConn = DriverManager.getConnection(sqliteUrl());
-                        mariadbConn = DriverManager.getConnection(mariadbUrl(), databaseUsername(), databasePassword());
-                        System.out.println("Connected to both SQLite and MariaDB.");
-                        stmt = mariadbConn.createStatement();
-                        ResultSet countResult = stmt.executeQuery("SELECT COUNT(*) AS total FROM " + databaseTable());
-                        countResult.next();
-                        int totalRows = countResult.getInt("total");
-                        countResult.close();
-                        if (totalRows == 0) {
-                            System.out.println("No data to migrate.");
-                            return;
-                        }
-                        System.out.println("Starting migration of " + totalRows + " records...");
-                        resultSet = stmt.executeQuery("SELECT UUID, HOME, LOCATION FROM " + databaseTable());
-                        String insertQuery = "INSERT OR REPLACE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?)";
-                        pstmt = sqliteConn.prepareStatement(insertQuery);
-                        int count = 0;
-                        while (resultSet.next()) {
-                            String uuid = resultSet.getString("UUID");
-                            String home = resultSet.getString("HOME");
-                            String location = resultSet.getString("LOCATION");
-                            pstmt.setString(1, uuid);
-                            pstmt.setString(2, home);
-                            pstmt.setString(3, location);
-                            pstmt.executeUpdate();
-                            count++;
-                            if (p != null) {
-                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + "/" + totalRows + "&8]");
-                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            }
-                        }
-                        if (p != null) {
-                            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + "/" + totalRows + "&8]");
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                        }
-                        System.out.println("\nMigration completed! " + count + " records transferred.");
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    migrateDatabase2(p, mariadbUrl(), sqliteUrl(), "INSERT OR REPLACE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?)");
+                    break;
+                }
+                case "mariadbtoh2": {
+                    migrateDatabase2(p, mariadbUrl(), h2Url(),
+                            "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)"
+                    );
+                    break;
+                }
+                case "h2tosqlite": {
+                    migrateLocalDatabase(p, h2Url(), sqliteUrl(), "INSERT OR REPLACE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?)");
+                    break;
+                }
+                case "h2tomysql": {
+                    migrateDatabase(p, h2Url(), mysqlUrl(), "INSERT INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)");
+                    break;
+                }
+                case "h2tomariadb": {
+                    migrateDatabase(p, h2Url(), mariadbUrl(), "INSERT INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)");
                     break;
                 }
                 case "essentials": {
@@ -329,72 +192,73 @@ public class DatabaseConnection extends ConfigUtils {
                         return;
                     }
 
-                    Connection dbConn = null;
-
-                    try {
-                        dbConn = getConnection();
+                    try (Connection conn = getConnection()) {
                         String insertQuery;
-                        if (!type.equalsIgnoreCase("sqlite")) {
+                        if (dbType.equals(database_type.H2)) {
+                            insertQuery = "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)";
+                        } else if (dbType.equals(database_type.SQLITE)) {
+                            insertQuery = "INSERT OR REPLACE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, SUBSTR(?, 1, 100), ?)";
+                        } else {
                             insertQuery = "INSERT INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
                                     + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
-                        } else {
-                            insertQuery = "INSERT OR REPLACE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, SUBSTR(?, 1, 100), ?)";
                         }
+                        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+                            File[] files = directory.listFiles((dir, name) -> name.endsWith(".yml"));
+                            if (files == null)
+                                lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
 
-                        pstmt = dbConn.prepareStatement(insertQuery);
-                        File[] files = directory.listFiles((dir, name) -> name.endsWith(".yml"));
-                        if (files == null) lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
+                            int totalUsers = files.length;
+                            System.out.println("Starting migration for " + totalUsers + " users...");
 
-                        int totalUsers = files.length;
-                        System.out.println("Starting migration for " + totalUsers + " users...");
+                            int count = 0;
+                            int countH = 0;
+                            for (File file : files) {
+                                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+                                String uuid = file.getName().replace(".yml", "");
 
-                        int count = 0;
-                        int countH = 0;
-                        for (File file : files) {
-                            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-                            String uuid = file.getName().replace(".yml", "");
+                                if (!yaml.contains("homes")) {
+                                    count++;
+                                    if (p != null) {
+                                        String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                    }
+                                    continue;
+                                }
 
-                            if (!yaml.contains("homes")) {
+                                ConfigurationSection homesSection = yaml.getConfigurationSection("homes");
+                                for (String homeName : homesSection.getKeys(false)) {
+                                    ConfigurationSection home = homesSection.getConfigurationSection(homeName);
+
+                                    if (home == null) continue;
+
+                                    String worldName = home.getString("world-name", "");
+                                    double x = home.getDouble("x");
+                                    double y = home.getDouble("y");
+                                    double z = home.getDouble("z");
+                                    float yaw = (float) home.getDouble("yaw");
+                                    float pitch = (float) home.getDouble("pitch");
+                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+
+                                    pstmt.setString(1, uuid);
+                                    pstmt.setString(2, homeName);
+                                    pstmt.setString(3, location);
+                                    pstmt.executeUpdate();
+                                    countH++;
+                                }
                                 count++;
                                 if (p != null) {
                                     String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
                                     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                 }
-                                continue;
                             }
-
-                            ConfigurationSection homesSection = yaml.getConfigurationSection("homes");
-                            for (String homeName : homesSection.getKeys(false)) {
-                                ConfigurationSection home = homesSection.getConfigurationSection(homeName);
-
-                                if (home == null) continue;
-
-                                String worldName = home.getString("world-name", "");
-                                double x = home.getDouble("x");
-                                double y = home.getDouble("y");
-                                double z = home.getDouble("z");
-                                float yaw = (float) home.getDouble("yaw");
-                                float pitch = (float) home.getDouble("pitch");
-                                String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
-
-                                pstmt.setString(1, uuid);
-                                pstmt.setString(2, homeName);
-                                pstmt.setString(3, location);
-                                pstmt.executeUpdate();
-                                countH++;
-                            }
-                            count++;
                             if (p != null) {
-                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
                                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                             }
+                            System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from Essentials.");
                         }
-                        if (p != null) {
-                            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                        }
-                        System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from Essentials.");
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -407,72 +271,73 @@ public class DatabaseConnection extends ConfigUtils {
                         return;
                     }
 
-                    Connection dbConn = null;
-
-                    try {
-                        dbConn = getConnection();
+                    try (Connection conn = getConnection()) {
                         String insertQuery;
-                        if (!type.equalsIgnoreCase("sqlite")) {
-                            insertQuery = "INSERT IGNORE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
-                                    + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
-                        } else {
+                        if (dbType.equals(database_type.H2)) {
+                            insertQuery = "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)";
+                        } else if (dbType.equals(database_type.SQLITE)) {
                             insertQuery = "INSERT OR REPLACE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, SUBSTR(?, 1, 100), ?)";
+                        } else {
+                            insertQuery = "INSERT INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
+                                    + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
                         }
+                        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+                            File[] files = directory.listFiles((dir, name) -> name.endsWith(".yml"));
+                            if (files == null)
+                                lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
 
-                        pstmt = dbConn.prepareStatement(insertQuery);
-                        File[] files = directory.listFiles((dir, name) -> name.endsWith(".yml"));
-                        if (files == null) lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
+                            int totalUsers = files.length;
+                            System.out.println("Starting migration for " + totalUsers + " users...");
 
-                        int totalUsers = files.length;
-                        System.out.println("Starting migration for " + totalUsers + " users...");
+                            int count = 0;
+                            int countH = 0;
+                            for (File file : files) {
+                                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+                                String uuid = file.getName().replace(".yml", "");
 
-                        int count = 0;
-                        int countH = 0;
-                        for (File file : files) {
-                            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-                            String uuid = file.getName().replace(".yml", "");
+                                if (!yaml.contains("Homes")) {
+                                    count++;
+                                    if (p != null) {
+                                        String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                    }
+                                    continue;
+                                }
 
-                            if (!yaml.contains("Homes")) {
+                                ConfigurationSection homesSection = yaml.getConfigurationSection("Homes");
+                                for (String homeName : homesSection.getKeys(false)) {
+                                    ConfigurationSection home = homesSection.getConfigurationSection(homeName);
+
+                                    if (home == null) continue;
+
+                                    String worldName = home.getString("world", "");
+                                    double x = home.getDouble("x");
+                                    double y = home.getDouble("y");
+                                    double z = home.getDouble("z");
+                                    float yaw = (float) home.getDouble("yaw");
+                                    float pitch = (float) home.getDouble("pitch");
+                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+
+                                    pstmt.setString(1, uuid);
+                                    pstmt.setString(2, homeName);
+                                    pstmt.setString(3, location);
+                                    pstmt.executeUpdate();
+                                    countH++;
+                                }
                                 count++;
                                 if (p != null) {
                                     String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
                                     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                 }
-                                continue;
                             }
-
-                            ConfigurationSection homesSection = yaml.getConfigurationSection("Homes");
-                            for (String homeName : homesSection.getKeys(false)) {
-                                ConfigurationSection home = homesSection.getConfigurationSection(homeName);
-
-                                if (home == null) continue;
-
-                                String worldName = home.getString("world", "");
-                                double x = home.getDouble("x");
-                                double y = home.getDouble("y");
-                                double z = home.getDouble("z");
-                                float yaw = (float) home.getDouble("yaw");
-                                float pitch = (float) home.getDouble("pitch");
-                                String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
-
-                                pstmt.setString(1, uuid);
-                                pstmt.setString(2, homeName);
-                                pstmt.setString(3, location);
-                                pstmt.executeUpdate();
-                                countH++;
-                            }
-                            count++;
                             if (p != null) {
-                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
                                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                             }
+                            System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from SetHome.");
                         }
-                        if (p != null) {
-                            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
-                        }
-                        System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from SetHome.");
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -485,72 +350,146 @@ public class DatabaseConnection extends ConfigUtils {
                         return;
                     }
 
-                    Connection dbConn = null;
-
-                    try {
-                        dbConn = getConnection();
+                    try (Connection conn = getConnection()) {
                         String insertQuery;
-                        if (!type.equalsIgnoreCase("sqlite")) {
+                        if (dbType.equals(database_type.H2)) {
+                            insertQuery = "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)";
+                        } else if (dbType.equals(database_type.SQLITE)) {
+                            insertQuery = "INSERT OR REPLACE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, SUBSTR(?, 1, 100), ?)";
+                        } else {
                             insertQuery = "INSERT INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
                                     + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
-                        } else {
-                            insertQuery = "INSERT OR REPLACE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, SUBSTR(?, 1, 100), ?)";
                         }
+                        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+                            File[] files = directory.listFiles((dir, name) -> name.endsWith(".yml"));
+                            if (files == null)
+                                lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
 
-                        pstmt = dbConn.prepareStatement(insertQuery);
-                        File[] files = directory.listFiles((dir, name) -> name.endsWith(".yml"));
-                        if (files == null) lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
+                            int totalUsers = files.length;
+                            System.out.println("Starting migration for " + totalUsers + " users...");
 
-                        int totalUsers = files.length;
-                        System.out.println("Starting migration for " + totalUsers + " users...");
+                            int count = 0;
+                            int countH = 0;
+                            for (File file : files) {
+                                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+                                String uuid = file.getName().replace(".yml", "");
 
-                        int count = 0;
-                        int countH = 0;
-                        for (File file : files) {
-                            YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-                            String uuid = file.getName().replace(".yml", "");
+                                if (!yaml.contains("homes")) {
+                                    count++;
+                                    if (p != null) {
+                                        String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                    }
+                                    continue;
+                                }
 
-                            if (!yaml.contains("homes")) {
+                                ConfigurationSection homesSection = yaml.getConfigurationSection("homes");
+                                for (String homeName : homesSection.getKeys(false)) {
+                                    ConfigurationSection home = homesSection.getConfigurationSection(homeName);
+
+                                    if (home == null) continue;
+
+                                    String worldName = home.getString("world", "");
+                                    double x = home.getDouble("x");
+                                    double y = home.getDouble("y");
+                                    double z = home.getDouble("z");
+                                    float yaw = (float) home.getDouble("yaw");
+                                    float pitch = (float) home.getDouble("pitch");
+                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+
+                                    pstmt.setString(1, uuid);
+                                    pstmt.setString(2, homeName);
+                                    pstmt.setString(3, location);
+                                    pstmt.executeUpdate();
+                                    countH++;
+                                }
                                 count++;
                                 if (p != null) {
                                     String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
                                     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                 }
-                                continue;
                             }
-
-                            ConfigurationSection homesSection = yaml.getConfigurationSection("homes");
-                            for (String homeName : homesSection.getKeys(false)) {
-                                ConfigurationSection home = homesSection.getConfigurationSection(homeName);
-
-                                if (home == null) continue;
-
-                                String worldName = home.getString("world", "");
-                                double x = home.getDouble("x");
-                                double y = home.getDouble("y");
-                                double z = home.getDouble("z");
-                                float yaw = (float) home.getDouble("yaw");
-                                float pitch = (float) home.getDouble("pitch");
-                                String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
-
-                                pstmt.setString(1, uuid);
-                                pstmt.setString(2, homeName);
-                                pstmt.setString(3, location);
-                                pstmt.executeUpdate();
-                                countH++;
-                            }
-                            count++;
                             if (p != null) {
-                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
                                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                             }
+                            System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from UltimateHomes.");
                         }
-                        if (p != null) {
-                            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-                            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case "xhomes": {
+                    File file = new File(Main.getInstance().getDataFolder()+"/../Xhomes/playerhomes.yml");
+                    if (!file.exists()) {
+                        System.out.println("Invalid file: " + file.getPath());
+                        return;
+                    }
+
+                    try (Connection conn = getConnection()) {
+                        String insertQuery;
+                        if (dbType.equals(database_type.H2)) {
+                            insertQuery = "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)";
+                        } else if (dbType.equals(database_type.SQLITE)) {
+                            insertQuery = "INSERT OR REPLACE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, SUBSTR(?, 1, 100), ?)";
+                        } else {
+                            insertQuery = "INSERT INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
+                                    + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
                         }
-                        System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from UltimateHomes.");
+                        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+                            YamlConfiguration fYaml = YamlConfiguration.loadConfiguration(file);
+                            int totalUsers = fYaml.getKeys(false).size();
+                            System.out.println("Starting migration for " + totalUsers + " users...");
+
+                            int count = 0;
+                            int countH = 0;
+                            for (String player : fYaml.getKeys(false)) {
+                                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+                                OfflinePlayer offplayer = Bukkit.getOfflinePlayer(player);
+                                if (offplayer == null) {
+                                    count++;
+                                    if (p != null) {
+                                        String message = ChatColor.translateAlternateColorCodes('&', "&aConvertion failed, skipping user... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                    }
+                                    continue;
+                                }
+                                String uuid = offplayer.getUniqueId().toString();
+
+                                ConfigurationSection homesSection = yaml.getConfigurationSection(player);
+                                for (String homeName : homesSection.getKeys(false)) {
+                                    String[] homeS = homesSection.getString(homeName).split(",");
+                                    String worldName = homeS[0];
+                                    double x = Double.parseDouble(homeS[1]);
+                                    double y = Double.parseDouble(homeS[2]);
+                                    double z = Double.parseDouble(homeS[3]);
+                                    float yaw = Float.parseFloat(homeS[4]);
+                                    float pitch = Float.parseFloat(homeS[5]);
+                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+
+                                    pstmt.setString(1, uuid);
+                                    pstmt.setString(2, homeName);
+                                    pstmt.setString(3, location);
+                                    pstmt.executeUpdate();
+                                    countH++;
+                                }
+                                count++;
+                                if (p != null) {
+                                    String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                }
+                            }
+                            if (p != null) {
+                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                            }
+                            System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from XHomes.");
+                        }
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
@@ -559,26 +498,127 @@ public class DatabaseConnection extends ConfigUtils {
                 default: {
                     if (p != null) {
                         lang.sendMsg(p, lang.getUsage());
-                        return;
                     }
                 }
             }
-            connect();
-            try {
-                if (resultSet != null)
-                    resultSet.close();
-                if (stmt != null)
-                    stmt.close();
-                if (pstmt != null)
-                    pstmt.close();
-                if (sqliteConn != null)
-                    sqliteConn.close();
-                if (mysqlConn != null)
-                    mysqlConn.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
     }}.runTaskAsynchronously(Main.getInstance());}
+
+    private void migrateDatabase(Player p, String sourceUrl, String targetUrl, String insertQuery) {
+        disconnect();
+        try (Connection sourceConn = DriverManager.getConnection(sourceUrl);
+             Connection targetConn = DriverManager.getConnection(targetUrl, databaseUsername(), databasePassword())) {
+            System.out.println("Connected to both source and target databases.");
+            try (Statement stmt = sourceConn.createStatement();
+                 ResultSet countResult = stmt.executeQuery("SELECT COUNT(*) AS total FROM " + databaseTable())) {
+                countResult.next();
+                int totalRows = countResult.getInt("total");
+                if (totalRows == 0) {
+                    System.out.println("No data to migrate.");
+                    return;
+                }
+                System.out.println("Starting migration of " + totalRows + " records...");
+                try (ResultSet resultSet = stmt.executeQuery("SELECT UUID, HOME, LOCATION FROM " + databaseTable())) {
+                    try (PreparedStatement pstmt = targetConn.prepareStatement(insertQuery)) {
+                        int count = 0;
+                        while (resultSet.next()) {
+                            pstmt.setString(1, resultSet.getString("UUID"));
+                            pstmt.setString(2, resultSet.getString("HOME"));
+                            pstmt.setString(3, resultSet.getString("LOCATION"));
+                            pstmt.executeUpdate();
+                            count++;
+                            updateProgress(p, count, totalRows);
+                        }
+                        completeMigration(p, count, totalRows);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        connect();
+    }
+    private void migrateDatabase2(Player p, String sourceUrl, String targetUrl, String insertQuery) {
+        disconnect();
+        try (Connection sourceConn = DriverManager.getConnection(sourceUrl, databaseUsername(), databasePassword());
+             Connection targetConn = DriverManager.getConnection(targetUrl)) {
+            System.out.println("Connected to both source and target databases.");
+            try (Statement stmt = sourceConn.createStatement();
+                 ResultSet countResult = stmt.executeQuery("SELECT COUNT(*) AS total FROM " + databaseTable())) {
+                countResult.next();
+                int totalRows = countResult.getInt("total");
+                if (totalRows == 0) {
+                    System.out.println("No data to migrate.");
+                    return;
+                }
+                System.out.println("Starting migration of " + totalRows + " records...");
+                try (ResultSet resultSet = stmt.executeQuery("SELECT UUID, HOME, LOCATION FROM " + databaseTable())) {
+                    try (PreparedStatement pstmt = targetConn.prepareStatement(insertQuery)) {
+                        int count = 0;
+                        while (resultSet.next()) {
+                            pstmt.setString(1, resultSet.getString("UUID"));
+                            pstmt.setString(2, resultSet.getString("HOME"));
+                            pstmt.setString(3, resultSet.getString("LOCATION"));
+                            pstmt.executeUpdate();
+                            count++;
+                            updateProgress(p, count, totalRows);
+                        }
+                        completeMigration(p, count, totalRows);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        connect();
+    }
+    private void migrateLocalDatabase(Player p, String sourceUrl, String targetUrl, String insertQuery) {
+        disconnect();
+        try (Connection sourceConn = DriverManager.getConnection(sourceUrl);
+             Connection targetConn = DriverManager.getConnection(targetUrl)) {
+            System.out.println("Connected to both source and target databases.");
+            try (Statement stmt = sourceConn.createStatement();
+                 ResultSet countResult = stmt.executeQuery("SELECT COUNT(*) AS total FROM " + databaseTable())) {
+                countResult.next();
+                int totalRows = countResult.getInt("total");
+                if (totalRows == 0) {
+                    System.out.println("No data to migrate.");
+                    return;
+                }
+                System.out.println("Starting migration of " + totalRows + " records...");
+                try (ResultSet resultSet = stmt.executeQuery("SELECT UUID, HOME, LOCATION FROM " + databaseTable())) {
+                    try (PreparedStatement pstmt = targetConn.prepareStatement(insertQuery)) {
+                        int count = 0;
+                        while (resultSet.next()) {
+                            pstmt.setString(1, resultSet.getString("UUID"));
+                            pstmt.setString(2, resultSet.getString("HOME"));
+                            pstmt.setString(3, resultSet.getString("LOCATION"));
+                            pstmt.executeUpdate();
+                            count++;
+                            updateProgress(p, count, totalRows);
+                        }
+                        completeMigration(p, count, totalRows);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        connect();
+    }
+    private void updateProgress(Player p, int count, int totalRows) {
+        if (p != null) {
+            String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + "/" + totalRows + "&8]");
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+        }
+    }
+    private void completeMigration(Player p, int count, int totalRows) {
+        if (p != null) {
+            String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + "/" + totalRows + "&8]");
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+        }
+        System.out.println("\nMigration completed! " + count + " records transferred.");
+    }
 
     public boolean existsTableColumnValue(String table, String columnName, String value) {
         try (Connection con = getConnection();
