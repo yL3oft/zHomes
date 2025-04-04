@@ -50,6 +50,11 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <failOnError>false</failOnError>
+          <encoding>UTF-8</encoding>
+          <source>1.8</source>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
