@@ -1,12 +1,12 @@
 commands:
   # Aqui em cima Você vai achar mensagens que podem ser utilizadas em varios comandos
-  home-already-exist: "&cVocê já tem uma home com este nome."
-  home-doesnt-exist: "&cVocê não tem nenhuma home com este nome."
-  home-doesnt-exist-others: "&e%player% &cnão tem nenhuma home com este nome."
-  no-permission: "&cVocê não tem permissao para executar este comando."
-  cooldown: "&cVocê precisa esperar %time% segundos para executar este comanda novamente."
-  cant-use-2dot: "&cVocê não pode usar &e':' &cneste comando."
-  cant-find-player: "&cEste jogador não foi encontrado."
+  no-permission: "%prefix%&cVocê não tem permissao para executar este comando."
+  cant-afford: "%prefix%&cVocê precisa de &6$%cost% &cpara executar este comando."
+  home-already-exist: "%prefix%&cVocê já tem uma home com este nome."
+  home-doesnt-exist: "%prefix%&cVocê não tem nenhuma home com este nome."
+  home-doesnt-exist-others: "%prefix%&e%player% &cnão tem nenhuma home com este nome."
+  cant-use-2dot: "%prefix%&cVocê não pode usar &e':' &cneste comando."
+  cant-find-player: "%prefix%&cEste jogador não foi encontrado."
 
   # Aqui embaixo vai achar mensagens especificas de alguns comandos.
   main:
@@ -39,11 +39,20 @@ commands:
     converter:
       usage: |-
         %prefix%&bUsos de &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
         &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
         &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
         &c-> &e/%command% &aconverter essentials
         &c-> &e/%command% &aconverter sethome
         &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
       output: "%prefix%&aTodos dados foram convertidos!"
       error: "%prefix%&cAlgo deu errado na converção dos dados, por favor verifique o console do seu servidor."
   sethome:

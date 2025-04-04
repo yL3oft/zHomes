@@ -7,12 +7,14 @@ import me.yleoft.zHomes.managers.*;
 import me.yleoft.zHomes.storage.*;
 import me.yleoft.zHomes.tabcompleters.*;
 import me.yleoft.zHomes.utils.*;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.HandlerList;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
@@ -44,6 +46,7 @@ public final class Main extends JavaPlugin {
     public static Driver h2Driver = null;
 
     public static Object papi;
+    public static Economy economy;
 
     public String pluginName = getDescription().getName();
     public String coloredPluginName = this.pluginName;
@@ -144,9 +147,17 @@ public final class Main extends JavaPlugin {
             if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
                 papi = new PlaceholderAPIExpansion();
                 ((PlaceholderAPIExpansion)papi).register();
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§ahook connected successfully!");
+                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aPlaceholderAPI hooked successfully!");
             } else {
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+                setupEconomy();
+                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aConnected to Vault successfully!");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,6 +174,7 @@ public final class Main extends JavaPlugin {
         HandlerList.unregisterAll(this);
         if (db != null) {
             db.closePool();
+            getLogger().info("Database connection closed.");
         }
         if(papi != null) {
             ((PlaceholderAPIExpansion)papi).unregister();
@@ -280,6 +292,17 @@ public final class Main extends JavaPlugin {
             System.out.println("Error downloading libs. HTTP code: " + responseCode);
         }
         httpConn.disconnect();
+    }
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        economy = rsp.getProvider();
+        return economy != null;
     }
 
     //<editor-fold desc="Location Serialization">

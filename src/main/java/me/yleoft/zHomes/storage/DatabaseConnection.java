@@ -76,6 +76,7 @@ public class DatabaseConnection extends ConfigUtils {
                 config.setConnectionTimeout(30000);
                 config.setIdleTimeout(600000);
                 config.setLeakDetectionThreshold(2000);
+                config.setMaxLifetime(1800000);
                 Main.dataSource = new HikariDataSource(config);
             }
         } catch (Exception e) {
@@ -103,8 +104,8 @@ public class DatabaseConnection extends ConfigUtils {
 
     public void disconnect() {
         HikariDataSource dataSource = Main.dataSource;
-        if (dataSource != null && !dataSource.isClosed()) {
-            dataSource.close();
+        if (dataSource != null) {
+            closePool();
         }
     }
 

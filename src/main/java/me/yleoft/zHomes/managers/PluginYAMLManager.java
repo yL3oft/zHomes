@@ -168,7 +168,7 @@ public class PluginYAMLManager {
             unregisterPermission(perm);
         }
         Bukkit.getPluginManager().getPermissions().forEach(permission -> {
-            if(permission.getName().startsWith("zbase")) {
+            if(permission.getName().startsWith("zhomes")) {
                 unregisterPermission(permission);
             }
         });

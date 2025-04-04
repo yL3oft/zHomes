@@ -32,11 +32,15 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
                     lang.sendMsg(p, cmdm.getCantFindPlayer());
                     return false;
                 }
-                lang.sendMsg(p, lang.getOutput(t));
+                if (cfguExtras.canAfford(p, CmdHomesCost())) {
+                    lang.sendMsg(p, lang.getOutput(t));
+                }
                 return true;
             }
         }
-        lang.sendMsg(p, lang.getOutput());
+        if (cfguExtras.canAfford(p, CmdHomesCost())) {
+            lang.sendMsg(p, lang.getOutput());
+        }
         return false;
     }
 

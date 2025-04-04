@@ -53,9 +53,11 @@ public class HomeCommand extends HomesUtils implements CommandExecutor {
             return;
         home = event.getHome();
 
-        if (hasHome((OfflinePlayer)p, home)) {
-            lang.sendMsg(p, lang.getOutput(home));
-            teleportPlayer(p, home);
+        if (hasHome(p, home)) {
+            if (cfguExtras.canAfford(p, CmdHomeCost())) {
+                lang.sendMsg(p, lang.getOutput(home));
+                teleportPlayer(p, home);
+            }
         } else {
             lang.sendMsg(p, cmdm.getHomeDoesntExist());
         }
@@ -78,8 +80,10 @@ public class HomeCommand extends HomesUtils implements CommandExecutor {
             return;
         }
         if (hasHome(t, home)) {
-            lang.sendMsg(p, lang.getOutput(ofchome));
-            teleportPlayer(p, t, home);
+            if (cfguExtras.canAfford(p, CmdHomeCost())) {
+                lang.sendMsg(p, lang.getOutput(ofchome));
+                teleportPlayer(p, t, home);
+            }
         } else {
             lang.sendMsg(p, cmdm.getHomeDoesntExistOthers(t));
         }

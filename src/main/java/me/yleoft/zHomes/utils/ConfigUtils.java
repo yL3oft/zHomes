@@ -2,6 +2,7 @@ package me.yleoft.zHomes.utils;
 
 import java.util.List;
 import me.yleoft.zHomes.Main;
+import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 
 public class ConfigUtils {
@@ -11,6 +12,8 @@ public class ConfigUtils {
     protected String databasePath = "database.";
     protected String lim = "limits.";
     protected String tpo = "teleport-options.";
+
+    public ConfigUtilsExtras cfguExtras = new ConfigUtilsExtras();
 
     public static String langType() {
         return main.getConfig().getString("general.language");
@@ -88,6 +91,9 @@ public class ConfigUtils {
     public List<String> CmdSethomeAliases() {
         return main.getConfig().getStringList(this.cmdPath + "sethome.aliases");
     }
+    public Float CmdSethomeCost() {
+        return (float) main.getConfig().getDouble(this.cmdPath + "sethome.command-cost");
+    }
     //</editor-fold>
     //<editor-fold desc="Delhome Command">
     public String CmdDelhomeCommand() {
@@ -101,6 +107,9 @@ public class ConfigUtils {
     }
     public List<String> CmdDelhomeAliases() {
         return main.getConfig().getStringList(this.cmdPath + "delhome.aliases");
+    }
+    public Float CmdDelhomeCost() {
+        return (float) main.getConfig().getDouble(this.cmdPath + "delhome.command-cost");
     }
     public String CmdDelhomeOthersPermission() {
         return main.getConfig().getString(this.cmdPath + "delhome.others.permission");
@@ -119,6 +128,9 @@ public class ConfigUtils {
     public List<String> CmdHomesAliases() {
         return main.getConfig().getStringList(this.cmdPath + "homes.aliases");
     }
+    public Float CmdHomesCost() {
+        return (float) main.getConfig().getDouble(this.cmdPath + "homes.command-cost");
+    }
     public String CmdHomesOthersPermission() {
         return main.getConfig().getString(this.cmdPath + "homes.others.permission");
     }
@@ -135,6 +147,9 @@ public class ConfigUtils {
     }
     public List<String> CmdHomeAliases() {
         return main.getConfig().getStringList(this.cmdPath + "home.aliases");
+    }
+    public Float CmdHomeCost() {
+        return (float) main.getConfig().getDouble(this.cmdPath + "home.command-cost");
     }
     public String CmdHomeOthersPermission() {
         return main.getConfig().getString(this.cmdPath + "home.others.permission");
@@ -176,5 +191,23 @@ public class ConfigUtils {
         return databaseTablePrefix()+"_homes";
     }
     //</editor-fold>
+
+    protected static class ConfigUtilsExtras {
+
+        public boolean canAfford(Player p, Float cost) {
+            Economy economy = Main.economy;
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            if (Main.getInstance().getServer().getPluginManager().isPluginEnabled("Vault")) {
+                if(economy.has(p, cost)) {
+                    economy.withdrawPlayer(p, cost);
+                    return true;
+                }
+                cmdm.sendMsg(p, cmdm.getCantAffod(cost));
+                return false;
+            }
+            return true;
+        }
+
+    }
 
 }

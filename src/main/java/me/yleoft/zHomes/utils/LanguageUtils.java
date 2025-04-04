@@ -448,15 +448,15 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%player%", p.getName());
         }
 
+        public String getCantAffod(Float cost) {
+            String path = LanguageUtils.formPath(cmds, "cant-afford");
+            return this.cfg.getString(path)
+                    .replace("%cost%", Float.toString(cost));
+        }
+
         public String getNoPermission() {
             String path = LanguageUtils.formPath(cmds, "no-permission");
             return this.cfg.getString(path);
-        }
-
-        public String getCooldown(String time) {
-            String path = LanguageUtils.formPath(cmds, "cooldown");
-            return this.cfg.getString(path)
-                    .replace("%time%", time);
         }
 
         public String getCantUse2Dot() {
@@ -491,6 +491,7 @@ public class LanguageUtils extends ConfigUtils {
 
     public interface Helper {
         default void sendMsg(Player p, String text) {
+            if(text.isEmpty()) return;
             text = hex(text);
             text = ChatColor.translateAlternateColorCodes('&', text
                     .replace("%prefix%", hex(Main.cfgu.prefix()))
@@ -503,6 +504,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         default void sendMsg(CommandSender s, String text) {
+            if(text.isEmpty()) return;
             text = hex(text);
             text = ChatColor.translateAlternateColorCodes('&', text
                     .replace("%prefix%", hex(Main.cfgu.prefix())));
@@ -519,6 +521,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         default void broadcast(String text) {
+            if(text.isEmpty()) return;
             text = hex(text);
             text = ChatColor.translateAlternateColorCodes('&', text
                     .replace("%prefix%", hex(Main.cfgu.prefix())));

@@ -79,6 +79,7 @@ limits:
   default: 10
 
 commands:
+  # Mostly everything below needs a restart to apply
   main:
     command: zhomes
     description: "The main command for the plugin"
@@ -103,6 +104,7 @@ commands:
     permission: "zhomes.command.sethome" # True by default
     aliases:
       - seth
+    command-cost: 0 # Requires Vault to work
   delhome:
     command: delhome
     description: "Delhome"
@@ -110,6 +112,7 @@ commands:
     aliases:
       - deletehome
       - delh
+    command-cost: 0 # Requires Vault to work
     others:
       permission: "zhomes.command.delhome.others" # Only OP by default
   homes:
@@ -118,6 +121,7 @@ commands:
     permission: "zhomes.command.homes" # True by default
     aliases:
       - myhomes
+    command-cost: 0  # Requires Vault to work
     others:
       permission: "zhomes.command.homes.others" # Only OP by default
   home:
@@ -125,6 +129,7 @@ commands:
     description: "Home"
     permission: "zhomes.command.home" # True by default
     aliases: []
+    command-cost: 0  # Requires Vault to work
     others:
       permission: "zhomes.command.home.others" # Only OP by default
 ```
@@ -136,13 +141,13 @@ commands:
 ```
 commands:
   # Up here you will find messages that can be used in multiple commands
-  home-already-exist: "&cYou already have a home with this name."
-  home-doesnt-exist: "&cYou don't have any home with this name."
-  home-doesnt-exist-others: "&e%player% &cdon't have any home with this name."
-  no-permission: "&cYou don't have permission to execute this command."
-  cooldown: "&cYou need to wait %time% seconds to execute this command again."
-  cant-use-2dot: "&cYou can't use &e':' &cin this command."
-  cant-find-player: "&cThis player was not found."
+  no-permission: "%prefix%&cYou don't have permission to execute this command."
+  cant-afford: "%prefix%&cYou need &6$%cost% &cin order to execute this command."
+  home-already-exist: "%prefix%&cYou already have a home with this name."
+  home-doesnt-exist: "%prefix%&cYou don't have any home with this name."
+  home-doesnt-exist-others: "%prefix%&e%player% &cdon't have any home with this name."
+  cant-use-2dot: "%prefix%&cYou can't use &e':' &cin this command."
+  cant-find-player: "%prefix%&cThis player was not found."
 
   # Below you will find messages specific for the commands
   main:
@@ -175,11 +180,20 @@ commands:
     converter:
       usage: |-
         %prefix%&bUsages of &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
         &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
         &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
         &c-> &e/%command% &aconverter essentials
         &c-> &e/%command% &aconverter sethome
         &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
       output: "%prefix%&aAll data converted!"
       error: "%prefix%&cSomething went wrong converting the data, please check your server console."
   sethome:

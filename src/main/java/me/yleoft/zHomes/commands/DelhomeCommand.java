@@ -2,6 +2,8 @@ package me.yleoft.zHomes.commands;
 
 import com.zhomes.api.event.player.ExecuteDelhomeCommandEvent;
 import com.zhomes.api.event.player.PreExecuteDelhomeCommandEvent;
+import me.yleoft.zHomes.Main;
+import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
@@ -50,8 +52,10 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
         home = event.getHome();
 
         if (hasHome(p, home)) {
-            delHome(p, home);
-            lang.sendMsg(p, lang.getOutput(home));
+            if (cfguExtras.canAfford(p, CmdDelhomeCost())) {
+                delHome(p, home);
+                lang.sendMsg(p, lang.getOutput(home));
+            }
         } else {
             lang.sendMsg(p, cmdm.getHomeDoesntExist());
         }
@@ -74,8 +78,10 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
             return;
         }
         if (hasHome(t, home)) {
-            delHome(t, home);
-            lang.sendMsg(p, lang.getOutput(ofchome));
+            if (cfguExtras.canAfford(p, CmdDelhomeCost())) {
+                delHome(t, home);
+                lang.sendMsg(p, lang.getOutput(ofchome));
+            }
         } else {
             lang.sendMsg(p, cmdm.getHomeDoesntExistOthers(t));
         }

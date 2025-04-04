@@ -52,6 +52,7 @@ limits:
   default: 10
 
 commands:
+  # Mostly everything below needs a restart to apply
   main:
     command: zhomes
     description: "The main command for the plugin"
@@ -76,6 +77,7 @@ commands:
     permission: "zhomes.command.sethome" # True by default
     aliases:
       - seth
+    command-cost: 0 # Requires Vault to work
   delhome:
     command: delhome
     description: "Delhome"
@@ -83,6 +85,7 @@ commands:
     aliases:
       - deletehome
       - delh
+    command-cost: 0 # Requires Vault to work
     others:
       permission: "zhomes.command.delhome.others" # Only OP by default
   homes:
@@ -91,6 +94,7 @@ commands:
     permission: "zhomes.command.homes" # True by default
     aliases:
       - myhomes
+    command-cost: 0  # Requires Vault to work
     others:
       permission: "zhomes.command.homes.others" # Only OP by default
   home:
@@ -98,5 +102,6 @@ commands:
     description: "Home"
     permission: "zhomes.command.home" # True by default
     aliases: []
+    command-cost: 0  # Requires Vault to work
     others:
       permission: "zhomes.command.home.others" # Only OP by default
