@@ -31,13 +31,15 @@ jobs:
       - name: Upload to Modrinth
         run: |
           set -e
-          # Write the JSON payload to a file
+
           cat > modrinth.json <<EOF
           {
             "name": "zHomes ${{ steps.get_version.outputs.version }}",
             "version_number": "${{ steps.get_version.outputs.version }}",
             "project_id": "zhomes",
             "version_type": "alpha",
+            "changelog": "Automated release for version ${{ steps.get_version.outputs.version }}.",
+            "featured": false,
             "loaders": [ "bukkit", "paper", "spigot", "folia", "purpur" ],
             "game_versions": [
               "1.8", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8", "1.8.9",
@@ -70,7 +72,6 @@ jobs:
           }
           EOF
           
-          # Now upload using the JSON payload file
           curl --fail -X POST https://api.modrinth.com/v2/version \
           -H "Authorization: ${{ secrets.MODRINTH_TOKEN }}" \
           -H "Content-Type: multipart/form-data" \
