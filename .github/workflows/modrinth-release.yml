@@ -37,7 +37,6 @@ jobs:
           name: zHomes ${{ steps.get_version.outputs.version }}
           version: ${{ steps.get_version.outputs.version }}
           channel: alpha
-          changelog: ${{ github.event.release.body }}
           loaders: |-
             paper
             purpur
