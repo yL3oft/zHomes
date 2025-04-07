@@ -61,11 +61,11 @@ jobs:
             1.21.x
           dependencies: |-
             [{
-              "project_id": "essentialsx",
+              "project_id": "hXiIvTyT",
               "dependency_type": "optional"
             },
             {
-              "project_id": "xhomes",
+              "project_id": "ZeVMOyC5",
               "dependency_type": "optional"
             }]
           files: target/zHomes-${{ steps.get_version.outputs.version }}.jar
