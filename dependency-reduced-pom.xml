@@ -147,14 +147,13 @@
       <version>1.7.1</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.github.yL3oft</groupId>
+      <artifactId>zAPI</artifactId>
+      <version>1.0</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
-  <distributionManagement>
-    <repository>
-      <id>modrinth</id>
-      <name>Modrinth Maven</name>
-      <url>https://maven.modrinth.com/releases</url>
-    </repository>
-  </distributionManagement>
   <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
     <java.version>8</java.version>

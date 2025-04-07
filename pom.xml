@@ -173,10 +173,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.yleoft</groupId>
+            <groupId>com.github.yL3oft</groupId>
             <artifactId>zAPI</artifactId>
             <version>1.0</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
