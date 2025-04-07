@@ -59,12 +59,12 @@ jobs:
             ],
             "dependencies": [
               {
-                "project_id": "hXiIvTyT",
+                "project_id": "essentialsx",
                 "version_id": null,
                 "dependency_type": "optional"
               },
               {
-                "project_id": "ZeVMOyC5",
+                "project_id": "xhomes",
                 "version_id": null,
                 "dependency_type": "optional"
               }
