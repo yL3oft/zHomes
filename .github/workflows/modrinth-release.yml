@@ -30,12 +30,13 @@ jobs:
 
       - name: Upload to Modrinth
         run: |
-          curl -X POST https://api.modrinth.com/v2/project/zhomes-dev/version \
+          curl -X POST https://api.modrinth.com/v2/version \
           -H "Authorization: ${{ secrets.MODRINTH_TOKEN }}" \
           -H "Content-Type: multipart/form-data" \
           -F "data={
             \"name\": \"zHomes ${{ steps.get_version.outputs.version }}\",
             \"version_number\": \"${{ steps.get_version.outputs.version }}\",
+            \"project_id\": \"zhomes-dev\",
             \"version_type\": \"alpha\",
             \"loaders\": [\"bukkit\", \"paper\", \"spigot\", \"folia\", \"purpur\"],
             \"game_versions\": [
