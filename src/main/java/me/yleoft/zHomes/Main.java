@@ -1,9 +1,10 @@
 package me.yleoft.zHomes;
 
 import com.zaxxer.hikari.HikariDataSource;
+import me.yleoft.zAPI.managers.*;
+import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.commands.*;
 import me.yleoft.zHomes.hooks.*;
-import me.yleoft.zHomes.managers.*;
 import me.yleoft.zHomes.storage.*;
 import me.yleoft.zHomes.tabcompleters.*;
 import me.yleoft.zHomes.utils.*;
@@ -65,13 +66,14 @@ public final class Main extends JavaPlugin {
     public final String h2Repo = "https://repo1.maven.org/maven2/com/h2database/h2/" + h2Version + "/" + h2Jar;
 
     public void onEnable() {
+        zAPI.init(this, pluginName, coloredPluginName);
         //<editor-fold desc="Variables">
         main = Main.this;
         pluginName = getDescription().getName();
         coloredPluginName = this.pluginName;
         pluginVer = getDescription().getVersion();
-        pym = new PluginYAMLManager();
-        fm = new FileManager();
+        pym = zAPI.getInstance().getPluginYAMLManager();
+        fm = zAPI.getInstance().getFileManager();
         cfgu = new ConfigUtils();
         hu = new HomesUtils();
         db = new DatabaseConnection();
@@ -79,6 +81,7 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
         coloredPluginName = cmdm.hex(coloredPluginName);
+        zAPI.getInstance().setColoredPluginName(coloredPluginName);
         coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getConfig().getString("prefix")));
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
@@ -121,7 +124,7 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         //<editor-fold desc="Metrics">
         if(cfgu.hasMetrics()) {
-            Metrics metrics = new Metrics(main, bStatsId);
+            zAPI.getInstance().startMetrics(bStatsId);
             cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&aMetrics enabled."
             ));
@@ -145,8 +148,8 @@ public final class Main extends JavaPlugin {
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
         try {
             if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                papi = new PlaceholderAPIExpansion();
-                ((PlaceholderAPIExpansion)papi).register();
+                zAPI.getInstance().registerPlaceholderExpansion(new PlaceholderAPIExpansion());
+                papi = zAPI.getInstance().getPlaceholderExpansion();
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aPlaceholderAPI hooked successfully!");
             } else {
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
@@ -305,7 +308,7 @@ public final class Main extends JavaPlugin {
         return economy != null;
     }
 
-    //<editor-fold desc="Location Serialization">
+        //<editor-fold desc="Location Serialization">
     public String serialize(Location loc) {
         String w = loc.getWorld().getName();
         double x = loc.getX();

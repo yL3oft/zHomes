@@ -13,7 +13,6 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
-    <directory>C:\Users\Maehara\Documents\Java\Projetos Prontos\zHomes\build</directory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -149,6 +148,13 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <distributionManagement>
+    <repository>
+      <id>modrinth</id>
+      <name>Modrinth Maven</name>
+      <url>https://maven.modrinth.com/releases</url>
+    </repository>
+  </distributionManagement>
   <properties>
     <maven.compiler.target>1.8</maven.compiler.target>
     <java.version>8</java.version>

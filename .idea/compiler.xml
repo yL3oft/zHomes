@@ -6,11 +6,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-      </profile>
-      <profile name="Annotation profile for zHomes" enabled="true">
-        <sourceOutputDir name="../../Projetos Prontos/zHomes/build/generated-sources/annotations" />
-        <sourceTestOutputDir name="../../Projetos Prontos/zHomes/build/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
         <module name="zHomes" />
       </profile>
     </annotationProcessing>
