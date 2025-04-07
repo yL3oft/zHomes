@@ -6,21 +6,19 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-upload:
+  publish:
+    name: Publish
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '21'
-
-      - name: Build with Maven
-        run: mvn clean package
+          java-version: 17
+          distribution: temurin
+          cache: maven
 
       - name: Get project version from POM
         id: get_version
@@ -28,52 +26,46 @@ jobs:
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Upload to Modrinth
-        run: |
-          set -e
+      - name: Build and package with Maven
+        run: mvn -B clean package --file pom.xml
 
-          cat > modrinth.json <<EOF
-          {
-            "name": "zHomes ${{ steps.get_version.outputs.version }}",
-            "version_number": "${{ steps.get_version.outputs.version }}",
-            "project_id": "zhomes",
-            "version_type": "alpha",
-            "changelog": "Automated release for version ${{ steps.get_version.outputs.version }}.",
-            "featured": false,
-            "loaders": [ "bukkit", "paper", "spigot", "folia", "purpur" ],
-            "game_versions": [
-              "1.8", "1.8.1", "1.8.2", "1.8.3", "1.8.4", "1.8.5", "1.8.6", "1.8.7", "1.8.8", "1.8.9",
-              "1.9", "1.9.1", "1.9.2", "1.9.3", "1.9.4",
-              "1.10", "1.10.1", "1.10.2",
-              "1.11", "1.11.1", "1.11.2",
-              "1.12", "1.12.1", "1.12.2",
-              "1.13", "1.13.1", "1.13.2",
-              "1.14", "1.14.1", "1.14.2", "1.14.3", "1.14.4",
-              "1.15", "1.15.1", "1.15.2",
-              "1.16", "1.16.1", "1.16.2", "1.16.3", "1.16.4", "1.16.5",
-              "1.17", "1.17.1",
-              "1.18", "1.18.1", "1.18.2",
-              "1.19", "1.19.1", "1.19.2", "1.19.3", "1.19.4",
-              "1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4",
-              "1.21", "1.21.1", "1.21.2", "1.21.3", "1.21.4", "1.21.5"
-            ],
-            "dependencies": [
-              {
-                "project_id": "essentialsx",
-                "version_id": null,
-                "dependency_type": "optional"
-              },
-              {
-                "project_id": "xhomes",
-                "version_id": null,
-                "dependency_type": "optional"
-              }
-            ]
-          }
-          EOF
-          
-          curl --fail -X POST https://api.modrinth.com/v2/version \
-          -H "Authorization: ${{ secrets.MODRINTH_TOKEN }}" \
-          -H "Content-Type: multipart/form-data" \
-          -F "data=@modrinth.json;type=application/json" \
-          -F "file=@target/zHomes-${{ steps.get_version.outputs.version }}.jar"
+      - name: Upload to Modrinth
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: zhomes
+          name: zHomes ${{ steps.get_version.outputs.version }}
+          version: ${{ steps.get_version.outputs.version }}
+          channel: alpha
+          changelog: ${{ github.event.release.body }}
+          loaders: |-
+            paper
+            purpur
+            spigot
+            bukkit
+            folia
+          game-versions: |-
+            1.8.x
+            1.9.x
+            1.10.x
+            1.11.x
+            1.12.x
+            1.13.x
+            1.14.x
+            1.15.x
+            1.16.x
+            1.17.x
+            1.18.x
+            1.19.x
+            1.20.x
+            1.21.x
+          dependencies: |-
+            [{
+              "project_id": "essentialsx",
+              "dependency_type": "optional"
+            },
+            {
+              "project_id": "xhomes",
+              "dependency_type": "optional"
+            }]
+          files: target/zHomes-${{ steps.get_version.outputs.version }}.jar
