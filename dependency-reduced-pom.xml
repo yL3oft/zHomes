@@ -4,7 +4,7 @@
   <groupId>me.yleoft</groupId>
   <artifactId>zHomes</artifactId>
   <name>zHomes</name>
-  <version>1.3.3</version>
+  <version>1.3.4</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>

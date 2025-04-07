@@ -55,5 +55,17 @@ jobs:
               \"1.20\", \"1.20.1\", \"1.20.2\", \"1.20.3\", \"1.20.4\",
               \"1.21\", \"1.21.1\"
             ]
+            \"dependencies\": [
+              {
+                \"project_id\": \"essentialsx\",
+                \"version_id\": null,
+                \"dependency_type\": \"optional\"
+              },
+              {
+                \"project_id\": \"xhomes\",
+                \"version_id\": null,
+                \"dependency_type\": \"optional\"
+              }
+            ]
           };type=application/json" \
           -F "file=@target/zHomes-${{ steps.get_version.outputs.version }}.jar"
