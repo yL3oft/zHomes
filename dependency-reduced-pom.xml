@@ -147,12 +147,6 @@
       <version>1.7.1</version>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>com.github.yL3oft</groupId>
-      <artifactId>zAPI</artifactId>
-      <version>1.0</version>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   <properties>
     <maven.compiler.target>1.8</maven.compiler.target>

@@ -176,7 +176,7 @@
             <groupId>com.github.yL3oft</groupId>
             <artifactId>zAPI</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
