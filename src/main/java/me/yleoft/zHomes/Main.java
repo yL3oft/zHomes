@@ -27,6 +27,7 @@ import java.sql.Driver;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
 
 public final class Main extends JavaPlugin {
 
@@ -102,7 +103,7 @@ public final class Main extends JavaPlugin {
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9H2Database §asaved to "+outputFile.getAbsolutePath());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to download H2Database library", e);
         }
         //</editor-fold>
         //<editor-fold desc="MariaDB">
@@ -113,7 +114,7 @@ public final class Main extends JavaPlugin {
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MariaDB §asaved to "+outputFile.getAbsolutePath());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, "Failed to download MariaDB library", e);
         }
         //</editor-fold>
         //</editor-fold>
@@ -155,7 +156,7 @@ public final class Main extends JavaPlugin {
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, "Error hooking into PlaceholderAPI", e);
         }
         try {
             if (getServer().getPluginManager().isPluginEnabled("Vault")) {
@@ -163,7 +164,7 @@ public final class Main extends JavaPlugin {
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aConnected to Vault successfully!");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Bukkit.getLogger().log(Level.SEVERE, "Error hooking into VaultAPI", e);
         }
         //</editor-fold>
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started (Any errors will be above this message)");
@@ -185,7 +186,7 @@ public final class Main extends JavaPlugin {
         main = null;
     }
 
-    public boolean updatePlugin() {
+    public void updatePlugin() {
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
         UpdateChecker checker = new UpdateChecker();
         String version = checker.getVersion();
@@ -213,7 +214,6 @@ public final class Main extends JavaPlugin {
                     cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&aRestart the server to apply changes."
                     ));
-                    return true;
                 }catch (Exception e) {
                     cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&cCould not auto-update it."
@@ -232,7 +232,6 @@ public final class Main extends JavaPlugin {
                     coloredPluginName+"&aPlugin is up-to-date!"
             ));
         }
-        return false;
     }
     public void loadCommands() {
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
@@ -246,16 +245,15 @@ public final class Main extends JavaPlugin {
             pym.registerCommand(cfgu.CmdHomesCommand(), new HomesCommand(), new HomesCompleter(), cfgu.CmdHomesDescription(), cfgu.CmdHomesAliases().toArray(new String[0]));
             pym.registerCommand(cfgu.CmdHomeCommand(), new HomeCommand(), new HomeCompleter(), cfgu.CmdHomeDescription(), cfgu.CmdHomeAliases().toArray(new String[0]));
         } catch (Exception e) {
-            e.printStackTrace();
-            cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cError loading commands!");
+            throw new RuntimeException("Failed to load commands", e);
         }
         //</editor-fold>
         //<editor-fold desc="Permissions">
         try {
             pym.unregisterPermissions();
             Map<String, Boolean> helpANDmainChildren = new HashMap<>();
-            helpANDmainChildren.put(cfgu.CmdMainPermission(), Boolean.valueOf(true));
-            helpANDmainChildren.put(cfgu.CmdMainHelpPermission(), Boolean.valueOf(true));
+            helpANDmainChildren.put(cfgu.CmdMainPermission(), true);
+            helpANDmainChildren.put(cfgu.CmdMainHelpPermission(), true);
             pym.registerPermission(cfgu.CmdMainPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + "' command", PermissionDefault.OP);
             pym.registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
             pym.registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
@@ -305,21 +303,19 @@ public final class Main extends JavaPlugin {
             return false;
         }
         economy = rsp.getProvider();
-        return economy != null;
+        return true;
     }
 
-        //<editor-fold desc="Location Serialization">
+    //<editor-fold desc="Location Serialization">
     public String serialize(Location loc) {
-        String w = loc.getWorld().getName();
+        String w = Objects.requireNonNull(loc.getWorld()).getName();
         double x = loc.getX();
         double y = loc.getY();
         double z = loc.getZ();
         float yaw = loc.getYaw();
         float pitch = loc.getPitch();
 
-        String serialized = w+";"+x+";"+y+";"+z+";"+yaw+";"+pitch+";";
-
-        return serialized;
+        return w+";"+x+";"+y+";"+z+";"+yaw+";"+pitch+";";
     }
     public String serialize(String w, double x, double y, double z, float yaw, float pitch) {
         return w+";"+x+";"+y+";"+z+";"+yaw+";"+pitch+";";

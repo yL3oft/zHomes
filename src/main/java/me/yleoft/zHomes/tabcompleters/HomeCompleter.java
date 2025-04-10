@@ -11,11 +11,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.util.StringUtil;
+import org.jetbrains.annotations.NotNull;
 
 public class HomeCompleter extends HomesUtils implements TabCompleter {
 
     @Override
-    public List<String> onTabComplete(CommandSender s, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, String[] args) {
         Player p = (Player)s;
         List<String> completions = new ArrayList<>();
         List<String> commands = new ArrayList<>();

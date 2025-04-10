@@ -9,16 +9,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 public class SethomeCommand extends HomesUtils implements CommandExecutor {
 
-    public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(s instanceof Player))
             return false;
         Player p = (Player)s;
         PreExecuteSethomeCommandEvent preevent = new PreExecuteSethomeCommandEvent(p);
-        Bukkit.getPluginManager().callEvent((Event)preevent);
+        Bukkit.getPluginManager().callEvent(preevent);
         if (preevent.isCancelled()) return false;
 
         LanguageUtils.Sethome lang = new LanguageUtils.Sethome();
@@ -27,7 +27,7 @@ public class SethomeCommand extends HomesUtils implements CommandExecutor {
         if (args.length >= 1) {
             String home = args[0];
             ExecuteSethomeCommandEvent event = new ExecuteSethomeCommandEvent(p, home);
-            Bukkit.getPluginManager().callEvent((Event)event);
+            Bukkit.getPluginManager().callEvent(event);
             if (event.isCancelled())
                 return false;
             home = event.getHome();

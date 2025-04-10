@@ -23,7 +23,7 @@ public class HomesUtils extends DatabaseEditor {
 
     public boolean inSameWorld(String w, Player p) {
         String w2 = p.getWorld().getName();
-        return w.equals(w2);
+        return !w.equals(w2);
     }
 
     public boolean inMaxLimit(Player p) {
@@ -55,12 +55,10 @@ public class HomesUtils extends DatabaseEditor {
     }
 
     public void teleportPlayer(Player p, String home) {
-        Location loc = getHomeLoc((OfflinePlayer)p, home);
-        boolean isDimensionalTeleport = false;
-        if (!inSameWorld(getHomeWorld((OfflinePlayer)p, home), p))
-            isDimensionalTeleport = true;
+        Location loc = getHomeLoc(p, home);
+        boolean isDimensionalTeleport = inSameWorld(getHomeWorld(p, home), p);
         TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport);
-        Bukkit.getPluginManager().callEvent((Event)event);
+        Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
         if (isDimensionalTeleport && !canDimensionalTeleport(p)) {
@@ -82,11 +80,9 @@ public class HomesUtils extends DatabaseEditor {
 
     public void teleportPlayer(Player p, OfflinePlayer t, String home) {
         Location loc = getHomeLoc(t, home);
-        boolean isDimensionalTeleport = false;
-        if (!inSameWorld(getHomeWorld(t, home), p))
-            isDimensionalTeleport = true;
+        boolean isDimensionalTeleport = inSameWorld(getHomeWorld(t, home), p);
         TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport, false, t);
-        Bukkit.getPluginManager().callEvent((Event)event);
+        Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
         if (isDimensionalTeleport && !canDimensionalTeleport(p)) {
@@ -107,25 +103,25 @@ public class HomesUtils extends DatabaseEditor {
     }
 
     public String homes(OfflinePlayer p) {
-        String returned = "";
+        StringBuilder returned = new StringBuilder();
         try {
             List<String> homes = getHomes(p);
             if(!homes.isEmpty()) {
                 for (String home : homes) {
-                    if (returned.isEmpty()) {
-                        returned = home;
+                    if (returned.length() == 0) {
+                        returned = new StringBuilder(home);
                         continue;
                     }
-                    returned += ", " + home;
+                    returned.append(", ").append(home);
                 }
             }else {
-                returned = "None";
+                returned = new StringBuilder("None");
             }
         }catch (Exception e) {
-            returned = "None";
+            returned = new StringBuilder("None");
         }
 
-        return returned;
+        return returned.toString();
     }
 
     public List<String> homesW(OfflinePlayer p) {

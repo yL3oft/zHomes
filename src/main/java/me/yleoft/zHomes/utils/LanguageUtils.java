@@ -19,11 +19,9 @@ import org.bukkit.entity.Player;
 
 public class LanguageUtils extends ConfigUtils {
 
-    private static Main main = Main.getInstance();
+    private static final Main main = Main.getInstance();
 
     public static String cmds = "commands";
-
-    public static String cmdscfg = "commands-config";
 
     public static File f = new File(main.getDataFolder(), "languages/en.yml");
 
@@ -34,20 +32,20 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static String formPath(String... strs) {
-        String path = "";
+        StringBuilder path = new StringBuilder();
 
         try {
             for(String str : strs) {
-                if(path.equals("")) {
-                    path = str;
+                if(path.isEmpty()) {
+                    path = new StringBuilder(str);
                     continue;
                 }
-                path += "."+str;
+                path.append(".").append(str);
             }
-        }catch (Exception e) {
+        }catch (Exception ignored) {
         }
 
-        return path;
+        return path.toString();
     }
 
     public static YamlConfiguration getConfigFile() {
@@ -86,9 +84,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class Sethome extends HomesUtils implements Commands {
-        public File f = new File(this.main.getDataFolder(), "languages/en.yml");
-
-        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+        public YamlConfiguration cfg;
 
         public Sethome() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -115,22 +111,16 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%home%", home);
         }
 
-        public double getCooldown() {
-            String path = LanguageUtils.formPath(cmdscfg, getCmd(), "cooldown");
-            return Main.getInstance().getConfig().getDouble(path);
-        }
-
         public String getLimitReached(Player p) {
             String path = LanguageUtils.formPath(cmds, getCmd(), "limit-reached");
             return this.cfg.getString(path)
-                    .replace("%command%", Main.cfgu.CmdSethomeCommand());
+                    .replace("%command%", Main.cfgu.CmdSethomeCommand())
+                    .replace("%limit%", String.valueOf(Main.hu.getMaxLimit(p)));
         }
     }
 
     public static class Delhome implements Commands {
-        public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+        public YamlConfiguration cfg;
 
         public Delhome() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -156,17 +146,10 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%command%", Main.cfgu.CmdDelhomeCommand())
                     .replace("%home%", home);
         }
-
-        public double getCooldown() {
-            String path = LanguageUtils.formPath(cmdscfg, getCmd(), "cooldown");
-            return Main.getInstance().getConfig().getInt(path);
-        }
     }
 
     public static class Home implements Commands {
-        public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+        public YamlConfiguration cfg;
 
         public Home() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -193,11 +176,6 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%home%", home);
         }
 
-        public double getCooldown() {
-            String path = LanguageUtils.formPath(cmdscfg, getCmd(), "cooldown");
-            return Main.getInstance().getConfig().getInt(path);
-        }
-
         public String getCantDimensionalTeleport() {
             String path = LanguageUtils.formPath(cmds, getCmd(), "cant-dimensional-teleport");
             return this.cfg.getString(path);
@@ -205,9 +183,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class Homes implements Commands {
-        public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+        public YamlConfiguration cfg;
 
         public Homes() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -232,19 +208,12 @@ public class LanguageUtils extends ConfigUtils {
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdHomesCommand())
                     .replace("%homes%", Main.hu.homes(p))
-                    .replace("%player%", p.getName());
-        }
-
-        public double getCooldown() {
-            String path = LanguageUtils.formPath(cmdscfg, getCmd(), "cooldown");
-            return Main.getInstance().getConfig().getInt(path);
+                    .replace("%player%", Objects.requireNonNull(p.getName()));
         }
     }
 
     public static class MainCMD implements Commands {
-        public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+        public YamlConfiguration cfg;
 
         public MainCMD() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -262,15 +231,8 @@ public class LanguageUtils extends ConfigUtils {
             return null;
         }
 
-        public double getCooldown() {
-            String path = LanguageUtils.formPath(cmdscfg, getCmd(), "cooldown");
-            return LanguageUtils.main.getConfig().getDouble(path);
-        }
-
         public static class MainHelp implements LanguageUtils.Commands {
-            public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-            public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+            public YamlConfiguration cfg;
 
             public MainHelp() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -297,16 +259,10 @@ public class LanguageUtils extends ConfigUtils {
                 return this.cfg.getString(path)
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion());
             }
-
-            public double getCooldown() {
-                return 0.0D;
-            }
         }
 
         public static class MainVersion implements LanguageUtils.Commands {
-            public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-            public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+            public YamlConfiguration cfg;
 
             public MainVersion() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -325,16 +281,10 @@ public class LanguageUtils extends ConfigUtils {
                 return this.cfg.getString(path)
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion());
             }
-
-            public double getCooldown() {
-                return 0.0D;
-            }
         }
 
         public static class MainReload implements LanguageUtils.Commands {
-            public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-            public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+            public YamlConfiguration cfg;
 
             public MainReload() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -346,7 +296,7 @@ public class LanguageUtils extends ConfigUtils {
 
             public String getUsage() {
                 String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
-                return ((String) Objects.<String>requireNonNull(this.cfg.getString(path)))
+                return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
 
@@ -381,16 +331,10 @@ public class LanguageUtils extends ConfigUtils {
                         .replace("%command%", Main.cfgu.CmdMainCommand())
                         .replace("%time%", String.valueOf(time));
             }
-
-            public double getCooldown() {
-                return 0.0D;
-            }
         }
 
         public static class MainConverter implements LanguageUtils.Commands {
-            public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-            public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+            public YamlConfiguration cfg;
 
             public MainConverter() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -417,17 +361,11 @@ public class LanguageUtils extends ConfigUtils {
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
-
-            public double getCooldown() {
-                return 0.0D;
-            }
         }
     }
 
     public static class CommandsMSG implements Helper {
-        public File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-        public YamlConfiguration cfg = YamlConfiguration.loadConfiguration(this.f);
+        public YamlConfiguration cfg;
 
         public CommandsMSG() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -446,10 +384,10 @@ public class LanguageUtils extends ConfigUtils {
         public String getHomeDoesntExistOthers(OfflinePlayer p) {
             String path = LanguageUtils.formPath(cmds, "home-doesnt-exist-others");
             return this.cfg.getString(path)
-                    .replace("%player%", p.getName());
+                    .replace("%player%", Objects.requireNonNull(p.getName()));
         }
 
-        public String getCantAffod(Float cost) {
+        public String getCantAfford(Float cost) {
             String path = LanguageUtils.formPath(cmds, "cant-afford");
             return this.cfg.getString(path)
                     .replace("%cost%", Float.toString(cost));
@@ -469,25 +407,14 @@ public class LanguageUtils extends ConfigUtils {
             String path = LanguageUtils.formPath(cmds, "cant-find-player");
             return this.cfg.getString(path);
         }
-
-        public int getDecimalPoints() {
-            String path = LanguageUtils.formPath(cmdscfg, "decimal-points");
-            return Main.getInstance().getConfig().getInt(path);
-        }
     }
 
     public interface Commands extends Helper {
-        File f = new File(LanguageUtils.main.getDataFolder(), "languages/en.yml");
-
-        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
-
         String getCmd();
 
         String getUsage();
 
         String getOutput();
-
-        double getCooldown();
     }
 
     public interface Helper {

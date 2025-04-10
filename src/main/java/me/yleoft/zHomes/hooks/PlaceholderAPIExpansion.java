@@ -5,25 +5,23 @@ import java.util.List;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class PlaceholderAPIExpansion extends PlaceholderExpansion {
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return Main.getInstance().getDescription().getName().toLowerCase();
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "yLeoft";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return Main.getInstance().pluginVer;
     }
 
@@ -38,7 +36,7 @@ public class PlaceholderAPIExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public List<String> getPlaceholders() {
+    public @NotNull List<String> getPlaceholders() {
         List<String> placeholders = new ArrayList<>();
         placeholders.add("version");
         placeholders.add("hashome_<home>");

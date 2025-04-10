@@ -4,7 +4,9 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.*;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -80,7 +82,6 @@ public class DatabaseConnection extends ConfigUtils {
                 Main.dataSource = new HikariDataSource(config);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             throw new RuntimeException("Error setting up HikariCP connection pool", e);
         }
     }
@@ -119,9 +120,8 @@ public class DatabaseConnection extends ConfigUtils {
             connect();
             return dataSource.getConnection();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Unable to access database", e);
         }
-        return null;
     }
 
     public void closePool() {
@@ -132,7 +132,7 @@ public class DatabaseConnection extends ConfigUtils {
     }
 
     public void migrateData(@Nullable Player p, @NotNull String type) {new BukkitRunnable() {
-        database_type dbType = Main.type;
+        final database_type dbType = Main.type;
         @Override
             public void run() {
             LanguageUtils.MainCMD.MainConverter lang = new LanguageUtils.MainCMD.MainConverter();
@@ -209,6 +209,7 @@ public class DatabaseConnection extends ConfigUtils {
                             if (files == null)
                                 lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
 
+                            assert files != null;
                             int totalUsers = files.length;
                             System.out.println("Starting migration for " + totalUsers + " users...");
 
@@ -228,6 +229,7 @@ public class DatabaseConnection extends ConfigUtils {
                                 }
 
                                 ConfigurationSection homesSection = yaml.getConfigurationSection("homes");
+                                assert homesSection != null;
                                 for (String homeName : homesSection.getKeys(false)) {
                                     ConfigurationSection home = homesSection.getConfigurationSection(homeName);
 
@@ -261,7 +263,7 @@ public class DatabaseConnection extends ConfigUtils {
                             System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from Essentials.");
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Main.getInstance().getLogger().log(Level.SEVERE, "Unable to migrate data from Essentials", e);
                     }
                     break;
                 }
@@ -288,6 +290,7 @@ public class DatabaseConnection extends ConfigUtils {
                             if (files == null)
                                 lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
 
+                            assert files != null;
                             int totalUsers = files.length;
                             System.out.println("Starting migration for " + totalUsers + " users...");
 
@@ -307,6 +310,7 @@ public class DatabaseConnection extends ConfigUtils {
                                 }
 
                                 ConfigurationSection homesSection = yaml.getConfigurationSection("Homes");
+                                assert homesSection != null;
                                 for (String homeName : homesSection.getKeys(false)) {
                                     ConfigurationSection home = homesSection.getConfigurationSection(homeName);
 
@@ -340,7 +344,7 @@ public class DatabaseConnection extends ConfigUtils {
                             System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from SetHome.");
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Main.getInstance().getLogger().log(Level.SEVERE, "Unable to migrate data from SetHome", e);
                     }
                     break;
                 }
@@ -367,6 +371,7 @@ public class DatabaseConnection extends ConfigUtils {
                             if (files == null)
                                 lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
 
+                            assert files != null;
                             int totalUsers = files.length;
                             System.out.println("Starting migration for " + totalUsers + " users...");
 
@@ -386,6 +391,7 @@ public class DatabaseConnection extends ConfigUtils {
                                 }
 
                                 ConfigurationSection homesSection = yaml.getConfigurationSection("homes");
+                                assert homesSection != null;
                                 for (String homeName : homesSection.getKeys(false)) {
                                     ConfigurationSection home = homesSection.getConfigurationSection(homeName);
 
@@ -419,7 +425,7 @@ public class DatabaseConnection extends ConfigUtils {
                             System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from UltimateHomes.");
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Main.getInstance().getLogger().log(Level.SEVERE, "Unable to migrate data from UltimateHomes", e);
                     }
                     break;
                 }
@@ -462,8 +468,9 @@ public class DatabaseConnection extends ConfigUtils {
                                 String uuid = offplayer.getUniqueId().toString();
 
                                 ConfigurationSection homesSection = yaml.getConfigurationSection(player);
+                                assert homesSection != null;
                                 for (String homeName : homesSection.getKeys(false)) {
-                                    String[] homeS = homesSection.getString(homeName).split(",");
+                                    String[] homeS = Objects.requireNonNull(homesSection.getString(homeName)).split(",");
                                     String worldName = homeS[0];
                                     double x = Double.parseDouble(homeS[1]);
                                     double y = Double.parseDouble(homeS[2]);
@@ -492,7 +499,7 @@ public class DatabaseConnection extends ConfigUtils {
                             System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from XHomes.");
                         }
                     } catch (SQLException e) {
-                        e.printStackTrace();
+                        Main.getInstance().getLogger().log(Level.SEVERE, "Unable to migrate data from XHomes", e);
                     }
                     break;
                 }

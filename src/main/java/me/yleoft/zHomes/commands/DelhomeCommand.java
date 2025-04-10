@@ -2,8 +2,6 @@ package me.yleoft.zHomes.commands;
 
 import com.zhomes.api.event.player.ExecuteDelhomeCommandEvent;
 import com.zhomes.api.event.player.PreExecuteDelhomeCommandEvent;
-import me.yleoft.zHomes.Main;
-import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
@@ -12,16 +10,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 public class DelhomeCommand extends HomesUtils implements CommandExecutor {
 
-    public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(s instanceof Player))
             return false;
         Player p = (Player)s;
         PreExecuteDelhomeCommandEvent preevent = new PreExecuteDelhomeCommandEvent(p);
-        Bukkit.getPluginManager().callEvent((Event)preevent);
+        Bukkit.getPluginManager().callEvent(preevent);
         if (preevent.isCancelled()) return false;
 
         LanguageUtils.Delhome lang = new LanguageUtils.Delhome();
@@ -46,7 +44,7 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
 
     public void code1(Player p, String home, LanguageUtils.Delhome lang, LanguageUtils.CommandsMSG cmdm) {
         ExecuteDelhomeCommandEvent event = new ExecuteDelhomeCommandEvent(p, home);
-        Bukkit.getPluginManager().callEvent((Event)event);
+        Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
         home = event.getHome();
@@ -63,7 +61,7 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
 
     public void code2(Player p, String home, LanguageUtils.Delhome lang, LanguageUtils.CommandsMSG cmdm) {
         ExecuteDelhomeCommandEvent event = new ExecuteDelhomeCommandEvent(p, home);
-        Bukkit.getPluginManager().callEvent((Event)event);
+        Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
         String ofchome = event.getHome();

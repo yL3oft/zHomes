@@ -1,12 +1,14 @@
 package me.yleoft.zHomes.utils;
 
 import java.util.List;
+import java.util.Objects;
+
 import me.yleoft.zHomes.Main;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.entity.Player;
 
 public class ConfigUtils {
-    private static Main main = Main.getInstance();
+    private static final Main main = Main.getInstance();
 
     protected String cmdPath = "commands.";
     protected String databasePath = "database.";
@@ -37,7 +39,7 @@ public class ConfigUtils {
     }
     public int getMaxLimit(Player p) {
         int l = -1;
-        for (String str : main.getConfig().getConfigurationSection(lim.split("\\.")[0]).getKeys(false)) {
+        for (String str : Objects.requireNonNull(main.getConfig().getConfigurationSection(lim.split("\\.")[0])).getKeys(false)) {
             if (str.equals("enabled") || str.equals("default")) continue;
             try {
                 int i = Integer.parseInt(str);
@@ -170,7 +172,7 @@ public class ConfigUtils {
         return main.getConfig().getString(this.databasePath + "host");
     }
     public Integer databasePort() {
-        return Integer.valueOf(main.getConfig().getInt(this.databasePath + "port"));
+        return main.getConfig().getInt(this.databasePath + "port");
     }
     public String databaseDatabase() {
         return main.getConfig().getString(this.databasePath + "database");
@@ -185,14 +187,14 @@ public class ConfigUtils {
         return main.getConfig().getInt(this.databasePath + "pool-size");
     }
     public String databaseTablePrefix() {
-        return main.getConfig().getString(this.databasePath + "table-prefix").toLowerCase();
+        return Objects.requireNonNull(main.getConfig().getString(this.databasePath + "table-prefix")).toLowerCase();
     }
     public String databaseTable() {
         return databaseTablePrefix()+"_homes";
     }
     //</editor-fold>
 
-    protected static class ConfigUtilsExtras {
+    public static class ConfigUtilsExtras {
 
         public boolean canAfford(Player p, Float cost) {
             Economy economy = Main.economy;
@@ -202,7 +204,7 @@ public class ConfigUtils {
                     economy.withdrawPlayer(p, cost);
                     return true;
                 }
-                cmdm.sendMsg(p, cmdm.getCantAffod(cost));
+                cmdm.sendMsg(p, cmdm.getCantAfford(cost));
                 return false;
             }
             return true;

@@ -6,8 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
-import com.zaxxer.hikari.HikariDataSource;
 import me.yleoft.zHomes.Main;
 import org.bukkit.OfflinePlayer;
 
@@ -18,7 +18,7 @@ public class DatabaseEditor extends DatabaseConnection {
              PreparedStatement ps = con.prepareStatement("CREATE TABLE IF NOT EXISTS " + table + coluns)) {
             ps.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error creating table: " + table, e);
         }
     }
 
@@ -26,7 +26,7 @@ public class DatabaseEditor extends DatabaseConnection {
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement("ALTER TABLE " + oldtable + " RENAME TO " + newtable)) {
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (SQLException ignored) {
         }
     }
 
@@ -63,7 +63,7 @@ public class DatabaseEditor extends DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error setting home for player: " + p.getName(), e);
         }
     }
 
@@ -75,7 +75,7 @@ public class DatabaseEditor extends DatabaseConnection {
             ps2.setString(2, home);
             ps2.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error deleting home for player: " + p.getName(), e);
         }
     }
 
@@ -97,7 +97,7 @@ public class DatabaseEditor extends DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error getting homes for player: " + p.getName(), e);
         }
         return "";
     }
@@ -113,18 +113,9 @@ public class DatabaseEditor extends DatabaseConnection {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error getting homes for player: " + p.getName(), e);
         }
         return list;
-    }
-
-    public boolean isInTable(OfflinePlayer p) {
-        try {
-            String uuid = p.getUniqueId().toString();
-            if (existsTableColumnValue(databaseTable(), "UUID", uuid))
-                return true;
-        } catch (Exception exception) {}
-        return false;
     }
 
     public boolean isInTable(OfflinePlayer p, String home) {
@@ -132,7 +123,7 @@ public class DatabaseEditor extends DatabaseConnection {
             String uuid = p.getUniqueId().toString();
             if (existsTableColumnValueDouble(databaseTable(), "UUID", uuid, "HOME", home))
                 return true;
-        } catch (Exception exception) {}
+        } catch (Exception ignored) {}
         return false;
     }
 
