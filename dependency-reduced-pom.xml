@@ -4,7 +4,7 @@
   <groupId>me.yleoft</groupId>
   <artifactId>zHomes</artifactId>
   <name>zHomes</name>
-  <version>1.3.4</version>
+  <version>1.3.5</version>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>
@@ -43,6 +43,12 @@
                   </excludes>
                 </filter>
               </filters>
+              <relocations>
+                <relocation>
+                  <pattern>com.zaxxer.hikari</pattern>
+                  <shadedPattern>me.yleoft.shaded.hikari</shadedPattern>
+                </relocation>
+              </relocations>
             </configuration>
           </execution>
         </executions>

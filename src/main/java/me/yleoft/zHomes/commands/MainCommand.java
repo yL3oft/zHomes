@@ -121,7 +121,7 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
             case "commands":
                 reload("config");
                 Main.getInstance().loadCommands();
-                PluginYAMLManager.syncCommands();
+                Main.pym.syncCommands();
                 break;
             case "config":
                 Main.getInstance().reloadConfig();

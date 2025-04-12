@@ -15,6 +15,9 @@ database:
   database: db
   username: root
   password: pass
+  options:
+    useSSL: false
+    allowPublicKeyRetrieval: false
   # -------------------- #
   # WARNING: DO NOT CHANGE ANYTHING BELOW IF YOU DON'T KNOW WHAT YOU'RE DOING
   pool-size: 10
@@ -26,7 +29,7 @@ general:
   language: "en"
   # Define it the plugin should be updated automatically
   # OPTIONS: [true, false] --- DEFAULT: true
-  auto-update: true
+  auto-update: false
   # Here you can define if metrics should be on or off.
   # !WARNING: This option does not work with reload.
   # OPTIONS: [true, false] --- DEFAULT: true

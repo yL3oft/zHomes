@@ -29,6 +29,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class DatabaseConnection extends ConfigUtils {
 
+    boolean retry = false;
+
     public void connect() {
         try {
             if (Main.mariadbDriver == null) {
@@ -87,10 +89,10 @@ public class DatabaseConnection extends ConfigUtils {
     }
 
     public String mariadbUrl() {
-        return "jdbc:mariadb://" + databaseHost() + ":" + databasePort() + "/" + databaseDatabase();
+        return "jdbc:mariadb://" + databaseHost() + ":" + databasePort() + "/" + databaseDatabase()+"?allowPublicKeyRetrieval="+databaseAllowPublicKeyRetrieval()+"&useSSL="+databaseUseSSL();
     }
     public String mysqlUrl() {
-        return "jdbc:mysql://" + databaseHost() + ":" + databasePort() + "/" + databaseDatabase()+"?useSSL=false";
+        return "jdbc:mysql://" + databaseHost() + ":" + databasePort() + "/" + databaseDatabase()+"?allowPublicKeyRetrieval="+databaseAllowPublicKeyRetrieval()+"&useSSL="+databaseUseSSL();
     }
     public String h2Url() {
         return "jdbc:h2:" + Main.getInstance().getDataFolder().getAbsolutePath() + "/database-h2;AUTO_SERVER=TRUE";

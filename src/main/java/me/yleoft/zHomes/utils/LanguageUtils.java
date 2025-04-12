@@ -76,7 +76,7 @@ public class LanguageUtils extends ConfigUtils {
             File f = new File(main.getDataFolder(), resource);
             if (f.exists()) {
                 Main.fm.fBACKUP = f;
-                Main.fm.fuBACKUP = new FileUtils(f, resource);
+                Main.fm.fuBACKUP = new FileUtils(Main.zAPI, f, resource);
                 returned = (YamlConfiguration)Main.fm.fuBACKUP.getConfig();
             }
         }

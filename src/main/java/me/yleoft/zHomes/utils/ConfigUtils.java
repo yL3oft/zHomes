@@ -183,6 +183,12 @@ public class ConfigUtils {
     public String databasePassword() {
         return main.getConfig().getString(this.databasePath + "password");
     }
+    public Boolean databaseUseSSL() {
+        return main.getConfig().getBoolean(this.databasePath + "options.useSSL");
+    }
+    public Boolean databaseAllowPublicKeyRetrieval() {
+        return main.getConfig().getBoolean(this.databasePath + "options.allowPublicKeyRetrieval");
+    }
     public int databasePoolsize() {
         return main.getConfig().getInt(this.databasePath + "pool-size");
     }
