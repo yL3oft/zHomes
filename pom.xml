@@ -200,9 +200,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>me.yleoft</groupId>
+            <groupId>com.github.yL3oft</groupId>
             <artifactId>zAPI</artifactId>
-            <version>1.2.3-SNAPSHOT</version>
+            <version>1.2.4</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

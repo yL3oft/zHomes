@@ -1,6 +1,8 @@
+# Wiki is still being created... If you have any doubts, please ask in the Discord server.
+
 Inventory:
   title: "&c> Homes &8| Limit: %zhomes_numberofhomes/limit%"
-  title-other: "&c> %player%'s Homes"
+  title-other: "&c> &e%player%&c's Homes"
   rows: 6
 
 Config:

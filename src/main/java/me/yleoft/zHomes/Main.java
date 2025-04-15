@@ -14,10 +14,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -34,6 +36,7 @@ public final class Main extends JavaPlugin {
 
     public static zAPI zAPI;
 
+    public static FileUtils configFileUtils;
     public static String homesMenuPath = "menus/menu-homes.yml";
 
     private static Main main;
@@ -139,10 +142,8 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         //<editor-fold desc="Files">
         cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fChecking if files exist..."));
-        File f = new File(getDataFolder(), "config.yml");
-        if (!f.exists()) {
-            saveDefaultConfig();
-            reloadConfig();
+        if(configFileUtils == null) {
+            getConfig();
         }
         fm.fuLang.saveDefaultConfig();
         fm.fuLang.reloadConfig();
@@ -223,7 +224,7 @@ public final class Main extends JavaPlugin {
                         pf+"&fAttempting to auto-update it..."
                 ));
                 try {
-                    String path = checker.update(version);
+                    String path = checker.update(pluginName, version);
                     cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&aPlugin updated! &7Saved in: "+path
                     ));
@@ -354,11 +355,34 @@ public final class Main extends JavaPlugin {
     //</editor-fold>
     //<editor-fold desc="Java Overrides">
     @Override
+    public @NotNull FileConfiguration getConfig() {
+        if (configFileUtils == null) {
+            // Lazy initialization if not already set
+            File configFile = new File(getDataFolder(), "config.yml");
+            configFileUtils = new FileUtils(zAPI, configFile, "config.yml");
+            configFileUtils.saveDefaultConfig();
+            configFileUtils.reloadConfig(true);
+        }
+        return configFileUtils.getConfig();
+    }
+
+    @Override
+    public void saveDefaultConfig() {
+        if (configFileUtils == null) {
+            File configFile = new File(getDataFolder(), "config.yml");
+            configFileUtils = new FileUtils(zAPI, configFile, "config.yml");
+        }
+        configFileUtils.saveDefaultConfig();
+    }
+
+    @Override
     public void reloadConfig() {
-        super.reloadConfig();
-        saveDefaultConfig();
-        getConfig().options().copyDefaults(true);
-        saveConfig();
+        if (configFileUtils == null) {
+            File configFile = new File(getDataFolder(), "config.yml");
+            configFileUtils = new FileUtils(zAPI, configFile, "config.yml");
+            configFileUtils.saveDefaultConfig();
+        }
+        configFileUtils.reloadConfig(true);
     }
 
     public File getFileJava() {

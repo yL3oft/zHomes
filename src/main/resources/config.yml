@@ -42,10 +42,6 @@ teleport-options:
   dimensional-teleportation: true # There is also a permission to bypass: zhomes.bypass.dimensionalteleportation
 
 limits:
-  # Limit example:
-  # '15':
-  #   - group.vip
-  #   - group.mvp
   # This options defines if homes should have a limit or not.
   # OPTIONS: [true, false] --- DEFAULT: false
   enabled: false
@@ -53,6 +49,11 @@ limits:
   # The default limit of homes a player can have
   # OPTIONS: [>=0] --- DEFAULT: 10
   default: 10 # There is also a permission to bypass: zhomes.bypass.limit
+
+  # Example of how to set the limit for a group
+  '15':
+    - group.vip
+    - group.mvp
 
 commands:
   # Mostly everything below needs a restart to apply

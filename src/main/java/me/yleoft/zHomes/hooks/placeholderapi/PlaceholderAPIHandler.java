@@ -3,7 +3,7 @@ package me.yleoft.zHomes.hooks.placeholderapi;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 public class PlaceholderAPIHandler extends me.yleoft.zAPI.handlers.PlaceholderAPIHandler {
 
@@ -12,7 +12,7 @@ public class PlaceholderAPIHandler extends me.yleoft.zAPI.handlers.PlaceholderAP
     }
 
     @Override
-    public String applyHookPlaceholders(Player p, String params) {
+    public String applyHookPlaceholders(OfflinePlayer p, String params) {
         HomesUtils hu = Main.hu;
         String[] split = params.split("_");
 
