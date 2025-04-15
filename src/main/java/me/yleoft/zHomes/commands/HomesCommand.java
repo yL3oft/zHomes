@@ -48,9 +48,7 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
                 return true;
             }
         }
-        if (cfguExtras.canAfford(p, CmdHomesPermission(), CmdHomesCost())) {
-            code(p, p, lang, cmdm);
-        }
+        code(p, p, lang, cmdm);
         return false;
     }
 
@@ -82,7 +80,7 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
         List<String> finalHomes;
         if(p != t) {
             finalHomes = new ArrayList<>();
-            inv.setInventoryName(requireNonNull(requireNonNull(config.getString(formPath(configPathInventory, "title-other")))
+            inv.setInventoryName(t, requireNonNull(requireNonNull(config.getString(formPath(configPathInventory, "title-other")))
                     .replace("%player%", requireNonNull(t.getName()))));
             Main.hu.homesW(t).forEach(home -> finalHomes.add(t.getName()+":"+home));
         }else finalHomes = homes;

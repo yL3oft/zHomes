@@ -5,6 +5,7 @@ import java.util.Objects;
 
 import me.yleoft.zHomes.Main;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 public class ConfigUtils {
@@ -39,14 +40,14 @@ public class ConfigUtils {
     public boolean needsLimit() {
         return main.getConfig().getBoolean(this.lim + "enabled");
     }
-    public int getMaxLimit(Player p) {
+    public int getMaxLimit(OfflinePlayer p) {
         int l = -1;
         for (String str : Objects.requireNonNull(main.getConfig().getConfigurationSection(lim.split("\\.")[0])).getKeys(false)) {
             if (str.equals("enabled") || str.equals("default")) continue;
             try {
                 int i = Integer.parseInt(str);
                 for (String perm : main.getConfig().getStringList(lim+str)) {
-                    if (p.hasPermission(perm) && i > l) l = i;
+                    if (p.isOnline() && Objects.requireNonNull(p.getPlayer()).hasPermission(perm) && i > l) l = i;
                 }
             } catch (Exception e) {
                 main.getServer().getConsoleSender().sendMessage(main.coloredPluginName + "§cSomething's off in config.yml");
@@ -172,7 +173,7 @@ public class ConfigUtils {
     }
     public String PermissionBypassCommandCost(String commandPermission) {
         return main.getConfig().getString(permissionsBypassPath+"command-cost")
-                .replace("%command-cost%", commandPermission);
+                .replace("%command_permission%", commandPermission);
     }
     //</editor-fold>
 

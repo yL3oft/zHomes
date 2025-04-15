@@ -33,46 +33,57 @@ public class DatabaseConnection extends ConfigUtils {
 
     public void connect() {
         try {
-            if (Main.mariadbDriver == null) {
-                File mariadbjarFile = new File(Main.getInstance().libsFolder, Main.getInstance().mariadbJar);
-                URL mariadbjarURL = mariadbjarFile.toURI().toURL();
-                URLClassLoader mariadbclassLoader = new URLClassLoader(new URL[]{mariadbjarURL}, Main.class.getClassLoader());
-                Class<?> mariadbdriverClass = Class.forName("org.mariadb.jdbc.Driver", true, mariadbclassLoader);
-                Main.mariadbDriver = (Driver) mariadbdriverClass.getDeclaredConstructor().newInstance();
-                DriverManager.registerDriver(new DriverShim(Main.mariadbDriver));
-            }
-            if (Main.h2Driver == null) {
-                File h2jarFile = new File(Main.getInstance().libsFolder, Main.getInstance().h2Jar);
-                URL h2jarURL = h2jarFile.toURI().toURL();
-                URLClassLoader h2classLoader = new URLClassLoader(new URL[]{h2jarURL}, Main.class.getClassLoader());
-                Class<?> h2driverClass = Class.forName("org.h2.Driver", true, h2classLoader);
-                Main.h2Driver = (Driver) h2driverClass.getDeclaredConstructor().newInstance();
-                DriverManager.registerDriver(new DriverShim(Main.h2Driver));
-            }
-
             if (Main.dataSource == null || Main.dataSource.isClosed()) {
                 HikariConfig config = new HikariConfig();
                 switch (databaseType().toLowerCase()) {
                     case "mariadb":
+                        if (Main.mariadbDriver == null) {
+                            File mariadbjarFile = new File(Main.getInstance().libsFolder, Main.getInstance().mariadbJar);
+                            URL mariadbjarURL = mariadbjarFile.toURI().toURL();
+                            URLClassLoader mariadbclassLoader = new URLClassLoader(new URL[]{mariadbjarURL}, Main.class.getClassLoader());
+                            Class<?> mariadbdriverClass = Class.forName("org.mariadb.jdbc.Driver", true, mariadbclassLoader);
+                            Main.mariadbDriver = (Driver) mariadbdriverClass.getDeclaredConstructor().newInstance();
+                            DriverManager.registerDriver(new DriverShim(Main.mariadbDriver));
+                        }
                         Main.type = database_type.EXTERNAL;
                         config.setJdbcUrl(mariadbUrl());
                         config.setUsername(databaseUsername());
                         config.setPassword(databasePassword());
                         break;
                     case "mysql":
+                        if (Main.mysqlDriver == null) {
+                            try {
+                                if (DriverManager.getDriver("jdbc:mysql://") != null) {
+                                    DriverManager.deregisterDriver(DriverManager.getDriver("jdbc:mysql://"));
+                                }
+                            }catch (Exception ignored) {}
+                            File mysqljarFile = new File(Main.getInstance().libsFolder, Main.getInstance().mysqlJar);
+                            URL mysqljarURL = mysqljarFile.toURI().toURL();
+                            URLClassLoader mysqlclassLoader = new URLClassLoader(new URL[]{mysqljarURL}, Main.class.getClassLoader());
+                            Class<?> mysqldriverClass = Class.forName("com.mysql.cj.jdbc.Driver", true, mysqlclassLoader);
+                            Main.mysqlDriver = (Driver) mysqldriverClass.getDeclaredConstructor().newInstance();
+                            DriverManager.registerDriver(new DriverShim(Main.mysqlDriver));
+                        }
                         Main.type = database_type.EXTERNAL;
                         config.setJdbcUrl(mysqlUrl());
                         config.setUsername(databaseUsername());
                         config.setPassword(databasePassword());
                         break;
                     case "h2":
+                        if (Main.h2Driver == null) {
+                            File h2jarFile = new File(Main.getInstance().libsFolder, Main.getInstance().h2Jar);
+                            URL h2jarURL = h2jarFile.toURI().toURL();
+                            URLClassLoader h2classLoader = new URLClassLoader(new URL[]{h2jarURL}, Main.class.getClassLoader());
+                            Class<?> h2driverClass = Class.forName("org.h2.Driver", true, h2classLoader);
+                            Main.h2Driver = (Driver) h2driverClass.getDeclaredConstructor().newInstance();
+                            DriverManager.registerDriver(new DriverShim(Main.h2Driver));
+                        }
                         Main.type = database_type.H2;
                         config.setJdbcUrl(h2Url());
                         break;
                     default:
                         Main.type = database_type.SQLITE;
                         config.setJdbcUrl(sqliteUrl());
-                        config.setDriverClassName("org.sqlite.JDBC");
                         break;
                 }
 
@@ -100,7 +111,7 @@ public class DatabaseConnection extends ConfigUtils {
     public String sqliteUrl() {
         File old = new File(Main.getInstance().getDataFolder(), "database.db");
         if(old.exists()) {
-            return "jdbc:sqlite:" + Main.getInstance().getDataFolder().getAbsolutePath() + "/database.db";
+            old.renameTo(new File(Main.getInstance().getDataFolder(), "database-sqlite.db"));
         }
         return "jdbc:sqlite:" + Main.getInstance().getDataFolder().getAbsolutePath() + "/database-sqlite.db";
     }

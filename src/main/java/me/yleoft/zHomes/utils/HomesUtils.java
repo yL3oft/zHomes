@@ -11,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 
 import static me.yleoft.zAPI.utils.LocationUtils.findNearestSafeLocation;
 
@@ -77,7 +76,13 @@ public class HomesUtils extends DatabaseEditor {
             }
             return;
         }
-        p.teleport(findNearestSafeLocation(loc, 4, 50));
+        Location tpLoc = findNearestSafeLocation(loc, 4, 50);
+        if(tpLoc == null) {
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
+            return;
+        }
+        p.teleport(tpLoc);
     }
 
     public void teleportPlayer(Player p, OfflinePlayer t, String home) {
@@ -101,7 +106,13 @@ public class HomesUtils extends DatabaseEditor {
             }
             return;
         }
-        p.teleport(findNearestSafeLocation(loc, 4, 50));
+        Location tpLoc = findNearestSafeLocation(loc, 4, 50);
+        if(tpLoc == null) {
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
+            return;
+        }
+        p.teleport(tpLoc);
     }
 
     public String homes(OfflinePlayer p) {

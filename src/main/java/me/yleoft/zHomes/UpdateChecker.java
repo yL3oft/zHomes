@@ -7,6 +7,9 @@ import com.google.gson.JsonObject;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class UpdateChecker {
 
@@ -41,25 +44,20 @@ public class UpdateChecker {
         }
     }
 
-    public String update(String version) {
+    public String update(String pluginName, String version) {
         try {
-            File pFile = Main.getInstance().getFileJava();
-            StringBuilder fName = new StringBuilder(pFile.getName());
-            if(pFile.getParentFile().getName().equals("unknown-origin")) {
-                if(fName.toString().contains("-")) {
-                    String[] fNameS = fName.toString().split("-");
-                    fName = new StringBuilder(fNameS[0]);
-                    if(fNameS.length > 1) {
-                        for(int i = 1; i <= fNameS.length-2; i++) {
-                            fName.append("-").append(fNameS[i]);
-                        }
+            File dir = Main.getInstance().getDataFolder().getParentFile();
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir.toPath(), pluginName+"-*.jar")) {
+                for (Path file : stream) {
+                    try {
+                        Files.delete(file);
+                    } catch (IOException ignored) {
                     }
                 }
+            } catch (IOException ignored) {
             }
-            File f = new File(Main.getInstance().getDataFolder().getParent(), fName+".jar");
-            f.delete();
 
-            String path = f.getParentFile()+"/"+Main.getInstance().pluginName+"-"+version+".jar";
+            String path = dir+"/"+pluginName+"-"+version+".jar";
             File newF = new File(path);
             downloadFile(newF, getPluginDownloadURL(123141));
             return path;

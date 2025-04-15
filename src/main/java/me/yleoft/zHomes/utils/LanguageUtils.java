@@ -165,6 +165,7 @@ public class LanguageUtils extends ConfigUtils {
             String path = formPath(cmds, getCmd(), "cant-dimensional-teleport");
             return this.cfg.getString(path);
         }
+
     }
 
     public static class Homes implements Commands {
@@ -390,6 +391,11 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getCantFindPlayer() {
             String path = formPath(cmds, "cant-find-player");
+            return this.cfg.getString(path);
+        }
+
+        public String getUnableToFindSafeLocation() {
+            String path = formPath(cmds, "unable-to-find-safe-location");
             return this.cfg.getString(path);
         }
     }
