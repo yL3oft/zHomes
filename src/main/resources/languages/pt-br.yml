@@ -7,6 +7,7 @@ commands:
   home-doesnt-exist-others: "%prefix%&e%player% &cnão tem nenhuma home com este nome."
   cant-use-2dot: "%prefix%&cVocê não pode usar &e':' &cneste comando."
   cant-find-player: "%prefix%&cEste jogador não foi encontrado."
+  unable-to-find-safe-location: "%prefix%&cNão foi possível encontrar uma localização segura para teleportar."
 
   # Aqui embaixo vai achar mensagens especificas de alguns comandos.
   main:
@@ -65,7 +66,7 @@ commands:
   home:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aTeleportando para &e%home%&a..."
-    cant-dimensional-teleport: "&cSeu teleporte foi cancelado! Teleportacao interdimensional estdesativada."
+    cant-dimensional-teleport: "&cSeu teleporte foi cancelado! Teleportação interdimensional está desativada."
   homes:
     output: "%prefix%&7Suas homes: &f%homes%"
     others:

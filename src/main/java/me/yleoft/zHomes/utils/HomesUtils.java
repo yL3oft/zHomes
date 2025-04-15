@@ -13,6 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
+import static me.yleoft.zAPI.utils.LocationUtils.findNearestSafeLocation;
+
 public class HomesUtils extends DatabaseEditor {
 
     Main main = Main.getInstance();
@@ -27,7 +29,7 @@ public class HomesUtils extends DatabaseEditor {
     }
 
     public boolean inMaxLimit(Player p) {
-        if(needsLimit()) {
+        if(needsLimit() && !p.hasPermission(PermissionBypassLimit())) {
             return getLimit(p) >= getMaxLimit(p);
         }
         return false;
@@ -75,7 +77,7 @@ public class HomesUtils extends DatabaseEditor {
             }
             return;
         }
-        p.teleport(loc);
+        p.teleport(findNearestSafeLocation(loc, 4, 50));
     }
 
     public void teleportPlayer(Player p, OfflinePlayer t, String home) {
@@ -99,7 +101,7 @@ public class HomesUtils extends DatabaseEditor {
             }
             return;
         }
-        p.teleport(loc);
+        p.teleport(findNearestSafeLocation(loc, 4, 50));
     }
 
     public String homes(OfflinePlayer p) {

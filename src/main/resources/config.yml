@@ -52,7 +52,7 @@ limits:
 
   # The default limit of homes a player can have
   # OPTIONS: [>=0] --- DEFAULT: 10
-  default: 10
+  default: 10 # There is also a permission to bypass: zhomes.bypass.limit
 
 commands:
   # Mostly everything below needs a restart to apply
@@ -98,6 +98,9 @@ commands:
     aliases:
       - myhomes
     command-cost: 0  # Requires Vault to work
+    # This option defines the return type of this command
+    # OPTIONS: [text, menu] --- DEFAULT: menu
+    type: menu
     others:
       permission: "zhomes.command.homes.others" # Only OP by default
   home:
@@ -108,3 +111,17 @@ commands:
     command-cost: 0  # Requires Vault to work
     others:
       permission: "zhomes.command.home.others" # Only OP by default
+
+# In this section you can define the permissions for the plugin
+# Permissions for commands can be found on the commands section
+permissions:
+  bypass:
+    # This permission allows the player to bypass the limit of homes
+    # Default: zhomes.bypass.limit
+    limit: "zhomes.bypass.limit" # Only OP by default
+    # This permission allows the player to bypass the dimensional teleportation
+    # Default: zhomes.bypass.dimensionalteleportation
+    dimensional-teleportation: "zhomes.bypass.dimensionalteleportation" # Only OP by default
+    # This permission allows the player to bypass the cost of the command
+    # Default: %command_permission%.command-cost
+    command-cost: "%command_permission%.bypass.command-cost" # Only OP by default

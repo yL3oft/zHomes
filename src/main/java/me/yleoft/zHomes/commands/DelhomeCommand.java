@@ -50,7 +50,7 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
         home = event.getHome();
 
         if (hasHome(p, home)) {
-            if (cfguExtras.canAfford(p, CmdDelhomeCost())) {
+            if (cfguExtras.canAfford(p, CmdDelhomePermission(), CmdDelhomeCost())) {
                 delHome(p, home);
                 lang.sendMsg(p, lang.getOutput(home));
             }
@@ -76,7 +76,7 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
             return;
         }
         if (hasHome(t, home)) {
-            if (cfguExtras.canAfford(p, CmdDelhomeCost())) {
+            if (cfguExtras.canAfford(p, CmdDelhomePermission(), CmdDelhomeCost())) {
                 delHome(t, home);
                 lang.sendMsg(p, lang.getOutput(ofchome));
             }

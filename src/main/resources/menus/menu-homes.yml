@@ -1,0 +1,42 @@
+Inventory:
+  title: "&c> Homes &8| Limit: %zhomes_numberofhomes/limit%"
+  title-other: "&c> %player%'s Homes"
+  rows: 6
+
+Config:
+  homes-item:
+    material:
+      - WHITE_BED
+      - LIGHT_GRAY_BED
+      - GRAY_BED
+      - BLACK_BED
+      - BROWN_BED
+      - RED_BED
+      - ORANGE_BED
+      - YELLOW_BED
+      - LIME_BED
+      - GREEN_BED
+      - CYAN_BED
+      - LIGHT_BLUE_BED
+      - BLUE_BED
+      - PURPLE_BED
+      - MAGENTA_BED
+      - PINK_BED
+    slot: 0-44
+    name: "&aHome: &e%home%"
+    lore:
+      - "&bClick to teleport!"
+    commands:
+      - "home %home%"
+
+Items:
+  'filler':
+    material: GRAY_STAINED_GLASS_PANE
+    slot: 0-53
+    name: ""
+  'close':
+    material: BARRIER
+    slot: 49
+    name: "&cClose"
+    commands:
+      - "[INV]close"

@@ -17,6 +17,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import static me.yleoft.zAPI.utils.ConfigUtils.formPath;
+
 public class LanguageUtils extends ConfigUtils {
 
     private static final Main main = Main.getInstance();
@@ -29,23 +31,6 @@ public class LanguageUtils extends ConfigUtils {
 
     public LanguageUtils() {
         cfg = getConfigFile();
-    }
-
-    public static String formPath(String... strs) {
-        StringBuilder path = new StringBuilder();
-
-        try {
-            for(String str : strs) {
-                if(path.isEmpty()) {
-                    path = new StringBuilder(str);
-                    continue;
-                }
-                path.append(".").append(str);
-            }
-        }catch (Exception ignored) {
-        }
-
-        return path.toString();
     }
 
     public static YamlConfiguration getConfigFile() {
@@ -95,7 +80,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getUsage() {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
+            String path = formPath(cmds, getCmd(), "usage");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdSethomeCommand());
         }
@@ -105,14 +90,14 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getOutput(String home) {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+            String path = formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdSethomeCommand())
                     .replace("%home%", home);
         }
 
         public String getLimitReached(Player p) {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "limit-reached");
+            String path = formPath(cmds, getCmd(), "limit-reached");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdSethomeCommand())
                     .replace("%limit%", String.valueOf(Main.hu.getMaxLimit(p)));
@@ -131,7 +116,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getUsage() {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
+            String path = formPath(cmds, getCmd(), "usage");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdDelhomeCommand());
         }
@@ -141,7 +126,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getOutput(String home) {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+            String path = formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdDelhomeCommand())
                     .replace("%home%", home);
@@ -160,7 +145,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getUsage() {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
+            String path = formPath(cmds, getCmd(), "usage");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdHomeCommand());
         }
@@ -170,14 +155,14 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getOutput(String home) {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+            String path = formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdHomeCommand())
                     .replace("%home%", home);
         }
 
         public String getCantDimensionalTeleport() {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "cant-dimensional-teleport");
+            String path = formPath(cmds, getCmd(), "cant-dimensional-teleport");
             return this.cfg.getString(path);
         }
     }
@@ -198,13 +183,13 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getOutput() {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+            String path = formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdHomesCommand());
         }
 
         public String getOutput(OfflinePlayer p) {
-            String path = LanguageUtils.formPath(cmds, getCmd(), "others.output");
+            String path = formPath(cmds, getCmd(), "others.output");
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdHomesCommand())
                     .replace("%homes%", Main.hu.homes(p))
@@ -243,19 +228,19 @@ public class LanguageUtils extends ConfigUtils {
             }
 
             public String getUsage() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "help-noperm");
+                String path = formPath(cmds, getCmd(), "help-noperm");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
 
             public String getUsageWithPerm() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "help-perm");
+                String path = formPath(cmds, getCmd(), "help-perm");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
 
             public String getOutput() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+                String path = formPath(cmds, getCmd(), "output");
                 return this.cfg.getString(path)
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion());
             }
@@ -277,7 +262,7 @@ public class LanguageUtils extends ConfigUtils {
             }
 
             public String getOutput() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+                String path = formPath(cmds, getCmd(), "output");
                 return this.cfg.getString(path)
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion());
             }
@@ -295,7 +280,7 @@ public class LanguageUtils extends ConfigUtils {
             }
 
             public String getUsage() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
+                String path = formPath(cmds, getCmd(), "usage");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
@@ -305,28 +290,28 @@ public class LanguageUtils extends ConfigUtils {
             }
 
             public String getOutput(long time) {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+                String path = formPath(cmds, getCmd(), "output");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand())
                         .replace("%time%", String.valueOf(time));
             }
 
             public String getOutputCommands(long time) {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "commands.output");
+                String path = formPath(cmds, getCmd(), "commands.output");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand())
                         .replace("%time%", String.valueOf(time));
             }
 
             public String getOutputConfig(long time) {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "config.output");
+                String path = formPath(cmds, getCmd(), "config.output");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand())
                         .replace("%time%", String.valueOf(time));
             }
 
             public String getOutputLanguages(long time) {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "languages.output");
+                String path = formPath(cmds, getCmd(), "languages.output");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand())
                         .replace("%time%", String.valueOf(time));
@@ -345,19 +330,19 @@ public class LanguageUtils extends ConfigUtils {
             }
 
             public String getUsage() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "usage");
+                String path = formPath(cmds, getCmd(), "usage");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
 
             public String getOutput() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "output");
+                String path = formPath(cmds, getCmd(), "output");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
 
             public String getError() {
-                String path = LanguageUtils.formPath(cmds, getCmd(), "error");
+                String path = formPath(cmds, getCmd(), "error");
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
@@ -372,39 +357,39 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getHomeAlreadyExist() {
-            String path = LanguageUtils.formPath(cmds, "home-already-exist");
+            String path = formPath(cmds, "home-already-exist");
             return this.cfg.getString(path);
         }
 
         public String getHomeDoesntExist() {
-            String path = LanguageUtils.formPath(cmds, "home-doesnt-exist");
+            String path = formPath(cmds, "home-doesnt-exist");
             return this.cfg.getString(path);
         }
 
         public String getHomeDoesntExistOthers(OfflinePlayer p) {
-            String path = LanguageUtils.formPath(cmds, "home-doesnt-exist-others");
+            String path = formPath(cmds, "home-doesnt-exist-others");
             return this.cfg.getString(path)
                     .replace("%player%", Objects.requireNonNull(p.getName()));
         }
 
         public String getCantAfford(Float cost) {
-            String path = LanguageUtils.formPath(cmds, "cant-afford");
+            String path = formPath(cmds, "cant-afford");
             return this.cfg.getString(path)
                     .replace("%cost%", Float.toString(cost));
         }
 
         public String getNoPermission() {
-            String path = LanguageUtils.formPath(cmds, "no-permission");
+            String path = formPath(cmds, "no-permission");
             return this.cfg.getString(path);
         }
 
         public String getCantUse2Dot() {
-            String path = LanguageUtils.formPath(cmds, "cant-use-2dot");
+            String path = formPath(cmds, "cant-use-2dot");
             return this.cfg.getString(path);
         }
 
         public String getCantFindPlayer() {
-            String path = LanguageUtils.formPath(cmds, "cant-find-player");
+            String path = formPath(cmds, "cant-find-player");
             return this.cfg.getString(path);
         }
     }

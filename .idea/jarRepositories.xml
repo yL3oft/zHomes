@@ -17,14 +17,9 @@
       <option name="url" value="https://oss.sonatype.org/content/groups/public/" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="spigotmc-repo" />
-      <option name="name" value="spigotmc-repo" />
-      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="github" />
-      <option name="name" value="github" />
-      <option name="url" value="https://maven.pkg.github.com/OWNER/REPOSITORY" />
+      <option name="id" value="codemc-repo" />
+      <option name="name" value="codemc-repo" />
+      <option name="url" value="https://repo.codemc.io/repository/maven-public/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="placeholderapi" />
@@ -37,19 +32,9 @@
       <option name="url" value="https://repo1.maven.org/maven2" />
     </remote-repository>
     <remote-repository>
-      <option name="id" value="jboss.community" />
-      <option name="name" value="JBoss Community repository" />
-      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="github" />
       <option name="name" value="github" />
       <option name="url" value="https://maven.pkg.github.com/yL3oft/zHomes" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="Modrinth" />
-      <option name="name" value="Modrinth" />
-      <option name="url" value="https://api.modrinth.com/maven" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -60,6 +45,26 @@
       <option name="id" value="papermc" />
       <option name="name" value="papermc" />
       <option name="url" value="https://repo.papermc.io/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="spigotmc-repo" />
+      <option name="name" value="spigotmc-repo" />
+      <option name="url" value="https://hub.spigotmc.org/nexus/content/repositories/snapshots/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="github" />
+      <option name="name" value="github" />
+      <option name="url" value="https://maven.pkg.github.com/OWNER/REPOSITORY" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="jboss.community" />
+      <option name="name" value="JBoss Community repository" />
+      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="Modrinth" />
+      <option name="name" value="Modrinth" />
+      <option name="url" value="https://api.modrinth.com/maven" />
     </remote-repository>
   </component>
 </project>

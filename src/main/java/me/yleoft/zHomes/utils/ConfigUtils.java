@@ -11,6 +11,8 @@ public class ConfigUtils {
     private static final Main main = Main.getInstance();
 
     protected String cmdPath = "commands.";
+    protected String permissionsPath = "permissions.";
+    protected String permissionsBypassPath = permissionsPath+"bypass.";
     protected String databasePath = "database.";
     protected String lim = "limits.";
     protected String tpo = "teleport-options.";
@@ -133,6 +135,9 @@ public class ConfigUtils {
     public Float CmdHomesCost() {
         return (float) main.getConfig().getDouble(this.cmdPath + "homes.command-cost");
     }
+    public String CmdHomesType() {
+        return main.getConfig().getString(this.cmdPath + "homes.type");
+    }
     public String CmdHomesOthersPermission() {
         return main.getConfig().getString(this.cmdPath + "homes.others.permission");
     }
@@ -159,8 +164,15 @@ public class ConfigUtils {
     //</editor-fold>
 
     //<editor-fold desc="Permissions">
+    public String PermissionBypassLimit() {
+        return main.getConfig().getString(permissionsBypassPath+"limit");
+    }
     public String PermissionBypassDT() {
-        return "zhomes.bypass.dimensionalteleportation";
+        return main.getConfig().getString(permissionsBypassPath+"dimensional-teleportation");
+    }
+    public String PermissionBypassCommandCost(String commandPermission) {
+        return main.getConfig().getString(permissionsBypassPath+"command-cost")
+                .replace("%command-cost%", commandPermission);
     }
     //</editor-fold>
 
@@ -202,8 +214,11 @@ public class ConfigUtils {
 
     public static class ConfigUtilsExtras {
 
-        public boolean canAfford(Player p, Float cost) {
-            Economy economy = Main.economy;
+        public boolean canAfford(Player p, String commandPermission, Float cost) {
+            if(p.hasPermission(Main.cfgu.PermissionBypassCommandCost(commandPermission))) {
+                return true;
+            }
+            Economy economy = (Economy) Main.economy;
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
             if (Main.getInstance().getServer().getPluginManager().isPluginEnabled("Vault")) {
                 if(economy.has(p, cost)) {

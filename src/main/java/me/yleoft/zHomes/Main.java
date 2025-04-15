@@ -2,9 +2,10 @@ package me.yleoft.zHomes;
 
 import com.zaxxer.hikari.HikariDataSource;
 import me.yleoft.zAPI.managers.*;
+import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.commands.*;
-import me.yleoft.zHomes.hooks.*;
+import me.yleoft.zHomes.hooks.placeholderapi.*;
 import me.yleoft.zHomes.storage.*;
 import me.yleoft.zHomes.tabcompleters.*;
 import me.yleoft.zHomes.utils.*;
@@ -33,6 +34,8 @@ public final class Main extends JavaPlugin {
 
     public static zAPI zAPI;
 
+    public static String homesMenuPath = "menus/menu-homes.yml";
+
     private static Main main;
     public static PluginYAMLManager pym;
     public static FileManager fm;
@@ -48,10 +51,9 @@ public final class Main extends JavaPlugin {
     public static database_type type = database_type.SQLITE;
     public static Driver mariadbDriver = null;
     public static Driver h2Driver = null;
-    public static Driver sqliteDriver = null;
 
     public static Object papi;
-    public static Economy economy;
+    public static Object economy;
 
     public String pluginName = getDescription().getName();
     public String coloredPluginName = this.pluginName;
@@ -69,12 +71,9 @@ public final class Main extends JavaPlugin {
     public final String h2Jar = "h2-" + h2Version + ".jar";
     public final String h2Repo = "https://repo1.maven.org/maven2/com/h2database/h2/" + h2Version + "/" + h2Jar;
 
-    public final String sqliteVersion = "3.49.1.0";
-    public final String sqliteJar = "sqlite-jdbc-" + sqliteVersion + ".jar";
-    public final String sqliteRepo = "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/" + sqliteVersion + "/" + sqliteJar;
-
+    @Override
     public void onEnable() {
-        zAPI = new zAPI(this, pluginName, coloredPluginName);
+        zAPI = new zAPI(this, pluginName, coloredPluginName, true);
         //<editor-fold desc="Variables">
         main = Main.this;
         pluginName = getDescription().getName();
@@ -89,8 +88,8 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
         coloredPluginName = cmdm.hex(coloredPluginName);
-        zAPI.setColoredPluginName(coloredPluginName);
         coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getConfig().getString("prefix")));
+        zAPI.setColoredPluginName(coloredPluginName);
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
         updatePlugin();
@@ -149,14 +148,23 @@ public final class Main extends JavaPlugin {
         fm.fuLang.reloadConfig();
         fm.fuLang2.saveDefaultConfig();
         fm.fuLang2.reloadConfig();
+        FileUtils fu = fm.createFile(homesMenuPath);
+        if(!fu.getFile().exists()) {
+            fu.saveDefaultConfig();
+            fu.reloadConfig(true);
+        }else {
+            fu.saveDefaultConfig();
+            fu.reloadConfig(false);
+        }
         cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fAll files have been created!"));
         //</editor-fold>
         loadCommands();
         //<editor-fold desc="Hooks">
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
         try {
-            if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                zAPI.registerPlaceholderExpansion(new PlaceholderAPIExpansion());
+            zAPI.setPlaceholderAPIHandler(new PlaceholderAPIHandler(zAPI));
+            if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+                zAPI.registerPlaceholderExpansion(getDescription().getAuthors().toString(), pluginVer, true, true);
                 papi = zAPI.getPlaceholderExpansion();
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aPlaceholderAPI hooked successfully!");
             } else {
@@ -166,7 +174,7 @@ public final class Main extends JavaPlugin {
             Bukkit.getLogger().log(Level.SEVERE, "Error hooking into PlaceholderAPI", e);
         }
         try {
-            if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+            if (getServer().getPluginManager().getPlugin("Vault") != null) {
                 setupEconomy();
                 cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aConnected to Vault successfully!");
             }
@@ -178,6 +186,7 @@ public final class Main extends JavaPlugin {
         cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
     }
 
+    @Override
     public void onDisable() {
         if (!getServer().getName().contains("Folia")) {
             Bukkit.getScheduler().cancelTasks(this);
@@ -273,6 +282,7 @@ public final class Main extends JavaPlugin {
             pym.registerPermission(cfgu.CmdHomesOthersPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + " (Player)' command", PermissionDefault.OP);
             pym.registerPermission(cfgu.CmdHomePermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + "' command", PermissionDefault.TRUE);
             pym.registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
+            pym.registerPermission(cfgu.PermissionBypassLimit(), "Bypass homes limit", PermissionDefault.OP);
             pym.registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
         } catch (Exception e) {
             cmdm.sendMsg(getServer().getConsoleSender(), this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");

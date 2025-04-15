@@ -7,6 +7,7 @@ commands:
   home-doesnt-exist-others: "%prefix%&e%player% &cdon't have any home with this name."
   cant-use-2dot: "%prefix%&cYou can't use &e':' &cin this command."
   cant-find-player: "%prefix%&cThis player was not found."
+  unable-to-find-safe-location: "%prefix%&cUnable to find a safe location to teleport you."
 
   # Below you will find messages specific for the commands
   main:

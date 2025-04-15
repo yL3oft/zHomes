@@ -1,6 +1,7 @@
 package me.yleoft.zHomes.commands;
 
 import me.yleoft.zAPI.managers.PluginYAMLManager;
+import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.ExecuteMainCommandEvent;
 import me.yleoft.zHomes.utils.ConfigUtils;
@@ -117,6 +118,9 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
             case "all":
                 reload("commands");
                 reload("languages");
+                for(FileUtils fu : Main.fm.getFiles()) {
+                    fu.reloadConfig(false);
+                }
                 break;
             case "commands":
                 reload("config");
