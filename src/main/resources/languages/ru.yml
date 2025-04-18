@@ -1,0 +1,68 @@
+# Здесь вы можете управлять сообщениями хуков
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cВы не можете использовать дома здесь."
+  vault:
+    cant-afford-command: "%prefix%&cВам нужно &6$%cost% &cдля выполнения этой команды."
+
+# Сообщения, связанные с командами
+commands:
+  # Вверху находятся сообщения, используемые в нескольких командах
+  no-permission: "%prefix%&cУ вас нет прав для выполнения этой команды."
+  home-already-exist: "%prefix%&cУ вас уже есть дом с таким именем."
+  home-doesnt-exist: "%prefix%&cУ вас нет дома с таким именем."
+  home-doesnt-exist-others: "%prefix%&e%player% &cне имеет дома с таким именем."
+  cant-use-2dot: "%prefix%&cВы не можете использовать &e':' &cв этой команде."
+  cant-find-player: "%prefix%&cИгрок не найден."
+  unable-to-find-safe-location: "%prefix%&cНе удалось найти безопасное место для телепортации."
+
+  # Ниже находятся сообщения, специфичные для команд
+  main:
+    help:
+      help-perm: |-
+        %prefix%&bИспользование &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &aconverter (converter-type) &7Преобразование данных из одного источника в другой
+      help-noperm: |-
+        %prefix%&bИспользование &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix%&bТекущая версия: &a%version%"
+    reload:
+      usage: |-
+        %prefix%&bИспользование &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix%&aПлагин перезагружен за &b%time%мс&a."
+      commands:
+        output: "%prefix%&aКоманды перезагружены за &b%time%мс&a."
+      config:
+        output: "%prefix%&aФайл конфигурации перезагружен за &b%time%мс&a."
+      languages:
+        output: |-
+          %prefix%&aЯзыки перезагружены за &b%time%мс&a.
+          &7Примечание: это не обновит язык в config.yml, используйте '/%command% reload config' для этого.
+    converter:
+      usage: |-
+        %prefix%&bИспользование &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
+        ...
+      output: "%prefix%&aВсе данные были успешно конвертированы!"
+      error: "%prefix%&cПроизошла ошибка при конвертации данных. Проверьте консоль сервера."
+  sethome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aДом &e%home% &aустановлен на вашей позиции."
+    limit-reached: "&cВы достигли лимита домов: &e(%limit% домов)&c!"
+  delhome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&cДом &e%home% &aудалён."
+  home:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aТелепортация к &e%home%&a..."
+    cant-dimensional-teleport: "&cТелепортация отменена! Телепортация между измерениями отключена."
+  homes:
+    output: "%prefix%&7Ваши дома: &f%homes%"
+    others:
+      output: "%prefix%&7Дома игрока &e%player%: &f%homes%"

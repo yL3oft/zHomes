@@ -1,0 +1,80 @@
+# Aquí puedes administrar los mensajes de los hooks
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cNo puedes usar casas aquí."
+  vault:
+    cant-afford-command: "%prefix%&cNecesitas &6$%cost% &cpara ejecutar este comando."
+
+# Mensajes relacionados con comandos
+commands:
+  # Arriba encontrarás mensajes que pueden usarse en múltiples comandos
+  no-permission: "%prefix%&cNo tienes permiso para ejecutar este comando."
+  home-already-exist: "%prefix%&cYa tienes una casa con este nombre."
+  home-doesnt-exist: "%prefix%&cNo tienes ninguna casa con este nombre."
+  home-doesnt-exist-others: "%prefix%&e%player% &cno tiene ninguna casa con este nombre."
+  cant-use-2dot: "%prefix%&cNo puedes usar &e':' &cen este comando."
+  cant-find-player: "%prefix%&cNo se encontró al jugador."
+  unable-to-find-safe-location: "%prefix%&cNo se pudo encontrar una ubicación segura para teletransportarte."
+
+  # Abajo encontrarás mensajes específicos para los comandos
+  main:
+    help:
+      help-perm: |-
+        %prefix%&bUsos de &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &aconverter (converter-type) &7Convierte datos de un lugar a otro
+      help-noperm: |-
+        %prefix%&bUsos de &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix%&bVersión actual: &a%version%"
+    reload:
+      usage: |-
+        %prefix%&bUsos de &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix%&aPlugin recargado en &b%time%ms&a."
+      commands:
+        output: "%prefix%&aTodos los comandos del plugin recargados en &b%time%ms&a."
+      config:
+        output: "%prefix%&aArchivo de configuración del plugin recargado en &b%time%ms&a."
+      languages:
+        output: |-
+          %prefix%&aIdiomas del plugin recargados en &b%time%ms&a.
+          &7Nota: Esto no actualizará el idioma desde config.yml, usa '/%command% reload config' para hacerlo.
+    converter:
+      usage: |-
+        %prefix%&bUsos de &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
+        &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
+        &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
+        &c-> &e/%command% &aconverter essentials
+        &c-> &e/%command% &aconverter sethome
+        &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
+      output: "%prefix%&a¡Todos los datos han sido convertidos!"
+      error: "%prefix%&cAlgo salió mal al convertir los datos. Por favor, revisa la consola del servidor."
+  sethome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aCasa &e%home% &aestablecida en tu posición."
+    limit-reached: "&c¡No puedes establecer más casas porque alcanzaste tu límite de &e(%limit% casas)&c!"
+  delhome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&cCasa &e%home% &celiminada."
+  home:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aTeleportando a &e%home%&a..."
+    cant-dimensional-teleport: "&c¡Tu teletransporte fue cancelado! La teletransportación dimensional está desactivada."
+  homes:
+    output: "%prefix%&7Tus casas: &f%homes%"
+    others:
+      output: "%prefix%&7Casas de &e%player%: &f%homes%"

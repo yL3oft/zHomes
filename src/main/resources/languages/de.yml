@@ -1,0 +1,84 @@
+# Hier kannst du die Hook-Nachrichten verwalten
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cDu kannst hier keine Homes benutzen."
+  vault:
+    cant-afford-command: "%prefix%&cDu benötigst &6$%cost% &cum diesen Befehl auszuführen."
+
+# Nachrichten im Zusammenhang mit Befehlen
+commands:
+  # Oben findest du Nachrichten, die in mehreren Befehlen verwendet werden können
+  no-permission: "%prefix%&cDu hast keine Berechtigung, diesen Befehl auszuführen."
+  home-already-exist: "%prefix%&cDu hast bereits ein Home mit diesem Namen."
+  home-doesnt-exist: "%prefix%&cDu hast kein Home mit diesem Namen."
+  home-doesnt-exist-others: "%prefix%&e%player% &chat kein Home mit diesem Namen."
+  cant-use-2dot: "%prefix%&cDu kannst &e':' &cnicht in diesem Befehl verwenden."
+  cant-find-player: "%prefix%&cSpieler wurde nicht gefunden."
+  unable-to-find-safe-location: "%prefix%&cEs konnte kein sicherer Ort zum Teleportieren gefunden werden."
+
+  # Unten findest du spezifische Nachrichten für die Befehle
+  main:
+    help:
+      help-perm: |-
+        %prefix%&bVerwendung von &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &aconverter (converter-type) &7Konvertiere Daten von einem Ort zum anderen
+      help-noperm: |-
+        %prefix%&bVerwendung von &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix%&bAktuelle Version: &a%version%"
+    reload:
+      usage: |-
+        %prefix%&bVerwendung von &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix%&aPlugin in &b%time%ms&a neu geladen."
+      commands:
+        output: "%prefix%&aAlle Plugin-Befehle wurden in &b%time%ms&a neu geladen."
+      config:
+        output: "%prefix%&aKonfigurationsdatei wurde in &b%time%ms&a neu geladen."
+      languages:
+        output: |-
+          %prefix%&aSprachen des Plugins wurden in &b%time%ms&a neu geladen.
+          &7Hinweis: Dies aktualisiert nicht die Sprache in config.yml. Verwende '/%command% reload config', um das zu tun.
+    converter:
+      usage: |-
+        %prefix%&bVerwendung von &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
+        &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
+        &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
+        &c-> &e/%command% &aconverter essentials
+        &c-> &e/%command% &aconverter sethome
+        &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
+      output: "%prefix%&aAlle Daten wurden erfolgreich konvertiert!"
+      error: "%prefix%&cBeim Konvertieren der Daten ist ein Fehler aufgetreten. Bitte prüfe die Server-Konsole."
+
+  sethome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aHome &e%home% &awurde an deiner Position gesetzt."
+    limit-reached: "&cDu kannst keine weiteren Homes setzen – du hast dein Limit von &e(%limit% Homes)&c erreicht!"
+
+  delhome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&cHome &e%home% &awurde gelöscht."
+
+  home:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aTeleportiere zu &e%home%&a..."
+    cant-dimensional-teleport: "&cDeine Teleportation wurde abgebrochen! Dimensionale Teleportation ist deaktiviert."
+
+  homes:
+    output: "%prefix%&7Deine Homes: &f%homes%"
+    others:
+      output: "%prefix%&7Homes von &e%player%: &f%homes%"

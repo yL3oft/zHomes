@@ -4,7 +4,28 @@
   <groupId>me.yleoft</groupId>
   <artifactId>zHomes</artifactId>
   <name>zHomes</name>
-  <version>2.0.0</version>
+  <version>2.0.1-SNAPSHOT</version>
+  <description>A very complex homes plugins, including alot of features that convencional home plugins don't have</description>
+  <url>https://github.com/yL3oft/zHomes</url>
+  <developers>
+    <developer>
+      <id>yleoft</id>
+      <name>Leonardo Maehara</name>
+      <email>maehara.leonardo@gmail.com</email>
+    </developer>
+  </developers>
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <scm>
+    <connection>scm:git:git://github.com/yL3oft/zHomes.git</connection>
+    <developerConnection>scm:git:ssh://github.com:yL3oft/zHomes.git</developerConnection>
+    <url>https://github.com/yL3oft/zHomes</url>
+  </scm>
   <build>
     <defaultGoal>clean package</defaultGoal>
     <resources>
@@ -91,6 +112,15 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>0.7.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <repositories>
@@ -117,6 +147,10 @@
     <repository>
       <id>jitpack.io</id>
       <url>https://jitpack.io</url>
+    </repository>
+    <repository>
+      <id>sk89q-repo</id>
+      <url>https://maven.enginehub.org/repo/</url>
     </repository>
   </repositories>
   <dependencies>
@@ -172,6 +206,12 @@
       <groupId>com.github.MilkBowl</groupId>
       <artifactId>VaultAPI</artifactId>
       <version>1.7.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.sk89q.worldguard</groupId>
+      <artifactId>worldguard-bukkit</artifactId>
+      <version>7.0.9</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

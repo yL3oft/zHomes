@@ -67,6 +67,12 @@ public class HomesUtils extends DatabaseEditor {
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }
+        Location tpLoc = findNearestSafeLocation(loc, 4, 50);
+        if(tpLoc == null) {
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
+            return;
+        }
         if(Main.getInstance().getServer().getName().contains("Folia")) {
             try {
                 Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
@@ -76,13 +82,9 @@ public class HomesUtils extends DatabaseEditor {
             }
             return;
         }
-        Location tpLoc = findNearestSafeLocation(loc, 4, 50);
-        if(tpLoc == null) {
-            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
-            return;
-        }
-        p.teleport(tpLoc);
+        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+            p.teleport(tpLoc);
+        }, 1L);
     }
 
     public void teleportPlayer(Player p, OfflinePlayer t, String home) {
@@ -97,22 +99,24 @@ public class HomesUtils extends DatabaseEditor {
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }
-        if(Main.getInstance().getServer().getName().contains("Folia")) {
-            try {
-                Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
-                teleportAsyncMethod.invoke(p, loc);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException("Unable to teleport player to home", e);
-            }
-            return;
-        }
         Location tpLoc = findNearestSafeLocation(loc, 4, 50);
         if(tpLoc == null) {
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
             cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
             return;
         }
-        p.teleport(tpLoc);
+        if(Main.getInstance().getServer().getName().contains("Folia")) {
+            try {
+                Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
+                teleportAsyncMethod.invoke(p, tpLoc);
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException("Unable to teleport player to home", e);
+            }
+            return;
+        }
+        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+            p.teleport(tpLoc);
+        }, 1L);
     }
 
     public String homes(OfflinePlayer p) {

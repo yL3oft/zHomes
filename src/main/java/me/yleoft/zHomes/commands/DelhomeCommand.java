@@ -18,12 +18,18 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
         if (!(s instanceof Player))
             return false;
         Player p = (Player)s;
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+
+        if (!p.hasPermission(CmdDelhomePermission())) {
+            cmdm.sendMsg(p, cmdm.getNoPermission());
+            return false;
+        }
+
         PreExecuteDelhomeCommandEvent preevent = new PreExecuteDelhomeCommandEvent(p);
         Bukkit.getPluginManager().callEvent(preevent);
         if (preevent.isCancelled()) return false;
 
         LanguageUtils.Delhome lang = new LanguageUtils.Delhome();
-        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if (args.length >= 1) {
             String home = args[0];

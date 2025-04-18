@@ -1,12 +1,14 @@
 package me.yleoft.zHomes.utils;
 
 import java.util.List;
-import java.util.Objects;
 
+import me.yleoft.zAPI.utils.StringUtils;
 import me.yleoft.zHomes.Main;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+
+import static java.util.Objects.requireNonNull;
 
 public class ConfigUtils {
     private static final Main main = Main.getInstance();
@@ -30,7 +32,7 @@ public class ConfigUtils {
         return main.getConfig().getBoolean("general.metrics");
     }
     public String prefix() {
-        return main.getConfig().getString("prefix");
+        return StringUtils.transform(requireNonNull(main.getConfig().getString("prefix")));
     }
 
     //<editor-fold desc="Plugin Information">
@@ -42,12 +44,12 @@ public class ConfigUtils {
     }
     public int getMaxLimit(OfflinePlayer p) {
         int l = -1;
-        for (String str : Objects.requireNonNull(main.getConfig().getConfigurationSection(lim.split("\\.")[0])).getKeys(false)) {
+        for (String str : requireNonNull(main.getConfig().getConfigurationSection(lim.split("\\.")[0])).getKeys(false)) {
             if (str.equals("enabled") || str.equals("default")) continue;
             try {
                 int i = Integer.parseInt(str);
                 for (String perm : main.getConfig().getStringList(lim+str)) {
-                    if (p.isOnline() && Objects.requireNonNull(p.getPlayer()).hasPermission(perm) && i > l) l = i;
+                    if (p.isOnline() && requireNonNull(p.getPlayer()).hasPermission(perm) && i > l) l = i;
                 }
             } catch (Exception e) {
                 main.getServer().getConsoleSender().sendMessage(main.coloredPluginName + "§cSomething's off in config.yml");
@@ -206,7 +208,7 @@ public class ConfigUtils {
         return main.getConfig().getInt(this.databasePath + "pool-size");
     }
     public String databaseTablePrefix() {
-        return Objects.requireNonNull(main.getConfig().getString(this.databasePath + "table-prefix")).toLowerCase();
+        return requireNonNull(main.getConfig().getString(this.databasePath + "table-prefix")).toLowerCase();
     }
     public String databaseTable() {
         return databaseTablePrefix()+"_homes";
@@ -220,13 +222,13 @@ public class ConfigUtils {
                 return true;
             }
             Economy economy = (Economy) Main.economy;
-            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            LanguageUtils.HooksMSG hooks = new LanguageUtils.HooksMSG();
             if (Main.getInstance().getServer().getPluginManager().isPluginEnabled("Vault")) {
                 if(economy.has(p, cost)) {
                     economy.withdrawPlayer(p, cost);
                     return true;
                 }
-                cmdm.sendMsg(p, cmdm.getCantAfford(cost));
+                hooks.sendMsg(p, hooks.getVaultCantAfford(cost));
                 return false;
             }
             return true;

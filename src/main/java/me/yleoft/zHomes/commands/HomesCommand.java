@@ -2,6 +2,7 @@ package me.yleoft.zHomes.commands;
 
 import com.zhomes.api.event.player.ExecuteHomesCommandEvent;
 import me.yleoft.zAPI.inventory.CustomInventory;
+import me.yleoft.zAPI.managers.FileManager;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
@@ -29,12 +30,18 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
         if (!(s instanceof Player))
             return false;
         Player p = (Player)s;
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+
+        if (!p.hasPermission(CmdHomesPermission())) {
+            cmdm.sendMsg(p, cmdm.getNoPermission());
+            return false;
+        }
+
         ExecuteHomesCommandEvent event = new ExecuteHomesCommandEvent(p);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
 
         LanguageUtils.Homes lang = new LanguageUtils.Homes();
-        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if (args.length >= 1) {
             String player = args[0];
@@ -52,11 +59,16 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
         return false;
     }
 
-    public void code(Player p, OfflinePlayer t, LanguageUtils.Homes lang, LanguageUtils.CommandsMSG cmdm) {
+    public void code(String type, Player p, OfflinePlayer t, LanguageUtils.Homes lang, LanguageUtils.CommandsMSG cmdm) {
         if (cfguExtras.canAfford(p, CmdHomesPermission(), CmdHomesCost())) {
-            switch (CmdHomesType()) {
+            switch (type) {
                 case "menu":
-                    p.openInventory(getInventory(p, t));
+                    try {
+                        p.openInventory(getInventory(p, t));
+                    }catch (Exception e) {
+                        code("text", p, t, lang, cmdm);
+                        return;
+                    }
                     break;
                 case "text":
                     if (p != t) {
@@ -71,9 +83,12 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
             }
         }
     }
+    public void code(Player p, OfflinePlayer t, LanguageUtils.Homes lang, LanguageUtils.CommandsMSG cmdm) {
+        code(CmdHomesType(), p, t, lang, cmdm);
+    }
 
     public Inventory getInventory(Player p, OfflinePlayer t) {
-        YamlConfiguration config = Main.fm.getFile(homesMenuPath);
+        YamlConfiguration config = FileManager.getFile(homesMenuPath);
         String path = formPath("Config", "homes-item");
         CustomInventory inv = new CustomInventory(p, config);
         List<String> homes = Main.hu.homesW(t);

@@ -34,6 +34,7 @@ public class DatabaseConnection extends ConfigUtils {
     public void connect() {
         try {
             if (Main.dataSource == null || Main.dataSource.isClosed()) {
+                long start = System.currentTimeMillis();
                 HikariConfig config = new HikariConfig();
                 switch (databaseType().toLowerCase()) {
                     case "mariadb":
@@ -88,11 +89,9 @@ public class DatabaseConnection extends ConfigUtils {
                 }
 
                 config.setMaximumPoolSize(databasePoolsize());
-                config.setConnectionTimeout(30000);
-                config.setIdleTimeout(600000);
-                config.setLeakDetectionThreshold(2000);
-                config.setMaxLifetime(1800000);
                 Main.dataSource = new HikariDataSource(config);
+                long end = System.currentTimeMillis();
+                Main.getInstance().getLogger().info("HikariCP startup took " + (end - start) + "ms");
             }
         } catch (Exception e) {
             throw new RuntimeException("Error setting up HikariCP connection pool", e);
@@ -106,7 +105,7 @@ public class DatabaseConnection extends ConfigUtils {
         return "jdbc:mysql://" + databaseHost() + ":" + databasePort() + "/" + databaseDatabase()+"?allowPublicKeyRetrieval="+databaseAllowPublicKeyRetrieval()+"&useSSL="+databaseUseSSL();
     }
     public String h2Url() {
-        return "jdbc:h2:" + Main.getInstance().getDataFolder().getAbsolutePath() + "/database-h2;AUTO_SERVER=TRUE";
+        return "jdbc:h2:" + Main.getInstance().getDataFolder().getAbsolutePath() + "/database-h2";
     }
     public String sqliteUrl() {
         File old = new File(Main.getInstance().getDataFolder(), "database.db");

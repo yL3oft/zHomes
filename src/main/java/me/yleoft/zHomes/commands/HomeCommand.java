@@ -16,23 +16,27 @@ import org.jetbrains.annotations.NotNull;
 
 public class HomeCommand extends HomesUtils implements CommandExecutor {
 
-    ConfigUtils cfgu = Main.cfgu;
-
     public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(s instanceof Player))
             return false;
         Player p = (Player)s;
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+
+        if (!p.hasPermission(CmdHomePermission())) {
+            cmdm.sendMsg(p, cmdm.getNoPermission());
+            return false;
+        }
+
         PreExecuteHomeCommandEvent preevent = new PreExecuteHomeCommandEvent(p);
         Bukkit.getPluginManager().callEvent(preevent);
         if (preevent.isCancelled()) return false;
 
         LanguageUtils.Home lang = new LanguageUtils.Home();
-        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if (args.length >= 1) {
             String home = args[0];
             if (home.contains(":")) {
-                if (p.hasPermission(this.cfgu.CmdHomeOthersPermission())) {
+                if (p.hasPermission(CmdHomeOthersPermission())) {
                     code2(p, home, lang, cmdm);
                 } else {
                     lang.sendMsg(p, cmdm.getCantUse2Dot());

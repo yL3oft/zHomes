@@ -1,4 +1,4 @@
-package me.yleoft.zHomes.hooks.placeholderapi;
+package me.yleoft.zHomes.hooks;
 
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.Main;
@@ -6,10 +6,6 @@ import me.yleoft.zHomes.utils.HomesUtils;
 import org.bukkit.OfflinePlayer;
 
 public class PlaceholderAPIHandler extends me.yleoft.zAPI.handlers.PlaceholderAPIHandler {
-
-    public PlaceholderAPIHandler(zAPI zAPI) {
-        super(zAPI);
-    }
 
     @Override
     public String applyHookPlaceholders(OfflinePlayer p, String params) {

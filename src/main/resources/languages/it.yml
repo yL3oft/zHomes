@@ -1,0 +1,68 @@
+# Qui puoi gestire i messaggi dei hook
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cNon puoi usare home qui."
+  vault:
+    cant-afford-command: "%prefix%&cHai bisogno di &6$%cost% &cper eseguire questo comando."
+
+# Messaggi relativi ai comandi
+commands:
+  # In alto trovi i messaggi utilizzati da più comandi
+  no-permission: "%prefix%&cNon hai il permesso per eseguire questo comando."
+  home-already-exist: "%prefix%&cHai già una home con questo nome."
+  home-doesnt-exist: "%prefix%&cNon hai nessuna home con questo nome."
+  home-doesnt-exist-others: "%prefix%&e%player% &cnon ha nessuna home con questo nome."
+  cant-use-2dot: "%prefix%&cNon puoi usare &e':' &cin questo comando."
+  cant-find-player: "%prefix%&cGiocatore non trovato."
+  unable-to-find-safe-location: "%prefix%&cImpossibile trovare una posizione sicura per il teletrasporto."
+
+  # Di seguito i messaggi specifici dei comandi
+  main:
+    help:
+      help-perm: |-
+        %prefix%&bUtilizzo di &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &aconverter (converter-type) &7Converte i dati da una sorgente a un'altra
+      help-noperm: |-
+        %prefix%&bUtilizzo di &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix%&bVersione corrente: &a%version%"
+    reload:
+      usage: |-
+        %prefix%&bUtilizzo di &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix%&aPlugin ricaricato in &b%time%ms&a."
+      commands:
+        output: "%prefix%&aComandi del plugin ricaricati in &b%time%ms&a."
+      config:
+        output: "%prefix%&aFile di configurazione ricaricato in &b%time%ms&a."
+      languages:
+        output: |-
+          %prefix%&aLingue del plugin ricaricate in &b%time%ms&a.
+          &7Nota: questo non aggiorna la lingua da config.yml. Usa '/%command% reload config' per farlo.
+    converter:
+      usage: |-
+        %prefix%&bUtilizzo di &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
+        ...
+      output: "%prefix%&aTutti i dati sono stati convertiti!"
+      error: "%prefix%&cSi è verificato un errore durante la conversione. Controlla la console del server."
+  sethome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aHome &e%home% &aimpostata alla tua posizione."
+    limit-reached: "&cHai raggiunto il limite massimo di home &e(%limit% home)&c!"
+  delhome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&cHome &e%home% &acancellata."
+  home:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aTeletrasporto a &e%home%&a..."
+    cant-dimensional-teleport: "&cTeletrasporto annullato! Il teletrasporto dimensionale è disabilitato."
+  homes:
+    output: "%prefix%&7Le tue home: &f%homes%"
+    others:
+      output: "%prefix%&7Home di &e%player%: &f%homes%"

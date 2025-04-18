@@ -1,7 +1,14 @@
+# Here you can manage hook messages
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cYou can't use homes here."
+  vault:
+    cant-afford-command: "%prefix%&cYou need &6$%cost% &cin order to execute this command."
+
+# Messages related to commands
 commands:
   # Up here you will find messages that can be used in multiple commands
   no-permission: "%prefix%&cYou don't have permission to execute this command."
-  cant-afford: "%prefix%&cYou need &6$%cost% &cin order to execute this command."
   home-already-exist: "%prefix%&cYou already have a home with this name."
   home-doesnt-exist: "%prefix%&cYou don't have any home with this name."
   home-doesnt-exist-others: "%prefix%&e%player% &cdon't have any home with this name."

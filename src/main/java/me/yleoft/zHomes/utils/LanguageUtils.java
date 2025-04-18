@@ -4,26 +4,28 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import me.clip.placeholderapi.PlaceholderAPI;
+import me.yleoft.zAPI.managers.FileManager;
 import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zHomes.Main;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import static me.yleoft.zAPI.utils.ConfigUtils.formPath;
+import static me.yleoft.zAPI.utils.StringUtils.transform;
 
 public class LanguageUtils extends ConfigUtils {
 
     private static final Main main = Main.getInstance();
+    private static FileUtils fuBACKUP = null;
 
+    public static String hooks = "hooks";
     public static String cmds = "commands";
+    public static String worldguard = "worldguard";
+    public static String vault = "vault";
 
     public static File f = new File(main.getDataFolder(), "languages/en.yml");
 
@@ -35,9 +37,12 @@ public class LanguageUtils extends ConfigUtils {
 
     public static YamlConfiguration getConfigFile() {
         List<FileUtils> list = new ArrayList<>();
-        list.add(Main.fm.fuLang);
-        list.add(Main.fm.fuLang2);
-        list.add(Main.fm.fuBACKUP);
+        list.add(FileManager.getFileUtil("languages/en.yml"));
+        list.add(FileManager.getFileUtil("languages/es.yml"));
+        list.add(FileManager.getFileUtil("languages/de.yml"));
+        list.add(FileManager.getFileUtil("languages/fr.yml"));
+        list.add(FileManager.getFileUtil("languages/pt-br.yml"));
+        list.add(fuBACKUP);
         boolean found = false;
         YamlConfiguration returned = cfg;
         String lang = langType();
@@ -60,9 +65,8 @@ public class LanguageUtils extends ConfigUtils {
             String resource = "languages/" + lang + ".yml";
             File f = new File(main.getDataFolder(), resource);
             if (f.exists()) {
-                Main.fm.fBACKUP = f;
-                Main.fm.fuBACKUP = new FileUtils(Main.zAPI, f, resource);
-                returned = (YamlConfiguration)Main.fm.fuBACKUP.getConfig();
+                fuBACKUP = new FileUtils(f, resource);
+                returned = (YamlConfiguration)fuBACKUP.getConfig();
             }
         }
         return returned;
@@ -350,6 +354,25 @@ public class LanguageUtils extends ConfigUtils {
         }
     }
 
+    public static class HooksMSG implements Helper {
+        public YamlConfiguration cfg;
+
+        public HooksMSG() {
+            this.cfg = LanguageUtils.getConfigFile();
+        }
+
+        public String getWorldGuardCantUseHomes() {
+            String path = formPath(hooks, worldguard, "cant-use-homes");
+            return this.cfg.getString(path);
+        }
+
+        public String getVaultCantAfford(Float cost) {
+            String path = formPath(hooks, vault, "cant-afford-command");
+            return this.cfg.getString(path)
+                    .replace("%cost%", Float.toString(cost));
+        }
+    }
+
     public static class CommandsMSG implements Helper {
         public YamlConfiguration cfg;
 
@@ -371,12 +394,6 @@ public class LanguageUtils extends ConfigUtils {
             String path = formPath(cmds, "home-doesnt-exist-others");
             return this.cfg.getString(path)
                     .replace("%player%", Objects.requireNonNull(p.getName()));
-        }
-
-        public String getCantAfford(Float cost) {
-            String path = formPath(cmds, "cant-afford");
-            return this.cfg.getString(path)
-                    .replace("%cost%", Float.toString(cost));
         }
 
         public String getNoPermission() {
@@ -411,52 +428,35 @@ public class LanguageUtils extends ConfigUtils {
     public interface Helper {
         default void sendMsg(Player p, String text) {
             if(text.isEmpty()) return;
-            text = hex(text);
-            text = ChatColor.translateAlternateColorCodes('&', text
-                    .replace("%prefix%", hex(Main.cfgu.prefix()))
+            text = transform(p, text
+                    .replace("%prefix%", Main.cfgu.prefix())
                     .replace("%limit%", String.valueOf(Main.cfgu.getMaxLimit(p)))
                     .replace("%numberofhomes%", String.valueOf(Main.hu.numberOfHomes(p)))
                     .replace("%homes%", Main.hu.homes(p)));
-            if (LanguageUtils.main.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
-                text = PlaceholderAPI.setPlaceholders(p, text);
             p.sendMessage(text);
         }
 
         default void sendMsg(CommandSender s, String text) {
             if(text.isEmpty()) return;
-            text = hex(text);
-            text = ChatColor.translateAlternateColorCodes('&', text
-                    .replace("%prefix%", hex(Main.cfgu.prefix())));
+            text = transform(text
+                    .replace("%prefix%", Main.cfgu.prefix()));
             if (s instanceof Player) {
                 Player p = (Player)s;
-                text = ChatColor.translateAlternateColorCodes('&', text
+                text = transform(p, text
                         .replace("%limit%", String.valueOf(Main.cfgu.getMaxLimit(p)))
                         .replace("%numberofhomes%", String.valueOf(Main.hu.numberOfHomes(p)))
                         .replace("%homes%", Main.hu.homes(p)));
-                if (LanguageUtils.main.getServer().getPluginManager().isPluginEnabled("PlaceholderAPI"))
-                    text = PlaceholderAPI.setPlaceholders(p, text);
             }
             s.sendMessage(text);
         }
 
         default void broadcast(String text) {
             if(text.isEmpty()) return;
-            text = hex(text);
-            text = ChatColor.translateAlternateColorCodes('&', text
-                    .replace("%prefix%", hex(Main.cfgu.prefix())));
-            text = PlaceholderAPI.setPlaceholders(null, text);
+            text = transform(text
+                    .replace("%prefix%", Main.cfgu.prefix()));
             Bukkit.getServer().broadcastMessage(text);
         }
 
-        default String hex(String text) {
-            Matcher matcher = Pattern.compile("&#([A-Za-z0-9]{6})").matcher(text);
-            StringBuilder result = new StringBuilder();
-            while (matcher.find()) {
-                String replacement = "&x" + matcher.group(1).replaceAll("(.)", "&$1");
-                matcher.appendReplacement(result, Matcher.quoteReplacement(replacement));
-            }
-            return matcher.appendTail(result).toString();
-        }
     }
 
 }

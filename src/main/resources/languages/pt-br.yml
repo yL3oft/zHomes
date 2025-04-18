@@ -1,7 +1,14 @@
+# Aqui você pode gerenciar mensagens de integração
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cVocê não pode usar casas aqui."
+  vault:
+    cant-afford-command: "%prefix%&cVocê precisa de &6$%cost% &cpara executar este comando."
+
+# Mensagens relacionadas a comandos
 commands:
-  # Aqui em cima Você vai achar mensagens que podem ser utilizadas em varios comandos
+  # Aqui em cima você vai achar mensagens que podem ser utilizadas em varios comandos
   no-permission: "%prefix%&cVocê não tem permissao para executar este comando."
-  cant-afford: "%prefix%&cVocê precisa de &6$%cost% &cpara executar este comando."
   home-already-exist: "%prefix%&cVocê já tem uma home com este nome."
   home-doesnt-exist: "%prefix%&cVocê não tem nenhuma home com este nome."
   home-doesnt-exist-others: "%prefix%&e%player% &cnão tem nenhuma home com este nome."
@@ -32,7 +39,7 @@ commands:
       commands:
         output: "%prefix%&aTodos comandos do plugin foram recarregados em &b%time%ms!"
       config:
-        output: "%prefix%&aA configurado plugin foi recarregada em &b%time%ms!"
+        output: "%prefix%&aA configuração do plugin foi recarregada em &b%time%ms!"
       languages:
         output: |-
           %prefix%&aAs linguas do plugin foram recarregadas em &b%time%ms!
@@ -58,7 +65,7 @@ commands:
       error: "%prefix%&cAlgo deu errado na converção dos dados, por favor verifique o console do seu servidor."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aCasa &e%home% &adefinida na posicao atual."
+    output: "%prefix%&aCasa &e%home% &adefinida na posição atual."
     limit-reached: "&cVocê não pode definir mais casas, pois chegou no seu limite &e(%limit% homes)&c!"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"

@@ -1,11 +1,15 @@
 package me.yleoft.zHomes;
 
+import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
+import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.zaxxer.hikari.HikariDataSource;
+import de.tr7zw.changeme.nbtapi.NBT;
 import me.yleoft.zAPI.managers.*;
 import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.commands.*;
-import me.yleoft.zHomes.hooks.placeholderapi.*;
+import me.yleoft.zHomes.hooks.*;
+import me.yleoft.zHomes.listeners.WorldGuardListeners;
 import me.yleoft.zHomes.storage.*;
 import me.yleoft.zHomes.tabcompleters.*;
 import me.yleoft.zHomes.utils.*;
@@ -17,6 +21,7 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.permissions.PermissionDefault;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
@@ -27,21 +32,27 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Driver;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
+
+import static java.util.Objects.requireNonNull;
+import static me.yleoft.zAPI.managers.PluginYAMLManager.*;
+import static me.yleoft.zAPI.utils.StringUtils.transform;
 
 public final class Main extends JavaPlugin {
 
-    public static zAPI zAPI;
-
     public static FileUtils configFileUtils;
     public static String homesMenuPath = "menus/menu-homes.yml";
+    public static StateFlag useHomesFlag;
+
+    public static boolean usePlaceholderAPI = false;
+    public static boolean useWorldGuard = false;
+    public static boolean useVault = false;
 
     private static Main main;
-    public static PluginYAMLManager pym;
-    public static FileManager fm;
     public static ConfigUtils cfgu;
     public static HomesUtils hu;
     public static DatabaseConnection db;
@@ -52,7 +63,6 @@ public final class Main extends JavaPlugin {
 
     public static HikariDataSource dataSource = null;
     public static database_type type = database_type.SQLITE;
-    public static Driver sqliteDriver = null;
     public static Driver mysqlDriver = null;
     public static Driver mariadbDriver = null;
     public static Driver h2Driver = null;
@@ -81,27 +91,73 @@ public final class Main extends JavaPlugin {
     public final String h2Repo = "https://repo1.maven.org/maven2/com/h2database/h2/" + h2Version + "/" + h2Jar;
 
     @Override
+    public void onLoad() {
+        //<editor-fold desc="WorldGuard Hook">
+        try {
+            Plugin wg = getServer().getPluginManager().getPlugin("WorldGuard");
+            if (wg instanceof WorldGuardPlugin) {
+                useWorldGuard = true;
+                try {
+                    WorldGuardHook.setupFlag(); // Now you can use WorldGuard logic safely
+                } catch (Exception e) {
+                    getLogger().severe("Failed to hook into WorldGuard properly.");
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Error hooking into WorldGuard");
+        }
+        //</editor-fold>
+    }
+
+    @Override
     public void onEnable() {
-        zAPI = new zAPI(this, pluginName, coloredPluginName, true);
+        zAPI.init(this, pluginName, coloredPluginName, NBT.preloadApi());
         //<editor-fold desc="Variables">
         main = Main.this;
         pluginName = getDescription().getName();
         coloredPluginName = this.pluginName;
         pluginVer = getDescription().getVersion();
-        pym = zAPI.getPluginYAMLManager();
-        fm = zAPI.getFileManager();
         cfgu = new ConfigUtils();
         hu = new HomesUtils();
         db = new DatabaseConnection();
         dbe = new DatabaseEditor();
         //</editor-fold>
-        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-        coloredPluginName = cmdm.hex(coloredPluginName);
-        coloredPluginName = ChatColor.translateAlternateColorCodes('&', Objects.requireNonNull(getConfig().getString("prefix")));
+        LanguageUtils.Helper helper = new LanguageUtils.Helper() {};
+        coloredPluginName = transform(requireNonNull(getConfig().getString("prefix")));
         zAPI.setColoredPluginName(coloredPluginName);
-        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
-        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
+        helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
+        helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
         updatePlugin();
+        //<editor-fold desc="Files">
+        helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fChecking if files exist..."));
+        if(configFileUtils == null) {
+            getConfig();
+        }
+        List<FileUtils> fus = new ArrayList<>();
+        fus.add(FileManager.createFile("languages/de.yml"));
+        fus.add(FileManager.createFile("languages/en.yml"));
+        fus.add(FileManager.createFile("languages/es.yml"));
+        fus.add(FileManager.createFile("languages/fr.yml"));
+        fus.add(FileManager.createFile("languages/it.yml"));
+        fus.add(FileManager.createFile("languages/nl.yml"));
+        fus.add(FileManager.createFile("languages/pl.yml"));
+        fus.add(FileManager.createFile("languages/pt-br.yml"));
+        fus.add(FileManager.createFile("languages/ru.yml"));
+        for(FileUtils fu : fus) {
+            fu.saveDefaultConfig();
+            fu.reloadConfig();
+        }
+        FileUtils fu = FileManager.createFile(homesMenuPath);
+        if(!fu.getFile().exists()) {
+            fu.saveDefaultConfig();
+            fu.reloadConfig(true);
+        }else {
+            fu.saveDefaultConfig();
+            fu.reloadConfig(false);
+        }
+        helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fAll files have been created!"));
+        //</editor-fold>
         //<editor-fold desc="Download Libs">
         if(!libsFolder.exists()) {
             try {
@@ -115,7 +171,7 @@ public final class Main extends JavaPlugin {
             File outputFile = new File(libsFolder, h2Jar);
             if(!outputFile.exists()) {
                 downloadFile(h2Repo, outputFile);
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9H2Database §asaved to "+outputFile.getAbsolutePath());
+                helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9H2Database §asaved to "+outputFile.getAbsolutePath());
             }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Failed to download H2Database library", e);
@@ -126,7 +182,7 @@ public final class Main extends JavaPlugin {
             File outputFile = new File(libsFolder, mysqlJar);
             if(!outputFile.exists()) {
                 downloadFile(mysqlRepo, outputFile);
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MySQL Connector Java §asaved to "+outputFile.getAbsolutePath());
+                helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MySQL Connector Java §asaved to "+outputFile.getAbsolutePath());
             }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Failed to download MySQL Connector Java library", e);
@@ -137,7 +193,7 @@ public final class Main extends JavaPlugin {
             File outputFile = new File(libsFolder, mariadbJar);
             if(!outputFile.exists()) {
                 downloadFile(mariadbRepo, outputFile);
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MariaDB Java Client §asaved to "+outputFile.getAbsolutePath());
+                helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§aLibrary §9MariaDB Java Client §asaved to "+outputFile.getAbsolutePath());
             }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Failed to download MariaDB library", e);
@@ -152,56 +208,43 @@ public final class Main extends JavaPlugin {
         //<editor-fold desc="Metrics">
         if(cfgu.hasMetrics()) {
             zAPI.startMetrics(bStatsId);
-            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+            helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&aMetrics enabled."
             ));
         }
         //</editor-fold>
-        //<editor-fold desc="Files">
-        cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fChecking if files exist..."));
-        if(configFileUtils == null) {
-            getConfig();
-        }
-        fm.fuLang.saveDefaultConfig();
-        fm.fuLang.reloadConfig();
-        fm.fuLang2.saveDefaultConfig();
-        fm.fuLang2.reloadConfig();
-        FileUtils fu = fm.createFile(homesMenuPath);
-        if(!fu.getFile().exists()) {
-            fu.saveDefaultConfig();
-            fu.reloadConfig(true);
-        }else {
-            fu.saveDefaultConfig();
-            fu.reloadConfig(false);
-        }
-        cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fAll files have been created!"));
-        //</editor-fold>
         loadCommands();
         //<editor-fold desc="Hooks">
-        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
+        helper.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
+        //<editor-fold desc="PlaceholderAPI">
         try {
-            zAPI.setPlaceholderAPIHandler(new PlaceholderAPIHandler(zAPI));
-            if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            zAPI.setPlaceholderAPIHandler(new PlaceholderAPIHandler());
+            if (getServer().getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                usePlaceholderAPI = true;
                 zAPI.registerPlaceholderExpansion(getDescription().getAuthors().toString(), pluginVer, true, true);
                 papi = zAPI.getPlaceholderExpansion();
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aPlaceholderAPI hooked successfully!");
+                helper.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aPlaceholderAPI hooked successfully!");
             } else {
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
+                helper.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§cPlaceholderAPI plugin not found! Disabling hook...");
             }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Error hooking into PlaceholderAPI", e);
         }
+        //</editor-fold>
+        //<editor-fold desc="Vault">
         try {
-            if (getServer().getPluginManager().getPlugin("Vault") != null) {
+            if (getServer().getPluginManager().isPluginEnabled("Vault")) {
+                useVault = true;
                 setupEconomy();
-                cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aConnected to Vault successfully!");
+                helper.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aConnected to Vault successfully!");
             }
         } catch (Exception e) {
             Bukkit.getLogger().log(Level.SEVERE, "Error hooking into VaultAPI", e);
         }
         //</editor-fold>
-        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started (Any errors will be above this message)");
-        cmdm.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
+        //</editor-fold>
+        helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started (Any errors will be above this message)");
+        helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
     }
 
     @Override
@@ -221,89 +264,94 @@ public final class Main extends JavaPlugin {
     }
 
     public void updatePlugin() {
-        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+        LanguageUtils.Helper helper = new LanguageUtils.Helper() {};
         UpdateChecker checker = new UpdateChecker();
         String version = checker.getVersion();
         String pf = "&8&l|> &r";
 
         if(!getDescription().getVersion().equals(version)) {
-            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+            helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&cPlugin is out-dated!"
             ));
-            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+            helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     pf+"&fNew version: &e"+version
             ));
-            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+            helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     pf+"&fYour version: &e"+getDescription().getVersion()
             ));
             if(cfgu.isAutoUpdate()) {
-                cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+                helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                         pf+"&fAttempting to auto-update it..."
                 ));
                 try {
                     String path = checker.update(pluginName, version);
-                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+                    helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&aPlugin updated! &7Saved in: "+path
                     ));
-                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+                    helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&aRestart the server to apply changes."
                     ));
                 }catch (Exception e) {
-                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+                    helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&cCould not auto-update it."
                     ));
-                    cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+                    helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&fYou can update your plugin here: &e"+site
                     ));
                 }
             }else {
-                cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+                helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                         pf+"&fYou can update your plugin here: &e"+site
                 ));
             }
         }else {
-            cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
+            helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&aPlugin is up-to-date!"
             ));
         }
     }
     public void loadCommands() {
-        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-        cmdm.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "§fTrying to load commands, permissions & events..."));
+        LanguageUtils.CommandsMSG helper = new LanguageUtils.CommandsMSG();
+        helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "§fTrying to load commands, permissions & events..."));
         //<editor-fold desc="Commands">
         try {
-            pym.unregisterCommands();
-            pym.registerCommand(cfgu.CmdMainCommand(), new MainCommand(), new MainCompleter(), cfgu.CmdMainDescription(), cfgu.CmdMainAliases().toArray(new String[0]));
-            pym.registerCommand(cfgu.CmdSethomeCommand(), new SethomeCommand(), cfgu.CmdSethomeDescription(), cfgu.CmdSethomeAliases().toArray(new String[0]));
-            pym.registerCommand(cfgu.CmdDelhomeCommand(), new DelhomeCommand(), new DelhomeCompleter(), cfgu.CmdDelhomeDescription(), cfgu.CmdDelhomeAliases().toArray(new String[0]));
-            pym.registerCommand(cfgu.CmdHomesCommand(), new HomesCommand(), new HomesCompleter(), cfgu.CmdHomesDescription(), cfgu.CmdHomesAliases().toArray(new String[0]));
-            pym.registerCommand(cfgu.CmdHomeCommand(), new HomeCommand(), new HomeCompleter(), cfgu.CmdHomeDescription(), cfgu.CmdHomeAliases().toArray(new String[0]));
+            unregisterCommands();
+            registerCommand(cfgu.CmdMainCommand(), new MainCommand(), new MainCompleter(), cfgu.CmdMainDescription(), cfgu.CmdMainAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdSethomeCommand(), new SethomeCommand(), cfgu.CmdSethomeDescription(), cfgu.CmdSethomeAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdDelhomeCommand(), new DelhomeCommand(), new DelhomeCompleter(), cfgu.CmdDelhomeDescription(), cfgu.CmdDelhomeAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdHomesCommand(), new HomesCommand(), new HomesCompleter(), cfgu.CmdHomesDescription(), cfgu.CmdHomesAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdHomeCommand(), new HomeCommand(), new HomeCompleter(), cfgu.CmdHomeDescription(), cfgu.CmdHomeAliases().toArray(new String[0]));
         } catch (Exception e) {
             throw new RuntimeException("Failed to load commands", e);
         }
         //</editor-fold>
         //<editor-fold desc="Permissions">
         try {
-            pym.unregisterPermissions();
+            unregisterPermissions();
             Map<String, Boolean> helpANDmainChildren = new HashMap<>();
             helpANDmainChildren.put(cfgu.CmdMainPermission(), true);
             helpANDmainChildren.put(cfgu.CmdMainHelpPermission(), true);
-            pym.registerPermission(cfgu.CmdMainPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + "' command", PermissionDefault.OP);
-            pym.registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
-            pym.registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
-            pym.registerPermission(cfgu.CmdMainReloadPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
-            pym.registerPermission(cfgu.CmdMainConverterPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " converter' command", PermissionDefault.OP);
-            pym.registerPermission(cfgu.CmdSethomePermission(), "Permission to use the '/" + cfgu.CmdSethomeCommand() + "' command", PermissionDefault.TRUE);
-            pym.registerPermission(cfgu.CmdDelhomePermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + "' command", PermissionDefault.TRUE);
-            pym.registerPermission(cfgu.CmdDelhomeOthersPermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
-            pym.registerPermission(cfgu.CmdHomesPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + "' command", PermissionDefault.TRUE);
-            pym.registerPermission(cfgu.CmdHomesOthersPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + " (Player)' command", PermissionDefault.OP);
-            pym.registerPermission(cfgu.CmdHomePermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + "' command", PermissionDefault.TRUE);
-            pym.registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
-            pym.registerPermission(cfgu.PermissionBypassLimit(), "Bypass homes limit", PermissionDefault.OP);
-            pym.registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
+            registerPermission(cfgu.CmdMainPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + "' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
+            registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
+            registerPermission(cfgu.CmdMainReloadPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
+            registerPermission(cfgu.CmdMainConverterPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " converter' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdSethomePermission(), "Permission to use the '/" + cfgu.CmdSethomeCommand() + "' command", PermissionDefault.TRUE);
+            registerPermission(cfgu.CmdDelhomePermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + "' command", PermissionDefault.TRUE);
+            registerPermission(cfgu.CmdDelhomeOthersPermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdHomesPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + "' command", PermissionDefault.TRUE);
+            registerPermission(cfgu.CmdHomesOthersPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + " (Player)' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdHomePermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + "' command", PermissionDefault.TRUE);
+            registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
+            registerPermission(cfgu.PermissionBypassLimit(), "Bypass homes limit", PermissionDefault.OP);
+            registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
         } catch (Exception e) {
-            cmdm.sendMsg(getServer().getConsoleSender(), this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");
+            helper.sendMsg(getServer().getConsoleSender(), this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");
+        }
+        //</editor-fold>
+        //<editor-fold desc="Listeners">
+        if(useWorldGuard) {
+            registerEvent(new WorldGuardListeners());
         }
         //</editor-fold>
     }
@@ -343,7 +391,7 @@ public final class Main extends JavaPlugin {
 
     //<editor-fold desc="Location Serialization">
     public String serialize(Location loc) {
-        String w = Objects.requireNonNull(loc.getWorld()).getName();
+        String w = requireNonNull(loc.getWorld()).getName();
         double x = loc.getX();
         double y = loc.getY();
         double z = loc.getZ();
@@ -376,7 +424,7 @@ public final class Main extends JavaPlugin {
         if (configFileUtils == null) {
             // Lazy initialization if not already set
             File configFile = new File(getDataFolder(), "config.yml");
-            configFileUtils = new FileUtils(zAPI, configFile, "config.yml");
+            configFileUtils = new FileUtils(configFile, "config.yml");
             configFileUtils.saveDefaultConfig();
             configFileUtils.reloadConfig(false);
         }
@@ -387,7 +435,7 @@ public final class Main extends JavaPlugin {
     public void saveDefaultConfig() {
         if (configFileUtils == null) {
             File configFile = new File(getDataFolder(), "config.yml");
-            configFileUtils = new FileUtils(zAPI, configFile, "config.yml");
+            configFileUtils = new FileUtils(configFile, "config.yml");
         }
         configFileUtils.saveDefaultConfig();
     }
@@ -396,14 +444,10 @@ public final class Main extends JavaPlugin {
     public void reloadConfig() {
         if (configFileUtils == null) {
             File configFile = new File(getDataFolder(), "config.yml");
-            configFileUtils = new FileUtils(zAPI, configFile, "config.yml");
+            configFileUtils = new FileUtils(configFile, "config.yml");
             configFileUtils.saveDefaultConfig();
         }
         configFileUtils.reloadConfig(false);
-    }
-
-    public File getFileJava() {
-        return getFile();
     }
     //</editor-fold>
 

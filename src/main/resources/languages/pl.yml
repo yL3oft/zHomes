@@ -1,0 +1,68 @@
+# Tutaj możesz zarządzać wiadomościami hooków
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cNie możesz używać domów tutaj."
+  vault:
+    cant-afford-command: "%prefix%&cPotrzebujesz &6$%cost% &caby wykonać tę komendę."
+
+# Wiadomości związane z komendami
+commands:
+  # Powyżej znajdziesz wiadomości używane w wielu komendach
+  no-permission: "%prefix%&cNie masz uprawnień do wykonania tej komendy."
+  home-already-exist: "%prefix%&cMasz już dom o tej nazwie."
+  home-doesnt-exist: "%prefix%&cNie masz domu o tej nazwie."
+  home-doesnt-exist-others: "%prefix%&e%player% &cnie ma domu o tej nazwie."
+  cant-use-2dot: "%prefix%&cNie możesz używać &e':' &cw tej komendzie."
+  cant-find-player: "%prefix%&cNie znaleziono gracza."
+  unable-to-find-safe-location: "%prefix%&cNie można znaleźć bezpiecznego miejsca do teleportacji."
+
+  # Poniżej znajdziesz wiadomości specyficzne dla komend
+  main:
+    help:
+      help-perm: |-
+        %prefix%&bUżycie &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &aconverter (converter-type) &7Konwertuj dane z jednego miejsca do drugiego
+      help-noperm: |-
+        %prefix%&bUżycie &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix%&bAktualna wersja: &a%version%"
+    reload:
+      usage: |-
+        %prefix%&bUżycie &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix%&aPlugin przeładowany w &b%time%ms&a."
+      commands:
+        output: "%prefix%&aKomendy pluginu przeładowane w &b%time%ms&a."
+      config:
+        output: "%prefix%&aPlik konfiguracyjny przeładowany w &b%time%ms&a."
+      languages:
+        output: |-
+          %prefix%&aJęzyki pluginu przeładowane w &b%time%ms&a.
+          &7Uwaga: To nie zaktualizuje języka z config.yml, użyj '/%command% reload config' aby to zrobić.
+    converter:
+      usage: |-
+        %prefix%&bUżycie &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
+        ...
+      output: "%prefix%&aWszystkie dane zostały skonwertowane!"
+      error: "%prefix%&cWystąpił błąd podczas konwertowania danych. Sprawdź konsolę serwera."
+  sethome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aDom &e%home% &azapisany w twojej lokalizacji."
+    limit-reached: "&cOsiągnąłeś limit domów &e(%limit% domów)&c!"
+  delhome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&cDom &e%home% &ausunięty."
+  home:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aTeleportacja do &e%home%&a..."
+    cant-dimensional-teleport: "&cTeleportacja anulowana! Teleportacja między wymiarami jest wyłączona."
+  homes:
+    output: "%prefix%&7Twoje domy: &f%homes%"
+    others:
+      output: "%prefix%&7Domy gracza &e%player%: &f%homes%"

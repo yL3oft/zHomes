@@ -1,16 +1,14 @@
 name: zHomes
 version: ${version}
+description: ${description}
 main: me.yleoft.zHomes.Main
 author: yLeoft
-website: 'https://github.com/yL3oft/zHomes'
+website: ${url}
 api-version: "1.13"
 softdepend:
   - PlaceholderAPI
+  - WorldGuard
   - Vault
-  - Essentials
-  - UltimateHomes
-  - Sethome
-  - Xhomes
 folia-supported: true
 commands: {}
 permissions: {}

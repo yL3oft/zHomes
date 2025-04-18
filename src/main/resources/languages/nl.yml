@@ -1,0 +1,68 @@
+# Hier kun je hookberichten beheren
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&cJe kunt hier geen homes gebruiken."
+  vault:
+    cant-afford-command: "%prefix%&cJe hebt &6$%cost% &cnodig om dit commando uit te voeren."
+
+# Berichten gerelateerd aan commando's
+commands:
+  # Bovenaan staan berichten die in meerdere commando's worden gebruikt
+  no-permission: "%prefix%&cJe hebt geen toestemming om dit commando uit te voeren."
+  home-already-exist: "%prefix%&cJe hebt al een home met deze naam."
+  home-doesnt-exist: "%prefix%&cJe hebt geen home met deze naam."
+  home-doesnt-exist-others: "%prefix%&e%player% &cheeft geen home met deze naam."
+  cant-use-2dot: "%prefix%&cJe kunt &e':' &cniet gebruiken in dit commando."
+  cant-find-player: "%prefix%&cSpeler niet gevonden."
+  unable-to-find-safe-location: "%prefix%&cGeen veilige locatie gevonden om naartoe te teleporteren."
+
+  # Hieronder vind je specifieke berichten voor de commando's
+  main:
+    help:
+      help-perm: |-
+        %prefix%&bGebruik van &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &aconverter (converter-type) &7Converteer gegevens van de ene naar de andere plek
+      help-noperm: |-
+        %prefix%&bGebruik van &e/%command%&b:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix%&bHuidige versie: &a%version%"
+    reload:
+      usage: |-
+        %prefix%&bGebruik van &e/%command% &a(reload|rl)&b:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix%&aPlugin opnieuw geladen in &b%time%ms&a."
+      commands:
+        output: "%prefix%&aAlle commando's opnieuw geladen in &b%time%ms&a."
+      config:
+        output: "%prefix%&aConfiguratiebestand opnieuw geladen in &b%time%ms&a."
+      languages:
+        output: |-
+          %prefix%&aTalen opnieuw geladen in &b%time%ms&a.
+          &7Let op: Dit zal de taal in config.yml niet bijwerken, gebruik '/%command% reload config' om dat te doen.
+    converter:
+      usage: |-
+        %prefix%&bGebruik van &e/%command% &aconverter&b:
+        &c-> &e/%command% &aconverter sqlitetoh2
+        ...
+      output: "%prefix%&aAlle gegevens zijn geconverteerd!"
+      error: "%prefix%&cEr is een fout opgetreden tijdens het converteren van gegevens. Controleer de serverconsole."
+  sethome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aHome &e%home% &ais ingesteld op je locatie."
+    limit-reached: "&cJe hebt het limiet van &e(%limit% homes)&c bereikt!"
+  delhome:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&cHome &e%home% &ais verwijderd."
+  home:
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&aTeleporteren naar &e%home%&a..."
+    cant-dimensional-teleport: "&cTeleportatie geannuleerd! Dimensionale teleportatie is uitgeschakeld."
+  homes:
+    output: "%prefix%&7Jouw homes: &f%homes%"
+    others:
+      output: "%prefix%&7Homes van &e%player%: &f%homes%"

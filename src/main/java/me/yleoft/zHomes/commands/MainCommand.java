@@ -1,5 +1,6 @@
 package me.yleoft.zHomes.commands;
 
+import me.yleoft.zAPI.managers.FileManager;
 import me.yleoft.zAPI.managers.PluginYAMLManager;
 import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zHomes.Main;
@@ -17,13 +18,20 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, String[] args) {
         String subcmd2;
         Player p = null;
-        if (s instanceof Player)
-            p = (Player)s;
-        ExecuteMainCommandEvent event = new ExecuteMainCommandEvent(p);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled()) return false;
-
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+        if (s instanceof Player) {
+            p = (Player) s;
+
+            if (!p.hasPermission(CmdMainPermission())) {
+                cmdm.sendMsg(p, cmdm.getNoPermission());
+                return false;
+            }
+
+            ExecuteMainCommandEvent event = new ExecuteMainCommandEvent(p);
+            Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) return false;
+        }
+
         LanguageUtils.MainCMD lang = new LanguageUtils.MainCMD();
         LanguageUtils.MainCMD.MainReload lang2 = new LanguageUtils.MainCMD.MainReload();
         LanguageUtils.MainCMD.MainVersion lang3 = new LanguageUtils.MainCMD.MainVersion();
@@ -31,11 +39,6 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
         LanguageUtils.MainCMD.MainConverter lang5 = new LanguageUtils.MainCMD.MainConverter();
 
         //<editor-fold desc="Checks">
-        if (p != null &&
-                !p.hasPermission(CmdMainPermission())) {
-            lang.sendMsg(s, cmdm.getNoPermission());
-            return false;
-        }
         if (args.length == 0) {
             lang.sendMsg(s, getUsage(s, lang4));
             return false;
@@ -118,22 +121,20 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
             case "all":
                 reload("commands");
                 reload("languages");
-                for(FileUtils fu : Main.fm.getFiles()) {
-                    fu.reloadConfig(false);
-                }
                 break;
             case "commands":
                 reload("config");
                 Main.getInstance().loadCommands();
-                Main.pym.syncCommands();
+                PluginYAMLManager.syncCommands();
                 break;
             case "config":
                 Main.getInstance().reloadConfig();
                 Main.cfgu = new ConfigUtils();
                 break;
             case "languages":
-                Main.fm.fuLang.reloadConfig();
-                Main.fm.fuLang2.reloadConfig();
+                for(FileUtils fu : FileManager.getFiles()) {
+                    fu.reloadConfig(false);
+                }
                 break;
         }
         return System.currentTimeMillis() - now;

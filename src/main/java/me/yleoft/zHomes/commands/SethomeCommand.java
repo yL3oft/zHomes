@@ -17,12 +17,18 @@ public class SethomeCommand extends HomesUtils implements CommandExecutor {
         if (!(s instanceof Player))
             return false;
         Player p = (Player)s;
+        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+
+        if (!p.hasPermission(CmdSethomePermission())) {
+            cmdm.sendMsg(p, cmdm.getNoPermission());
+            return false;
+        }
+
         PreExecuteSethomeCommandEvent preevent = new PreExecuteSethomeCommandEvent(p);
         Bukkit.getPluginManager().callEvent(preevent);
         if (preevent.isCancelled()) return false;
 
         LanguageUtils.Sethome lang = new LanguageUtils.Sethome();
-        LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
 
         if (args.length >= 1) {
             String home = args[0];
