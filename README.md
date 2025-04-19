@@ -26,7 +26,12 @@ It's is 100% free, and only maintained by [yLeoft](https://github.com/yL3oft), h
 
 This plugin can also convert homes you had from previous plugins (The famous ones) See more in: [/zhomes converter](https://github.com/yL3oft/zHomes/wiki/Commands-&-Permissions#zhomes-converter)
 
-THANK YOU for using zHomes, if you want to support the project, or have any questions, consider joining our [Discord](https://discord.gg/yCdhVDgn4K) :)
+<div align="center">
+
+**THANK YOU** for using zHomes!  
+If you want to support the project or have any questions, join our [Discord](https://discord.gg/yCdhVDgn4K) 😊
+
+</div>
 
 ##
 ![Commands](https://cdn.modrinth.com/data/cached_images/cb455c702cf3974b3c5394e22cc3e709f7dd0761.png)
