@@ -30,4 +30,4 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Compile and Test with Maven
-        run: mvn clean install -DskipTests=false
+        run: mvn clean install -DskipTests=false -Dgpg.skip=true
