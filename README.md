@@ -49,7 +49,7 @@ If you want to support the project or have any questions, join our [Discord](htt
 ##
 ![Configuration](https://cdn.modrinth.com/data/cached_images/28ec0907a3e472a42fda6f68758355518a82d3f6.png)
 
-Below you will see every configuration file the plugin has, if you need any help using it you can either visit the [wiki](https://github.com/yL3oft/zHomes/wiki) or enter our [discord](https://discord.gg/yCdhVDgn4K)
+Below you will see every configuration file the plugin has, if you need any help using it you can either visit the [wiki](https://docs.yleoft.me/zhomes) or enter our [discord](https://discord.gg/yCdhVDgn4K)
 
 ##
 ![bStats Graph](https://bstats.org/signatures/bukkit/zHomes.svg)

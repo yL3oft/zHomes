@@ -11,13 +11,16 @@ public class ExampleEvent implements Listener {
     @EventHandler
     public void onPreExecuteSethomeCommandEvent(PreExecuteSethomeCommandEvent event) {
         Player player = event.getPlayer();
+        if(player.getName().equals("yLeoft")) event.setCancelled(true);
     }
 
     @EventHandler
     public void onExecuteSethomeCommandEvent(ExecuteSethomeCommandEvent event) {
         Player player = event.getPlayer();
         String home = event.getHome();
-        event.setHome("test");
+        if(player.getName().equals("yLeoft")) event.setCancelled(true);
+        if(home.equals("test")) event.setCancelled(true);
+        else event.setHome("test");
     }
 
 }
