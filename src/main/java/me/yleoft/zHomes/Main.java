@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import static java.util.Objects.requireNonNull;
 import static me.yleoft.zAPI.managers.PluginYAMLManager.*;
 import static me.yleoft.zAPI.utils.StringUtils.transform;
+import static me.yleoft.zHomes.utils.LanguageUtils.loadzAPIMessages;
 
 public final class Main extends JavaPlugin {
 
@@ -126,6 +127,7 @@ public final class Main extends JavaPlugin {
         LanguageUtils.Helper helper = new LanguageUtils.Helper() {};
         coloredPluginName = transform(requireNonNull(getConfig().getString("prefix")));
         zAPI.setColoredPluginName(coloredPluginName);
+        loadzAPIMessages();
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
         updatePlugin();
@@ -316,11 +318,11 @@ public final class Main extends JavaPlugin {
         //<editor-fold desc="Commands">
         try {
             unregisterCommands();
-            registerCommand(cfgu.CmdMainCommand(), new MainCommand(), new MainCompleter(), cfgu.CmdMainDescription(), cfgu.CmdMainAliases().toArray(new String[0]));
-            registerCommand(cfgu.CmdSethomeCommand(), new SethomeCommand(), cfgu.CmdSethomeDescription(), cfgu.CmdSethomeAliases().toArray(new String[0]));
-            registerCommand(cfgu.CmdDelhomeCommand(), new DelhomeCommand(), new DelhomeCompleter(), cfgu.CmdDelhomeDescription(), cfgu.CmdDelhomeAliases().toArray(new String[0]));
-            registerCommand(cfgu.CmdHomesCommand(), new HomesCommand(), new HomesCompleter(), cfgu.CmdHomesDescription(), cfgu.CmdHomesAliases().toArray(new String[0]));
-            registerCommand(cfgu.CmdHomeCommand(), new HomeCommand(), new HomeCompleter(), cfgu.CmdHomeDescription(), cfgu.CmdHomeAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdMainCommand(), new MainCommand(), cfgu.CmdMainCooldown(), new MainCompleter(), cfgu.CmdMainDescription(), cfgu.CmdMainAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdSethomeCommand(), new SethomeCommand(), cfgu.CmdSethomeCooldown(), cfgu.CmdSethomeDescription(), cfgu.CmdSethomeAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdDelhomeCommand(), new DelhomeCommand(), cfgu.CmdDelhomeCooldown(), new DelhomeCompleter(), cfgu.CmdDelhomeDescription(), cfgu.CmdDelhomeAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdHomesCommand(), new HomesCommand(), cfgu.CmdHomesCooldown(), new HomesCompleter(), cfgu.CmdHomesDescription(), cfgu.CmdHomesAliases().toArray(new String[0]));
+            registerCommand(cfgu.CmdHomeCommand(), new HomeCommand(), cfgu.CmdHomeCooldown(), new HomeCompleter(), cfgu.CmdHomeDescription(), cfgu.CmdHomeAliases().toArray(new String[0]));
         } catch (Exception e) {
             throw new RuntimeException("Failed to load commands", e);
         }

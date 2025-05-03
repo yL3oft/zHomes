@@ -69,6 +69,9 @@ public class ConfigUtils {
     public String CmdMainDescription() {
         return main.getConfig().getString(this.cmdPath + "main.description");
     }
+    public Double CmdMainCooldown() {
+        return main.getConfig().getDouble(this.cmdPath + "main.cooldown");
+    }
     public List<String> CmdMainAliases() {
         return main.getConfig().getStringList(this.cmdPath + "main.aliases");
     }
@@ -95,6 +98,9 @@ public class ConfigUtils {
     public String CmdSethomeDescription() {
         return main.getConfig().getString(this.cmdPath + "sethome.description");
     }
+    public Double CmdSethomeCooldown() {
+        return main.getConfig().getDouble(this.cmdPath + "sethome.cooldown");
+    }
     public List<String> CmdSethomeAliases() {
         return main.getConfig().getStringList(this.cmdPath + "sethome.aliases");
     }
@@ -111,6 +117,9 @@ public class ConfigUtils {
     }
     public String CmdDelhomeDescription() {
         return main.getConfig().getString(this.cmdPath + "delhome.description");
+    }
+    public Double CmdDelhomeCooldown() {
+        return main.getConfig().getDouble(this.cmdPath + "delhome.cooldown");
     }
     public List<String> CmdDelhomeAliases() {
         return main.getConfig().getStringList(this.cmdPath + "delhome.aliases");
@@ -131,6 +140,9 @@ public class ConfigUtils {
     }
     public String CmdHomesDescription() {
         return main.getConfig().getString(this.cmdPath + "homes.description");
+    }
+    public Double CmdHomesCooldown() {
+        return main.getConfig().getDouble(this.cmdPath + "homes.cooldown");
     }
     public List<String> CmdHomesAliases() {
         return main.getConfig().getStringList(this.cmdPath + "homes.aliases");
@@ -154,6 +166,9 @@ public class ConfigUtils {
     }
     public String CmdHomeDescription() {
         return main.getConfig().getString(this.cmdPath + "home.description");
+    }
+    public Double CmdHomeCooldown() {
+        return main.getConfig().getDouble(this.cmdPath + "home.cooldown");
     }
     public List<String> CmdHomeAliases() {
         return main.getConfig().getStringList(this.cmdPath + "home.aliases");

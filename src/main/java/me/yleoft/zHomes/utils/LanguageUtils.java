@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 
 import me.yleoft.zAPI.managers.FileManager;
+import me.yleoft.zAPI.mutable.Messages;
 import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zHomes.Main;
 import org.bukkit.Bukkit;
@@ -417,6 +418,10 @@ public class LanguageUtils extends ConfigUtils {
         }
     }
 
+    public static void loadzAPIMessages() {
+        Messages.setCooldownExpired(formPath(cmds, "in-cooldown"));
+    }
+
     public interface Commands extends Helper {
         String getCmd();
 
@@ -428,8 +433,7 @@ public class LanguageUtils extends ConfigUtils {
     public interface Helper {
         default void sendMsg(Player p, String text) {
             if(text.isEmpty()) return;
-            text = transform(p, text
-                    .replace("%prefix%", Main.cfgu.prefix())
+            text = getText(p, text
                     .replace("%limit%", String.valueOf(Main.cfgu.getMaxLimit(p)))
                     .replace("%numberofhomes%", String.valueOf(Main.hu.numberOfHomes(p)))
                     .replace("%homes%", Main.hu.homes(p)));
@@ -438,23 +442,30 @@ public class LanguageUtils extends ConfigUtils {
 
         default void sendMsg(CommandSender s, String text) {
             if(text.isEmpty()) return;
-            text = transform(text
-                    .replace("%prefix%", Main.cfgu.prefix()));
+            text = getText(s, text);
             if (s instanceof Player) {
                 Player p = (Player)s;
-                text = transform(p, text
-                        .replace("%limit%", String.valueOf(Main.cfgu.getMaxLimit(p)))
+                text = text.replace("%limit%", String.valueOf(Main.cfgu.getMaxLimit(p)))
                         .replace("%numberofhomes%", String.valueOf(Main.hu.numberOfHomes(p)))
-                        .replace("%homes%", Main.hu.homes(p)));
+                        .replace("%homes%", Main.hu.homes(p));
             }
             s.sendMessage(text);
         }
 
         default void broadcast(String text) {
             if(text.isEmpty()) return;
+            text = getText(null, text);
+            Bukkit.getServer().broadcastMessage(text);
+        }
+
+        default String getText(CommandSender s, String text) {
             text = transform(text
                     .replace("%prefix%", Main.cfgu.prefix()));
-            Bukkit.getServer().broadcastMessage(text);
+            if(s instanceof Player) {
+                Player p = (Player)s;
+                text = transform(p, text);
+            }
+            return text;
         }
 
     }

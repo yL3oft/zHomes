@@ -14,6 +14,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import static me.yleoft.zHomes.utils.LanguageUtils.loadzAPIMessages;
+
 public class MainCommand extends ConfigUtils implements CommandExecutor {
     public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, String[] args) {
         String subcmd2;
@@ -135,6 +137,7 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                 for(FileUtils fu : FileManager.getFiles()) {
                     fu.reloadConfig(false);
                 }
+                loadzAPIMessages();
                 break;
         }
         return System.currentTimeMillis() - now;
