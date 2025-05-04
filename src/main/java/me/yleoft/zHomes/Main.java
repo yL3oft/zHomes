@@ -127,7 +127,6 @@ public final class Main extends JavaPlugin {
         LanguageUtils.Helper helper = new LanguageUtils.Helper() {};
         coloredPluginName = transform(requireNonNull(getConfig().getString("prefix")));
         zAPI.setColoredPluginName(coloredPluginName);
-        loadzAPIMessages();
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started loading...");
         updatePlugin();
@@ -216,6 +215,7 @@ public final class Main extends JavaPlugin {
         }
         //</editor-fold>
         loadCommands();
+        loadzAPIMessages();
         //<editor-fold desc="Hooks">
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
         //<editor-fold desc="PlaceholderAPI">

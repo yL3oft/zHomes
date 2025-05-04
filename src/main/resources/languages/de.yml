@@ -9,6 +9,7 @@ hooks:
 commands:
   # Oben findest du Nachrichten, die in mehreren Befehlen verwendet werden können
   no-permission: "%prefix%&cDu hast keine Berechtigung, diesen Befehl auszuführen."
+  in-cooldown: "%prefix%&cDu musst %timeleft% Sekunden warten, bevor du diesen Befehl erneut verwenden kannst."
   home-already-exist: "%prefix%&cDu hast bereits ein Home mit diesem Namen."
   home-doesnt-exist: "%prefix%&cDu hast kein Home mit diesem Namen."
   home-doesnt-exist-others: "%prefix%&e%player% &chat kein Home mit diesem Namen."

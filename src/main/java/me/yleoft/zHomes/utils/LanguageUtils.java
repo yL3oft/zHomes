@@ -419,7 +419,8 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static void loadzAPIMessages() {
-        Messages.setCooldownExpired(formPath(cmds, "in-cooldown"));
+        YamlConfiguration config = LanguageUtils.getConfigFile();
+        Messages.setCooldownExpired(Objects.requireNonNull(Helper.getText(config.getString(formPath(cmds, "in-cooldown")))));
     }
 
     public interface Commands extends Helper {
@@ -458,7 +459,7 @@ public class LanguageUtils extends ConfigUtils {
             Bukkit.getServer().broadcastMessage(text);
         }
 
-        default String getText(CommandSender s, String text) {
+        static String getText(CommandSender s, String text) {
             text = transform(text
                     .replace("%prefix%", Main.cfgu.prefix()));
             if(s instanceof Player) {
@@ -466,6 +467,9 @@ public class LanguageUtils extends ConfigUtils {
                 text = transform(p, text);
             }
             return text;
+        }
+        static String getText(String text) {
+            return getText(null, text);
         }
 
     }

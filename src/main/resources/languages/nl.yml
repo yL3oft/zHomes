@@ -9,6 +9,7 @@ hooks:
 commands:
   # Bovenaan staan berichten die in meerdere commando's worden gebruikt
   no-permission: "%prefix%&cJe hebt geen toestemming om dit commando uit te voeren."
+  in-cooldown: "%prefix%&cJe moet %timeleft% seconden wachten voordat je dit commando opnieuw kunt gebruiken."
   home-already-exist: "%prefix%&cJe hebt al een home met deze naam."
   home-doesnt-exist: "%prefix%&cJe hebt geen home met deze naam."
   home-doesnt-exist-others: "%prefix%&e%player% &cheeft geen home met deze naam."

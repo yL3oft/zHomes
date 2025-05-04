@@ -9,6 +9,7 @@ hooks:
 commands:
   # Arriba encontrarás mensajes que pueden usarse en múltiples comandos
   no-permission: "%prefix%&cNo tienes permiso para ejecutar este comando."
+  in-cooldown: "%prefix%&cDebes esperar %timeleft% segundos antes de usar este comando nuevamente."
   home-already-exist: "%prefix%&cYa tienes una casa con este nombre."
   home-doesnt-exist: "%prefix%&cNo tienes ninguna casa con este nombre."
   home-doesnt-exist-others: "%prefix%&e%player% &cno tiene ninguna casa con este nombre."
