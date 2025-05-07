@@ -19,6 +19,7 @@ public class ConfigUtils {
     protected String databasePath = "database.";
     protected String lim = "limits.";
     protected String tpo = "teleport-options.";
+    protected String warmup = tpo+"warmup.";
 
     public ConfigUtilsExtras cfguExtras = new ConfigUtilsExtras();
 
@@ -38,6 +39,21 @@ public class ConfigUtils {
     //<editor-fold desc="Plugin Information">
     public boolean canDimensionalTeleport() {
         return main.getConfig().getBoolean(this.tpo + "dimensional-teleportation");
+    }
+    public boolean playSound() {
+        return main.getConfig().getBoolean(this.tpo + "play-sound");
+    }
+    public boolean doWarmup() {
+        return main.getConfig().getBoolean(this.warmup + "enable");
+    }
+    public int warmupTime() {
+        return main.getConfig().getInt(this.warmup + "time");
+    }
+    public boolean warmupCancelOnMove() {
+        return main.getConfig().getBoolean(this.warmup + "cancel-on-move");
+    }
+    public boolean warmupShowOnActionbar() {
+        return main.getConfig().getBoolean(this.warmup + "show-on-actionbar");
     }
     public boolean needsLimit() {
         return main.getConfig().getBoolean(this.lim + "enabled");
@@ -187,6 +203,9 @@ public class ConfigUtils {
     }
     public String PermissionBypassDT() {
         return main.getConfig().getString(permissionsBypassPath+"dimensional-teleportation");
+    }
+    public String PermissionBypassWarmup() {
+        return main.getConfig().getString(permissionsBypassPath+"warmup");
     }
     public String PermissionBypassCommandCost(String commandPermission) {
         return main.getConfig().getString(permissionsBypassPath+"command-cost")

@@ -5,6 +5,13 @@ hooks:
   vault:
     cant-afford-command: "%prefix%&cDu benötigst &6$%cost% &cum diesen Befehl auszuführen."
 
+# Nachrichten zur Teleport-Vorbereitungszeit
+teleport-warmup:
+  warmup: "%prefix%&aTeleportiere in %time% Sekunden... Nicht bewegen!"
+  warmup-actionbar: "&aTeleportiere in %time% Sekunden..."
+  cancelled: "%prefix%&cDu hast dich bewegt! Teleportation abgebrochen."
+  cancelled-actionbar: "&cDu hast dich bewegt! Teleportation abgebrochen."
+
 # Nachrichten im Zusammenhang mit Befehlen
 commands:
   # Oben findest du Nachrichten, die in mehreren Befehlen verwendet werden können
@@ -64,21 +71,17 @@ commands:
         &c-> &e/%command% &aconverter xhomes
       output: "%prefix%&aAlle Daten wurden erfolgreich konvertiert!"
       error: "%prefix%&cBeim Konvertieren der Daten ist ein Fehler aufgetreten. Bitte prüfe die Server-Konsole."
-
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &awurde an deiner Position gesetzt."
     limit-reached: "&cDu kannst keine weiteren Homes setzen – du hast dein Limit von &e(%limit% Homes)&c erreicht!"
-
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&cHome &e%home% &awurde gelöscht."
-
   home:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aTeleportiere zu &e%home%&a..."
+    output: "%prefix%&aZu &e%home%&a teleportiert..."
     cant-dimensional-teleport: "&cDeine Teleportation wurde abgebrochen! Dimensionale Teleportation ist deaktiviert."
-
   homes:
     output: "%prefix%&7Deine Homes: &f%homes%"
     others:

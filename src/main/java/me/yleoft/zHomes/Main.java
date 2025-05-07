@@ -9,6 +9,7 @@ import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.commands.*;
 import me.yleoft.zHomes.hooks.*;
+import me.yleoft.zHomes.listeners.PlayerListeners;
 import me.yleoft.zHomes.listeners.WorldGuardListeners;
 import me.yleoft.zHomes.storage.*;
 import me.yleoft.zHomes.tabcompleters.*;
@@ -70,6 +71,9 @@ public final class Main extends JavaPlugin {
 
     public static Object papi;
     public static Object economy;
+
+    public static boolean needsUpdate = false;
+    public String updateVersion = getDescription().getVersion();
 
     public String pluginName = getDescription().getName();
     public String coloredPluginName = this.pluginName;
@@ -272,6 +276,8 @@ public final class Main extends JavaPlugin {
         String pf = "&8&l|> &r";
 
         if(!getDescription().getVersion().equals(version)) {
+            needsUpdate = true;
+            updateVersion = version;
             helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&cPlugin is out-dated!"
             ));
@@ -352,6 +358,7 @@ public final class Main extends JavaPlugin {
         }
         //</editor-fold>
         //<editor-fold desc="Listeners">
+        registerEvent(new PlayerListeners());
         if(useWorldGuard) {
             registerEvent(new WorldGuardListeners());
         }

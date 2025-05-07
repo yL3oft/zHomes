@@ -25,6 +25,7 @@ public class LanguageUtils extends ConfigUtils {
 
     public static String hooks = "hooks";
     public static String cmds = "commands";
+    public static String tpw = "teleport-warmup";
     public static String worldguard = "worldguard";
     public static String vault = "vault";
 
@@ -352,6 +353,36 @@ public class LanguageUtils extends ConfigUtils {
                 return this.cfg.getString(path)
                         .replace("%command%", Main.cfgu.CmdMainCommand());
             }
+        }
+    }
+
+    public static class TeleportWarmupMSG implements Helper {
+        public YamlConfiguration cfg;
+
+        public TeleportWarmupMSG() {
+            this.cfg = LanguageUtils.getConfigFile();
+        }
+
+        public String getWarmup(int time) {
+            String path = formPath(tpw, "warmup");
+            return this.cfg.getString(path)
+                    .replace("%time%", String.valueOf(time));
+        }
+
+        public String getWarmupActionbar(int time) {
+            String path = formPath(tpw, "warmup-actionbar");
+            return this.cfg.getString(path)
+                    .replace("%time%", String.valueOf(time));
+        }
+
+        public String getCancelled() {
+            String path = formPath(tpw, "cancelled");
+            return this.cfg.getString(path);
+        }
+
+        public String getCancelledActionbar() {
+            String path = formPath(tpw, "cancelled-actionbar");
+            return this.cfg.getString(path);
         }
     }
 

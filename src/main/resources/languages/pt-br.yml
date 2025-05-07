@@ -5,10 +5,17 @@ hooks:
   vault:
     cant-afford-command: "%prefix%&cVocê precisa de &6$%cost% &cpara executar este comando."
 
+# Mensagens relacionadas ao tempo de espera para teleporte
+teleport-warmup:
+  warmup: "%prefix%&aTeleportando em %time% segundos... Não se mova!"
+  warmup-actionbar: "&aTeleportando em %time% segundos..."
+  cancelled: "%prefix%&cVocê se moveu! Teleporte cancelado."
+  cancelled-actionbar: "&cVocê se moveu! Teleporte cancelado."
+
 # Mensagens relacionadas a comandos
 commands:
-  # Aqui em cima você vai achar mensagens que podem ser utilizadas em varios comandos
-  no-permission: "%prefix%&cVocê não tem permissao para executar este comando."
+  # Aqui em cima você vai achar mensagens que podem ser utilizadas em vários comandos
+  no-permission: "%prefix%&cVocê não tem permissão para executar este comando."
   in-cooldown: "%prefix%&cVocê deve esperar %timeleft% segundos antes de usar este comando novamente."
   home-already-exist: "%prefix%&cVocê já tem uma home com este nome."
   home-doesnt-exist: "%prefix%&cVocê não tem nenhuma home com este nome."
@@ -63,7 +70,7 @@ commands:
         &c-> &e/%command% &aconverter ultimatehomes
         &c-> &e/%command% &aconverter xhomes
       output: "%prefix%&aTodos dados foram convertidos!"
-      error: "%prefix%&cAlgo deu errado na converção dos dados, por favor verifique o console do seu servidor."
+      error: "%prefix%&cAlgo deu errado na conversão dos dados, por favor verifique o console do seu servidor."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aCasa &e%home% &adefinida na posição atual."
@@ -73,7 +80,7 @@ commands:
     output: "%prefix%&cA casa &e%home% &cfoi removida."
   home:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aTeleportando para &e%home%&a..."
+    output: "%prefix%&aTeleportado para &e%home%&a..."
     cant-dimensional-teleport: "&cSeu teleporte foi cancelado! Teleportação interdimensional está desativada."
   homes:
     output: "%prefix%&7Suas homes: &f%homes%"

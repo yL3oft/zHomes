@@ -59,7 +59,6 @@ public class HomeCommand extends HomesUtils implements CommandExecutor {
 
         if (hasHome(p, home)) {
             if (cfguExtras.canAfford(p, CmdHomePermission(), CmdHomeCost())) {
-                lang.sendMsg(p, lang.getOutput(home));
                 teleportPlayer(p, home);
             }
         } else {
@@ -80,12 +79,10 @@ public class HomeCommand extends HomesUtils implements CommandExecutor {
 
         OfflinePlayer t = Bukkit.getOfflinePlayer(player);
         if (t == null) {
-            lang.sendMsg(p, cmdm.getCantFindPlayer());
             return;
         }
         if (hasHome(t, home)) {
             if (cfguExtras.canAfford(p, CmdHomePermission(), CmdHomeCost())) {
-                lang.sendMsg(p, lang.getOutput(ofchome));
                 teleportPlayer(p, t, home);
             }
         } else {

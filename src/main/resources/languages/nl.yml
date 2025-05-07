@@ -5,6 +5,13 @@ hooks:
   vault:
     cant-afford-command: "%prefix%&cJe hebt &6$%cost% &cnodig om dit commando uit te voeren."
 
+# Berichten met betrekking tot teleport voorbereidingen
+teleport-warmup:
+  warmup: "%prefix%&aTeleporteren over %time% seconden... Niet bewegen!"
+  warmup-actionbar: "&aTeleporteren over %time% seconden..."
+  cancelled: "%prefix%&cJe bewoog! Teleportatie geannuleerd."
+  cancelled-actionbar: "&cJe bewoog! Teleportatie geannuleerd."
+
 # Berichten gerelateerd aan commando's
 commands:
   # Bovenaan staan berichten die in meerdere commando's worden gebruikt
@@ -61,7 +68,7 @@ commands:
     output: "%prefix%&cHome &e%home% &ais verwijderd."
   home:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aTeleporteren naar &e%home%&a..."
+    output: "%prefix%&aGeteleporteerd naar &e%home%&a..."
     cant-dimensional-teleport: "&cTeleportatie geannuleerd! Dimensionale teleportatie is uitgeschakeld."
   homes:
     output: "%prefix%&7Jouw homes: &f%homes%"

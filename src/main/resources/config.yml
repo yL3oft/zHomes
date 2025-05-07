@@ -40,6 +40,24 @@ teleport-options:
   # This option defines if the players can teleport to other dimensions with homes.
   # OPTIONS: [true, false] --- DEFAULT: true
   dimensional-teleportation: true # There is also a permission to bypass in permissions.bypass.dimensional-teleportation in this file
+  # Should the plugin play an enderman warp sound when the player teleports to a home?
+    # OPTIONS: [true, false] --- DEFAULT: true
+  play-sound: true
+
+  # Teleportation warmup options
+  warmup:
+    # This option defines if the warmup should be enabled or not.
+    # OPTIONS: [true, false] --- DEFAULT: true
+    enable: true
+    # Defines the time of the warmup in seconds.
+    # OPTIONS: [>=0 INT] --- DEFAULT: 5
+    time: 5
+    # Should the warmup be cancelled when the player moves?
+    # OPTIONS: [true, false] --- DEFAULT: true
+    cancel-on-move: true
+    # Should the warmup be shown in the actionbar?
+    # OPTIONS: [true, false] --- DEFAULT: true
+    show-on-actionbar: true
 
 limits:
   # This options defines if homes should have a limit or not.
@@ -130,6 +148,9 @@ permissions:
     # This permission allows the player to bypass the dimensional teleportation
     # Default: zhomes.bypass.dimensionalteleportation
     dimensional-teleportation: "zhomes.bypass.dimensionalteleportation" # Only OP by default
+    # This permission allows the player to bypass the teleportation warmup
+    # Default: zhomes.bypass.warmup
+    warmup: "zhomes.bypass.warmup" # Only OP by default
     # This permission allows the player to bypass the cost of the command
     # Default: %command_permission%.command-cost
     command-cost: "%command_permission%.bypass.command-cost" # Only OP by default

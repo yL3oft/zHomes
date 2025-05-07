@@ -5,6 +5,13 @@ hooks:
   vault:
     cant-afford-command: "%prefix%&cВам нужно &6$%cost% &cдля выполнения этой команды."
 
+# Сообщения, связанные с ожиданием перед телепортацией
+teleport-warmup:
+  warmup: "%prefix%&aТелепортация через %time% секунд... Не двигайтесь!"
+  warmup-actionbar: "&aТелепортация через %time% секунд..."
+  cancelled: "%prefix%&cВы двинулись! Телепортация отменена."
+  cancelled-actionbar: "&cВы двинулись! Телепортация отменена."
+
 # Сообщения, связанные с командами
 commands:
   # Вверху находятся сообщения, используемые в нескольких командах
@@ -61,7 +68,7 @@ commands:
     output: "%prefix%&cДом &e%home% &aудалён."
   home:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aТелепортация к &e%home%&a..."
+    output: "%prefix%&aТелепортирован к &e%home%&a..."
     cant-dimensional-teleport: "&cТелепортация отменена! Телепортация между измерениями отключена."
   homes:
     output: "%prefix%&7Ваши дома: &f%homes%"

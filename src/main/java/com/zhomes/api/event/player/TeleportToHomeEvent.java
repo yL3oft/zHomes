@@ -30,7 +30,7 @@ public class TeleportToHomeEvent extends PlayerEvent implements Cancellable {
         this.from = from;
         this.to = to;
         this.isDimensionalTeleport = isDimensionalTeleport;
-        this.owner = (OfflinePlayer)who;
+        this.owner = who;
     }
 
     public TeleportToHomeEvent(Player who, String home, Location from, Location to, boolean isDimensionalTeleport, boolean playerOwnHome, OfflinePlayer owner) {

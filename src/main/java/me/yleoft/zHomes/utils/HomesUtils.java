@@ -2,21 +2,27 @@ package me.yleoft.zHomes.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.TeleportToHomeEvent;
 import me.yleoft.zHomes.storage.DatabaseEditor;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import static me.yleoft.zAPI.utils.LocationUtils.findNearestSafeLocation;
 
 public class HomesUtils extends DatabaseEditor {
 
     Main main = Main.getInstance();
+
+    public static HashMap<UUID, BukkitRunnable> warmups = new HashMap<>();
 
     public boolean hasHome(OfflinePlayer p, String home) {
         return isInTable(p, home);
@@ -55,47 +61,15 @@ public class HomesUtils extends DatabaseEditor {
         return canDimensionalTeleport();
     }
 
-    public void teleportPlayer(Player p, String home) {
-        Location loc = getHomeLoc(p, home);
-        boolean isDimensionalTeleport = inSameWorld(getHomeWorld(p, home), p);
-        TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled())
-            return;
-        if (isDimensionalTeleport && !canDimensionalTeleport(p)) {
-            LanguageUtils.Home lang = new LanguageUtils.Home();
-            lang.sendMsg(p, lang.getCantDimensionalTeleport());
-            return;
-        }
-        Location tpLoc = findNearestSafeLocation(loc, 4, 50);
-        if(tpLoc == null) {
-            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
-            return;
-        }
-        if(Main.getInstance().getServer().getName().contains("Folia")) {
-            try {
-                Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
-                teleportAsyncMethod.invoke(p, loc);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException("Unable to teleport player to home", e);
-            }
-            return;
-        }
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-            p.teleport(tpLoc);
-        }, 1L);
-    }
-
     public void teleportPlayer(Player p, OfflinePlayer t, String home) {
         Location loc = getHomeLoc(t, home);
         boolean isDimensionalTeleport = inSameWorld(getHomeWorld(t, home), p);
-        TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport, false, t);
+        TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport, p.getUniqueId()==t.getUniqueId(), t);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
+        LanguageUtils.Home lang = new LanguageUtils.Home();
         if (isDimensionalTeleport && !canDimensionalTeleport(p)) {
-            LanguageUtils.Home lang = new LanguageUtils.Home();
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }
@@ -105,18 +79,73 @@ public class HomesUtils extends DatabaseEditor {
             cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
             return;
         }
-        if(Main.getInstance().getServer().getName().contains("Folia")) {
-            try {
-                Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
-                teleportAsyncMethod.invoke(p, tpLoc);
-            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                throw new RuntimeException("Unable to teleport player to home", e);
+        String homeString = p.getUniqueId() == t.getUniqueId() ? home : t.getName() + ":" + home;
+        Runnable task = () -> {
+            Sound sound = Sound.ENTITY_ENDERMAN_TELEPORT;
+            if (Main.getInstance().getServer().getName().contains("Folia")) {
+                try {
+                    Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
+                    teleportAsyncMethod.invoke(p, tpLoc);
+                    lang.sendMsg(p, lang.getOutput(homeString));
+                    if (playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException("Unable to teleport player to home", e);
+                }
+                return;
             }
+            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                p.teleport(tpLoc);
+                lang.sendMsg(p, lang.getOutput(homeString));
+                if (playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+            }, 1L);
+        };
+        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
+            LanguageUtils.TeleportWarmupMSG langWarmup = new LanguageUtils.TeleportWarmupMSG();
+            lang.sendMsg(p, langWarmup.getWarmup(warmupTime()));
+            startWarmup(p, langWarmup, lang, homeString, task);
             return;
         }
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-            p.teleport(tpLoc);
-        }, 1L);
+        task.run();
+    }
+    public void teleportPlayer(Player p, String home) {
+        teleportPlayer(p, p, home);
+    }
+
+    public void startWarmup(Player p, LanguageUtils.TeleportWarmupMSG lang, LanguageUtils.Home lang2, String home, Runnable task) {
+        UUID uuid = p.getUniqueId();
+        if (warmups.containsKey(uuid)) {
+            warmups.get(uuid).cancel();
+        }
+
+        BukkitRunnable runnable = new BukkitRunnable() {
+            int counter = warmupTime();
+
+            @Override
+            public void run() {
+                if (!p.isOnline()) {
+                    cancel();
+                    warmups.remove(uuid);
+                    return;
+                }
+
+                if (counter >= 1) {
+                    if(warmupShowOnActionbar()) {
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(LanguageUtils.Helper.getText(p, lang.getWarmupActionbar(counter))));
+                    }
+                    counter--;
+                } else {
+                    if(warmupShowOnActionbar()) {
+                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(LanguageUtils.Helper.getText(p, lang2.getOutput(home))));
+                    }
+                    task.run();
+                    warmups.remove(uuid);
+                    cancel();
+                }
+            }
+        };
+
+        warmups.put(uuid, runnable);
+        runnable.runTaskTimer(Main.getInstance(), 0L, 20L);
     }
 
     public String homes(OfflinePlayer p) {

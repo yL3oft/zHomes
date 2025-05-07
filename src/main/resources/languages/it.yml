@@ -5,6 +5,13 @@ hooks:
   vault:
     cant-afford-command: "%prefix%&cHai bisogno di &6$%cost% &cper eseguire questo comando."
 
+# Messaggi relativi al tempo di preparazione del teletrasporto
+teleport-warmup:
+  warmup: "%prefix%&aTeletrasporto tra %time% secondi... Non muoverti!"
+  warmup-actionbar: "&aTeletrasporto tra %time% secondi..."
+  cancelled: "%prefix%&cTi sei mosso! Teletrasporto annullato."
+  cancelled-actionbar: "&cTi sei mosso! Teletrasporto annullato."
+
 # Messaggi relativi ai comandi
 commands:
   # In alto trovi i messaggi utilizzati da più comandi
@@ -61,7 +68,7 @@ commands:
     output: "%prefix%&cHome &e%home% &acancellata."
   home:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aTeletrasporto a &e%home%&a..."
+    output: "%prefix%&aTeletrasportato a &e%home%&a..."
     cant-dimensional-teleport: "&cTeletrasporto annullato! Il teletrasporto dimensionale è disabilitato."
   homes:
     output: "%prefix%&7Le tue home: &f%homes%"
