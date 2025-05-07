@@ -1,6 +1,7 @@
 package me.yleoft.zHomes.listeners;
 
 import me.yleoft.zHomes.Main;
+import me.yleoft.zHomes.utils.ActionbarUtils;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import net.md_5.bungee.api.ChatMessageType;
@@ -52,7 +53,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
                 if (runnable != null) {
                     runnable.cancel();
                     lang.sendMsg(p, lang.getCancelled());
-                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(LanguageUtils.Helper.getText(p, lang.getCancelledActionbar())));
+                    ActionbarUtils.send(p, LanguageUtils.Helper.getText(p, lang.getCancelledActionbar()));
                 }
             }
         }

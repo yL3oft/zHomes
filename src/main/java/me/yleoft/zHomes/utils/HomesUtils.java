@@ -81,7 +81,7 @@ public class HomesUtils extends DatabaseEditor {
         }
         String homeString = p.getUniqueId() == t.getUniqueId() ? home : t.getName() + ":" + home;
         Runnable task = () -> {
-            Sound sound = Sound.ENTITY_ENDERMAN_TELEPORT;
+            Sound sound = getTeleportSound();
             if (Main.getInstance().getServer().getName().contains("Folia")) {
                 try {
                     Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
@@ -130,12 +130,12 @@ public class HomesUtils extends DatabaseEditor {
 
                 if (counter >= 1) {
                     if(warmupShowOnActionbar()) {
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(LanguageUtils.Helper.getText(p, lang.getWarmupActionbar(counter))));
+                        ActionbarUtils.send(p, LanguageUtils.Helper.getText(p, lang.getWarmupActionbar(counter)));
                     }
                     counter--;
                 } else {
                     if(warmupShowOnActionbar()) {
-                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(LanguageUtils.Helper.getText(p, lang2.getOutput(home))));
+                        ActionbarUtils.send(p, LanguageUtils.Helper.getText(p, lang2.getOutput(home)));
                     }
                     task.run();
                     warmups.remove(uuid);
@@ -146,6 +146,14 @@ public class HomesUtils extends DatabaseEditor {
 
         warmups.put(uuid, runnable);
         runnable.runTaskTimer(Main.getInstance(), 0L, 20L);
+    }
+
+    public static Sound getTeleportSound() {
+        try {
+            return Sound.valueOf("ENTITY_ENDERMAN_TELEPORT");
+        } catch (IllegalArgumentException e) {
+            return Sound.valueOf("ENDERMAN_TELEPORT");
+        }
     }
 
     public String homes(OfflinePlayer p) {
