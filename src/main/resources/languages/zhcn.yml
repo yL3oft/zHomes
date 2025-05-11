@@ -5,6 +5,13 @@ hooks:
   vault:
     cant-afford-command: "%prefix%&c你至少需要 &6$%cost% &c才可执行该命令."
 
+# 传送预热相关消息提示
+teleport-warmup:
+  warmup: "%prefix%&a将在 %time% 秒内传送... 请勿移动!"
+  warmup-actionbar: "&a将在 %time% 秒内传送..."
+  cancelled: "%prefix%&c你移动了! 传送已取消."
+  cancelled-actionbar: "&c你移动了! 传送已取消."
+
 # 命令相关消息提示
 commands:
   # 多个命令中使用的消息文本
