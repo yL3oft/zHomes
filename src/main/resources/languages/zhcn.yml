@@ -1,0 +1,88 @@
+# 在此可修改对接消息
+hooks:
+  worldguard:
+    cant-use-homes: "%prefix%&c你不能在这里设置家."
+  vault:
+    cant-afford-command: "%prefix%&c你至少需要 &6$%cost% &c才可执行该命令."
+
+# 传送预热相关消息提示
+teleport-warmup:
+  warmup: "%prefix%&a将在 %time% 秒内传送... 请勿移动!"
+  warmup-actionbar: "&a将在 %time% 秒内传送..."
+  cancelled: "%prefix%&c你移动了! 传送已取消."
+  cancelled-actionbar: "&c你移动了! 传送已取消."
+
+# 命令相关消息提示
+commands:
+  # 多个命令中使用的消息文本
+  no-permission: "%prefix%&c你没有权限执行此命令."
+  in-cooldown: "%prefix%&c你必须等待 %timeleft% 秒才可再次使用该命令."
+  home-already-exist: "%prefix%&c你已经设置了同名的家."
+  home-doesnt-exist: "%prefix%&c你没有设置过该名称的家."
+  home-doesnt-exist-others: "%prefix%&e%player% &c没有设置过该名称的家."
+  cant-use-2dot: "%prefix%&c你不能在命令中使用英文冒号 &e':'&c."
+  cant-find-player: "%prefix%&c玩家不存在."
+  unable-to-find-safe-location: "%prefix%&c无法寻找安全传送点."
+
+  # 部分命令使用的特殊消息文本
+  main:
+    help:
+      help-perm: |-
+        %prefix%&b命令 &e/%command%&b 的用法:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &aconverter (转化类型) &7迁移数据
+      help-noperm: |-
+        %prefix%&b命令 &e/%command%&b 用法:
+        &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &a(version|ver)
+    version:
+      output: "%prefix%&b当前版本: &a%version%"
+    reload:
+      usage: |-
+        %prefix%&b命令 &e/%command% &a(reload|rl)&b 用法:
+        &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
+      output: "%prefix%&a重载完毕, 耗时 &b%time%ms&a."
+      commands:
+        output: "%prefix%&a重载插件所有命令完毕, 耗时 &b%time%ms&a."
+      config:
+        output: "%prefix%&a重载插件所有配置完毕, 耗时 &b%time%ms&a."
+      languages:
+        output: |-
+          %prefix%&a重载插件所有语言配置完毕, 耗时 &b%time%ms&a.
+          &7注意: 这不会更新 config.yml 中的语言文本, 若要如此, 请输入命令 '/%command% reload config'.
+    converter:
+      usage: |-
+        %prefix%&b命令 &e/%command% &aconverter&b 用法:
+        &c-> &e/%command% &aconverter sqlitetoh2
+        &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
+        &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
+        &c-> &e/%command% &aconverter essentials
+        &c-> &e/%command% &aconverter sethome
+        &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
+      output: "%prefix%&a所有数据转化完毕!"
+      error: "%prefix%&c转化数据时遇到问题, 请检查控制台获知详情."
+  sethome:
+    usage: "&c-> &e/%command% &a(家名称)"
+    output: "%prefix%&a已将家 &e%home% &a设置在当前位置."
+    limit-reached: "&c你不能再设置更多家 &e(%limit% 个) 了&c!"
+  delhome:
+    usage: "&c-> &e/%command% &a(家名称)"
+    output: "%prefix%&c已删除家 &e%home% &c."
+  home:
+    usage: "&c-> &e/%command% &a(家名称)"
+    output: "%prefix%&a正在传送至 &e%home%&a..."
+    cant-dimensional-teleport: "&c传送已取消! 无法跨维度移动."
+  homes:
+    output: "%prefix%&7你设置的家: &f%homes%"
+    others:
+      output: "%prefix%&e%player% &7设置的家: &f%homes%"
