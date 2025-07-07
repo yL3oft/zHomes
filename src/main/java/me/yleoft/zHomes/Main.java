@@ -149,6 +149,7 @@ public final class Main extends JavaPlugin {
         fus.add(FileManager.createFile("languages/pl.yml"));
         fus.add(FileManager.createFile("languages/pt-br.yml"));
         fus.add(FileManager.createFile("languages/ru.yml"));
+        fus.add(FileManager.createFile("languages/zhcn.yml"));
         for(FileUtils fu : fus) {
             fu.saveDefaultConfig();
             fu.reloadConfig();
