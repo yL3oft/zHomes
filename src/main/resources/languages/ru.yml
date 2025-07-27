@@ -56,7 +56,20 @@ commands:
       usage: |-
         %prefix%&bИспользование &e/%command% &aconverter&b:
         &c-> &e/%command% &aconverter sqlitetoh2
-        ...
+        &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
+        &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
+        &c-> &e/%command% &aconverter essentials
+        &c-> &e/%command% &aconverter sethome
+        &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
+        &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aВсе данные были успешно конвертированы!"
       error: "%prefix%&cПроизошла ошибка при конвертации данных. Проверьте консоль сервера."
   sethome:
@@ -72,5 +85,6 @@ commands:
     cant-dimensional-teleport: "&cТелепортация отменена! Телепортация между измерениями отключена."
   homes:
     output: "%prefix%&7Ваши дома: &f%homes%"
+    invalid-page: "%prefix%&cНеверный номер страницы! Пожалуйста, используйте число больше 0."
     others:
       output: "%prefix%&7Дома игрока &e%player%: &f%homes%"

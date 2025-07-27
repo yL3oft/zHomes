@@ -56,7 +56,20 @@ commands:
       usage: |-
         %prefix%&bUtilizzo di &e/%command% &aconverter&b:
         &c-> &e/%command% &aconverter sqlitetoh2
-        ...
+        &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
+        &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
+        &c-> &e/%command% &aconverter essentials
+        &c-> &e/%command% &aconverter sethome
+        &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
+        &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aTutti i dati sono stati convertiti!"
       error: "%prefix%&cSi è verificato un errore durante la conversione. Controlla la console del server."
   sethome:
@@ -72,5 +85,6 @@ commands:
     cant-dimensional-teleport: "&cTeletrasporto annullato! Il teletrasporto dimensionale è disabilitato."
   homes:
     output: "%prefix%&7Le tue home: &f%homes%"
+    invalid-page: "%prefix%&cNumero di pagina non valido! Utilizzare un numero maggiore di 0."
     others:
       output: "%prefix%&7Home di &e%player%: &f%homes%"

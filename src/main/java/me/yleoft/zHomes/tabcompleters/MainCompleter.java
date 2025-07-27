@@ -56,6 +56,7 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                         commands.add("sethome");
                         commands.add("ultimatehomes");
                         commands.add("xhomes");
+                        commands.add("zhome");
                     }
                     break;
                 }

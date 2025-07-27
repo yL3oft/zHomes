@@ -54,7 +54,7 @@ commands:
           &7Remarque : Cela ne mettra pas à jour la langue dans config.yml, utilisez '/%command% reload config' pour cela.
     converter:
       usage: |-
-        %prefix%&bUtilisations de &e/%command% &aconverter&b :
+        %prefix%&bUtilisations de &e/%command% &aconverter&b:
         &c-> &e/%command% &aconverter sqlitetoh2
         &c-> &e/%command% &aconverter sqlitetomysql
         &c-> &e/%command% &aconverter sqlitetomariadb
@@ -69,6 +69,7 @@ commands:
         &c-> &e/%command% &aconverter sethome
         &c-> &e/%command% &aconverter ultimatehomes
         &c-> &e/%command% &aconverter xhomes
+        &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aToutes les données ont été converties !"
       error: "%prefix%&cUne erreur est survenue lors de la conversion des données. Veuillez vérifier la console du serveur."
   sethome:
@@ -84,5 +85,6 @@ commands:
     cant-dimensional-teleport: "&cTéléportation annulée ! La téléportation inter-dimensionnelle est désactivée."
   homes:
     output: "%prefix%&7Vos homes : &f%homes%"
+    invalid-page: "%prefix%&cNuméro de page invalide ! Veuillez utiliser un nombre supérieur à 0."
     others:
       output: "%prefix%&7Homes de &e%player% : &f%homes%"

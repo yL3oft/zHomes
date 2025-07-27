@@ -4,8 +4,8 @@
   <groupId>me.yleoft</groupId>
   <artifactId>zHomes</artifactId>
   <name>zHomes</name>
-  <version>2.0.4</version>
-  <description>A very complex homes plugins, including alot of features that convencional home plugins don't have</description>
+  <version>2.0.5-SNAPSHOT</version>
+  <description>Your new favorite homes plugin</description>
   <url>https://github.com/yL3oft/zHomes</url>
   <developers>
     <developer>
@@ -162,6 +162,12 @@
       <url>https://jitpack.io</url>
     </repository>
     <repository>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
       <id>sk89q-repo</id>
       <url>https://maven.enginehub.org/repo/</url>
     </repository>
@@ -170,7 +176,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.21.4-R0.1-SNAPSHOT</version>
+      <version>1.21.7-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>

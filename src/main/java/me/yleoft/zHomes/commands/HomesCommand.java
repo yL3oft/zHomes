@@ -4,6 +4,7 @@ import com.zhomes.api.event.player.ExecuteHomesCommandEvent;
 import me.yleoft.zAPI.inventory.CustomInventory;
 import me.yleoft.zAPI.managers.FileManager;
 import me.yleoft.zAPI.utils.HeadUtils;
+import me.yleoft.zAPI.utils.StringUtils;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
@@ -18,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -45,12 +47,32 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
         LanguageUtils.Homes lang = new LanguageUtils.Homes();
 
         if (args.length >= 1) {
+            if(StringUtils.isInteger(args[0])) {
+                int page = Integer.parseInt(args[0]);
+                if (page < 1) {
+                    lang.sendMsg(p, lang.getInvalidPage());
+                    return false;
+                }
+                code(p, p, page, lang, cmdm);
+                return true;
+            }
             String player = args[0];
             if (p.hasPermission(CmdHomesOthersPermission())) {
                 OfflinePlayer t = Bukkit.getOfflinePlayer(player);
                 if (t == null) {
                     lang.sendMsg(p, cmdm.getCantFindPlayer());
                     return false;
+                }
+                if(args.length >= 2) {
+                    if(StringUtils.isInteger(args[1])) {
+                        int page = Integer.parseInt(args[1]);
+                        if (page < 1) {
+                            lang.sendMsg(p, lang.getInvalidPage());
+                            return false;
+                        }
+                        code(p, t, page, lang, cmdm);
+                        return true;
+                    }
                 }
                 code(p, t, lang, cmdm);
                 return true;
@@ -60,14 +82,14 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
         return false;
     }
 
-    public void code(String type, Player p, OfflinePlayer t, LanguageUtils.Homes lang, LanguageUtils.CommandsMSG cmdm) {
+    public void code(String type, Player p, OfflinePlayer t, int page, LanguageUtils.Homes lang, LanguageUtils.CommandsMSG cmdm) {
         if (cfguExtras.canAfford(p, CmdHomesPermission(), CmdHomesCost())) {
             switch (type) {
                 case "menu":
                     try {
-                        p.openInventory(getInventory(p, t));
+                        p.openInventory(getInventory(p, t, page));
                     }catch (Exception e) {
-                        code("text", p, t, lang, cmdm);
+                        code("text", p, t, page, lang, cmdm);
                         return;
                     }
                     break;
@@ -84,13 +106,18 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
             }
         }
     }
+    public void code(Player p, OfflinePlayer t, int page, LanguageUtils.Homes lang, LanguageUtils.CommandsMSG cmdm) {
+        code(CmdHomesType(), p, t, page, lang, cmdm);
+    }
     public void code(Player p, OfflinePlayer t, LanguageUtils.Homes lang, LanguageUtils.CommandsMSG cmdm) {
-        code(CmdHomesType(), p, t, lang, cmdm);
+        code(CmdHomesType(), p, t, 1, lang, cmdm);
     }
 
-    public Inventory getInventory(Player p, OfflinePlayer t) {
+    public Inventory getInventory(Player p, OfflinePlayer t, int page) {
         YamlConfiguration config = FileManager.getFile(homesMenuPath);
         String path = formPath("Config", "homes-item");
+        String pathPP = formPath("Config", "previous-page-item");
+        String pathNP = formPath("Config", "next-page-item");
         CustomInventory inv = new CustomInventory(p, config);
         List<String> homes = Main.hu.homesW(t);
         List<String> finalHomes;
@@ -98,9 +125,21 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
             finalHomes = new ArrayList<>();
             inv.setInventoryName(t, requireNonNull(requireNonNull(config.getString(formPath(configPathInventory, "title-other")))
                     .replace("%player%", requireNonNull(t.getName()))));
-            Main.hu.homesW(t).forEach(home -> finalHomes.add(t.getName()+":"+home));
+            homes.forEach(home -> finalHomes.add(t.getName()+":"+home));
         }else finalHomes = homes;
-        inv.setItem(p, config, path, "%home%", finalHomes);
+        int slots = 45;
+        if (page > 1) {
+            int startIndex = 0;
+            int endIndex = Math.min(startIndex + (slots*(page-1)), finalHomes.size());
+            finalHomes.subList(startIndex, endIndex).clear();
+            inv.setItem(p, config, pathPP, "%previous-page%", Collections.singletonList(String.valueOf(page - 1)));
+        }
+        if(!finalHomes.isEmpty()) {
+            if (finalHomes.size() > 45) {
+                inv.setItem(p, config, pathNP, "%next-page%", Collections.singletonList(String.valueOf(page + 1)));
+            }
+            inv.setItem(p, config, path, "%home%", finalHomes);
+        }
         return inv.getInventory();
     }
 

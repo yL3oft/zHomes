@@ -23,20 +23,26 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
@@ -272,7 +278,7 @@ public final class Main extends JavaPlugin {
 
     public void updatePlugin() {
         LanguageUtils.Helper helper = new LanguageUtils.Helper() {};
-        UpdateChecker checker = new UpdateChecker();
+        UpdateManager checker = new UpdateManager(this, "https://api.github.com/repos/yL3oft/zHomes/tags", "zhomes");
         String version = checker.getVersion();
         String pf = "&8&l|> &r";
 
@@ -293,7 +299,7 @@ public final class Main extends JavaPlugin {
                         pf+"&fAttempting to auto-update it..."
                 ));
                 try {
-                    String path = checker.update(pluginName, version);
+                    String path = checker.update();
                     helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                             pf+"&aPlugin updated! &7Saved in: "+path
                     ));
@@ -399,35 +405,6 @@ public final class Main extends JavaPlugin {
         return true;
     }
 
-    //<editor-fold desc="Location Serialization">
-    public String serialize(Location loc) {
-        String w = requireNonNull(loc.getWorld()).getName();
-        double x = loc.getX();
-        double y = loc.getY();
-        double z = loc.getZ();
-        float yaw = loc.getYaw();
-        float pitch = loc.getPitch();
-
-        return w+";"+x+";"+y+";"+z+";"+yaw+";"+pitch+";";
-    }
-    public String serialize(String w, double x, double y, double z, float yaw, float pitch) {
-        return w+";"+x+";"+y+";"+z+";"+yaw+";"+pitch+";";
-    }
-
-    public Location deserialize(String serialized) {
-
-        String[] serializedSplit = serialized.split(";");
-
-        World w = Bukkit.getWorld(serializedSplit[0]);
-        double x = Double.parseDouble(serializedSplit[1]);
-        double y = Double.parseDouble(serializedSplit[2]);
-        double z = Double.parseDouble(serializedSplit[3]);
-        float yaw = Float.parseFloat(serializedSplit[4]);
-        float pitch = Float.parseFloat(serializedSplit[5]);
-
-        return new Location(w, x, y, z, yaw, pitch);
-    }
-    //</editor-fold>
     //<editor-fold desc="Java Overrides">
     @Override
     public @NotNull FileConfiguration getConfig() {

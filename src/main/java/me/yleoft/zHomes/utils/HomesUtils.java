@@ -4,11 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import me.yleoft.zAPI.utils.ActionbarUtils;
 import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.TeleportToHomeEvent;
 import me.yleoft.zHomes.storage.DatabaseEditor;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -16,7 +15,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import static me.yleoft.zAPI.utils.LocationUtils.findNearestSafeLocation;
+import static me.yleoft.zAPI.utils.LocationUtils.*;
 
 public class HomesUtils extends DatabaseEditor {
 
@@ -45,7 +44,7 @@ public class HomesUtils extends DatabaseEditor {
     }
 
     public void addHome(OfflinePlayer p, String home, Location loc) {
-        setHome(p, home, main.serialize(loc));
+        setHome(p, home, serialize(loc));
     }
 
     public void delHome(OfflinePlayer p, String home) {
@@ -87,7 +86,7 @@ public class HomesUtils extends DatabaseEditor {
                     Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
                     teleportAsyncMethod.invoke(p, tpLoc);
                     lang.sendMsg(p, lang.getOutput(homeString));
-                    if (playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                    if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException("Unable to teleport player to home", e);
                 }
@@ -96,7 +95,7 @@ public class HomesUtils extends DatabaseEditor {
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                 p.teleport(tpLoc);
                 lang.sendMsg(p, lang.getOutput(homeString));
-                if (playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
             }, 1L);
         };
         if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
@@ -151,8 +150,12 @@ public class HomesUtils extends DatabaseEditor {
     public static Sound getTeleportSound() {
         try {
             return Sound.valueOf("ENTITY_ENDERMAN_TELEPORT");
-        } catch (IllegalArgumentException e) {
-            return Sound.valueOf("ENDERMAN_TELEPORT");
+        } catch (Throwable ignored1) {
+            try {
+                return Sound.valueOf("ENDERMAN_TELEPORT");
+            } catch (Throwable ignored2) {
+                return null;
+            }
         }
     }
 
@@ -194,7 +197,7 @@ public class HomesUtils extends DatabaseEditor {
 
     public Location getHomeLoc(OfflinePlayer p, String home) {
         String locS = getHome(p, home);
-        return this.main.deserialize(locS);
+        return deserialize(locS);
     }
 
     public String getHomeWorld(OfflinePlayer p, String home) {

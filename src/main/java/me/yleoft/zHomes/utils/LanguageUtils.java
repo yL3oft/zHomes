@@ -195,6 +195,12 @@ public class LanguageUtils extends ConfigUtils {
                     .replace("%command%", Main.cfgu.CmdHomesCommand());
         }
 
+        public String getInvalidPage() {
+            String path = formPath(cmds, getCmd(), "invalid-page");
+            return this.cfg.getString(path)
+                    .replace("%command%", Main.cfgu.CmdHomesCommand());
+        }
+
         public String getOutput(OfflinePlayer p) {
             String path = formPath(cmds, getCmd(), "others.output");
             return this.cfg.getString(path)

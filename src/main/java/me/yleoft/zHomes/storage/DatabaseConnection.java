@@ -27,6 +27,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static me.yleoft.zAPI.utils.LocationUtils.serialize;
+
 public class DatabaseConnection extends ConfigUtils {
 
     boolean retry = false;
@@ -253,7 +255,7 @@ public class DatabaseConnection extends ConfigUtils {
                                     double z = home.getDouble("z");
                                     float yaw = (float) home.getDouble("yaw");
                                     float pitch = (float) home.getDouble("pitch");
-                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+                                    String location = serialize(worldName, x, y, z, yaw, pitch);
 
                                     pstmt.setString(1, uuid);
                                     pstmt.setString(2, homeName);
@@ -334,7 +336,7 @@ public class DatabaseConnection extends ConfigUtils {
                                     double z = home.getDouble("z");
                                     float yaw = (float) home.getDouble("yaw");
                                     float pitch = (float) home.getDouble("pitch");
-                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+                                    String location = serialize(worldName, x, y, z, yaw, pitch);
 
                                     pstmt.setString(1, uuid);
                                     pstmt.setString(2, homeName);
@@ -415,7 +417,7 @@ public class DatabaseConnection extends ConfigUtils {
                                     double z = home.getDouble("z");
                                     float yaw = (float) home.getDouble("yaw");
                                     float pitch = (float) home.getDouble("pitch");
-                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+                                    String location = serialize(worldName, x, y, z, yaw, pitch);
 
                                     pstmt.setString(1, uuid);
                                     pstmt.setString(2, homeName);
@@ -489,7 +491,7 @@ public class DatabaseConnection extends ConfigUtils {
                                     double z = Double.parseDouble(homeS[3]);
                                     float yaw = Float.parseFloat(homeS[4]);
                                     float pitch = Float.parseFloat(homeS[5]);
-                                    String location = Main.getInstance().serialize(worldName, x, y, z, yaw, pitch);
+                                    String location = serialize(worldName, x, y, z, yaw, pitch);
 
                                     pstmt.setString(1, uuid);
                                     pstmt.setString(2, homeName);
@@ -512,6 +514,85 @@ public class DatabaseConnection extends ConfigUtils {
                         }
                     } catch (SQLException e) {
                         Main.getInstance().getLogger().log(Level.SEVERE, "Unable to migrate data from XHomes", e);
+                    }
+                    break;
+                }
+                case "zhome": {
+                    File directory = new File(Main.getInstance().getDataFolder()+"/../zHome/homes");
+                    if (!directory.exists() || !directory.isDirectory()) {
+                        System.out.println("Invalid directory: " + directory.getPath());
+                        return;
+                    }
+
+                    try (Connection conn = getConnection()) {
+                        String insertQuery;
+                        if (dbType.equals(database_type.H2)) {
+                            insertQuery = "MERGE INTO " + databaseTable() + " (UUID, HOME, LOCATION) " +
+                                    "KEY(UUID, HOME) VALUES (?, LEFT(?, 100), ?)";
+                        } else if (dbType.equals(database_type.SQLITE)) {
+                            insertQuery = "INSERT OR REPLACE INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, SUBSTR(?, 1, 100), ?)";
+                        } else {
+                            insertQuery = "INSERT INTO "+databaseTable()+" (UUID, HOME, LOCATION) VALUES (?, LEFT(?, 100), ?) "
+                                    + "ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
+                        }
+                        try (PreparedStatement pstmt = conn.prepareStatement(insertQuery)) {
+                            File[] files = directory.listFiles((dir, name) -> name.endsWith(".yml"));
+                            if (files == null)
+                                lang.sendMsg(Main.getInstance().getServer().getConsoleSender(), lang.getError());
+
+                            assert files != null;
+                            int totalUsers = files.length;
+                            System.out.println("Starting migration for " + totalUsers + " users...");
+
+                            int count = 0;
+                            int countH = 0;
+                            for (File file : files) {
+                                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+                                String uuid = file.getName().replace(".yml", "");
+
+                                if (yaml.getKeys(false).isEmpty()) {
+                                    count++;
+                                    if (p != null) {
+                                        String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                    }
+                                    continue;
+                                }
+
+                                for (String homeName : yaml.getKeys(false)) {
+                                    ConfigurationSection home = yaml.getConfigurationSection(homeName);
+
+                                    if (home == null) continue;
+
+                                    String worldName = home.getString("world", "");
+                                    double x = home.getDouble("x");
+                                    double y = home.getDouble("y");
+                                    double z = home.getDouble("z");
+                                    float yaw = (float) home.getDouble("yaw");
+                                    float pitch = (float) home.getDouble("pitch");
+                                    String location = serialize(worldName, x, y, z, yaw, pitch);
+
+                                    pstmt.setString(1, uuid);
+                                    pstmt.setString(2, homeName);
+                                    pstmt.setString(3, location);
+                                    pstmt.executeUpdate();
+                                    countH++;
+                                }
+                                count++;
+                                if (p != null) {
+                                    String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                    p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                }
+                            }
+                            if (p != null) {
+                                String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
+                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                            }
+                            System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from Essentials.");
+                        }
+                    } catch (SQLException e) {
+                        Main.getInstance().getLogger().log(Level.SEVERE, "Unable to migrate data from Essentials", e);
                     }
                     break;
                 }

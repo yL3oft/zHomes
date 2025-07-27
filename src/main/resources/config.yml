@@ -93,7 +93,7 @@ commands:
     # Sub command - Reload
     reload:
       permission: "zhomes.command.main.reload" # Only OP by default
-    # Sub command - Reload
+    # Sub command - Converter
     converter:
       permission: "zhomes.command.main.converter" # Only OP by default
   sethome:

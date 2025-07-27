@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import static me.yleoft.zHomes.Main.needsUpdate;
 import static me.yleoft.zHomes.utils.LanguageUtils.loadzAPIMessages;
 
 public class MainCommand extends ConfigUtils implements CommandExecutor {
@@ -101,6 +102,12 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                     return false;
                 }
                 lang.sendMsg(s, lang3.getOutput());
+                if(needsUpdate) {
+                    cmdm.sendMsg(p, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
+                    cmdm.sendMsg(p, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);
+                    cmdm.sendMsg(p, "%prefix%&6Your version: &c" + Main.getInstance().getDescription().getVersion());
+                    cmdm.sendMsg(p, "%prefix%&6You can update your plugin here: &e" + Main.getInstance().site);
+                }
                 return false;
         }
         lang.sendMsg(s, getUsage(s, lang4));

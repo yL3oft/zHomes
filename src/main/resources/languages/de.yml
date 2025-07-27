@@ -69,6 +69,7 @@ commands:
         &c-> &e/%command% &aconverter sethome
         &c-> &e/%command% &aconverter ultimatehomes
         &c-> &e/%command% &aconverter xhomes
+        &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aAlle Daten wurden erfolgreich konvertiert!"
       error: "%prefix%&cBeim Konvertieren der Daten ist ein Fehler aufgetreten. Bitte prüfe die Server-Konsole."
   sethome:
@@ -84,5 +85,6 @@ commands:
     cant-dimensional-teleport: "&cDeine Teleportation wurde abgebrochen! Dimensionale Teleportation ist deaktiviert."
   homes:
     output: "%prefix%&7Deine Homes: &f%homes%"
+    invalid-page: "%prefix%&cUngültige Seitennummer! Bitte verwenden Sie eine Zahl größer als 0."
     others:
       output: "%prefix%&7Homes von &e%player%: &f%homes%"

@@ -30,6 +30,19 @@ Config:
       - "&bClick to teleport!"
     commands:
       - "home %home%"
+      - "[INV]close"
+  previous-page-item:
+    material: ARROW
+    slot: 47
+    name: "&cPrevious page"
+    commands:
+      - "homes %previous-page%"
+  next-page-item:
+    material: ARROW
+    slot: 51
+    name: "&aNext page"
+    commands:
+      - "homes %next-page%"
 
 Items:
   'filler':

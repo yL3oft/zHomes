@@ -56,7 +56,20 @@ commands:
       usage: |-
         %prefix%&bGebruik van &e/%command% &aconverter&b:
         &c-> &e/%command% &aconverter sqlitetoh2
-        ...
+        &c-> &e/%command% &aconverter sqlitetomysql
+        &c-> &e/%command% &aconverter sqlitetomariadb
+        &c-> &e/%command% &aconverter mysqltosqlite
+        &c-> &e/%command% &aconverter mysqltoh2
+        &c-> &e/%command% &aconverter mariadbtosqlite
+        &c-> &e/%command% &aconverter mariadbtoh2
+        &c-> &e/%command% &aconverter h2tosqlite
+        &c-> &e/%command% &aconverter h2tomysql
+        &c-> &e/%command% &aconverter h2tomariadb
+        &c-> &e/%command% &aconverter essentials
+        &c-> &e/%command% &aconverter sethome
+        &c-> &e/%command% &aconverter ultimatehomes
+        &c-> &e/%command% &aconverter xhomes
+        &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aAlle gegevens zijn geconverteerd!"
       error: "%prefix%&cEr is een fout opgetreden tijdens het converteren van gegevens. Controleer de serverconsole."
   sethome:
@@ -72,5 +85,6 @@ commands:
     cant-dimensional-teleport: "&cTeleportatie geannuleerd! Dimensionale teleportatie is uitgeschakeld."
   homes:
     output: "%prefix%&7Jouw homes: &f%homes%"
+    invalid-page: "%prefix%&cOngeldig paginanummer! Gebruik een getal hoger dan 0."
     others:
       output: "%prefix%&7Homes van &e%player%: &f%homes%"
