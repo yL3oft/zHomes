@@ -80,7 +80,7 @@ commands:
   main:
     command: zhomes
     description: "The main command for the plugin"
-    permission: zhomes.command.main
+    permission: zhomes.command.main # True by default
     cooldown: 0.0
     aliases:
       - zh
@@ -137,6 +137,10 @@ commands:
     command-cost: 0  # Requires Vault to work
     others:
       permission: "zhomes.command.home.others" # Only OP by default
+    # Sub command - Rename
+    rename:
+      permission: "zhomes.command.home.rename" # True by default
+      command-cost: 0 # Requires Vault to work
 
 # In this section you can define the permissions for the plugin
 # Permissions for commands can be found on the commands section

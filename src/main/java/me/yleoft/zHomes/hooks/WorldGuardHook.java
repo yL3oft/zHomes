@@ -9,17 +9,42 @@ import me.yleoft.zHomes.Main;
 
 public class WorldGuardHook {
 
-    public static void setupFlag() throws Exception {
+    public static void setupFlags() throws Exception {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
-            StateFlag flag = new StateFlag("use-homes", true);
-            registry.register(flag);
-            Main.useHomesFlag = flag;
+            // use-homes flag
+            StateFlag useHomesFlag = new StateFlag("use-homes", true);
+            registry.register(useHomesFlag);
+            Main.useHomesFlag = useHomesFlag;
+            // set-homes flag
+            StateFlag setHomesFlag = new StateFlag("set-homes", true);
+            registry.register(setHomesFlag);
+            Main.setHomesFlag = setHomesFlag;
+            // bypass-home-warmup flag
+            StateFlag bypassHomeWarmupFlag = new StateFlag("bypass-home-warmup", false);
+            registry.register(bypassHomeWarmupFlag);
+            Main.bypassHomeWarmupFlag = bypassHomeWarmupFlag;
+            // bypass-home-cost flag
+            StateFlag bypassHomeCostFlag = new StateFlag("bypass-home-cost", false);
+            registry.register(bypassHomeCostFlag);
+            Main.bypassHomeCostFlag = bypassHomeCostFlag;
         } catch (FlagConflictException | IllegalStateException e) {
-            Flag<?> existing = registry.get("use-homes");
-            if (existing instanceof StateFlag) {
-                Main.useHomesFlag = (StateFlag) existing;
+            Flag<?> existinguseHomesFlag = registry.get("use-homes");
+            if (existinguseHomesFlag instanceof StateFlag) {
+                Main.useHomesFlag = (StateFlag) existinguseHomesFlag;
             }
+            Flag<?> existingsetHomesFlag = registry.get("set-homes");
+            if (existingsetHomesFlag instanceof StateFlag) {
+                Main.setHomesFlag = (StateFlag) existingsetHomesFlag;
+            }Flag<?> existingbypassHomeWarmupFlag = registry.get("bypass-home-warmup");
+            if (existingbypassHomeWarmupFlag instanceof StateFlag) {
+                Main.bypassHomeWarmupFlag = (StateFlag) existingbypassHomeWarmupFlag;
+            }
+            Flag<?> existingbypassHomeCostFlag = registry.get("bypass-home-cost");
+            if (existingbypassHomeCostFlag instanceof StateFlag) {
+                Main.bypassHomeCostFlag = (StateFlag) existingbypassHomeCostFlag;
+            }
+
         }
     }
 

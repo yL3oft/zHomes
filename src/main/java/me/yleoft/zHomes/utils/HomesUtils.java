@@ -51,6 +51,16 @@ public class HomesUtils extends DatabaseEditor {
         deleteHome(p, home);
     }
 
+    public void renameHome(OfflinePlayer p, String home, String newName) {
+        if (hasHome(p, home)) {
+            if (!hasHome(p, newName)) {
+                String locS = getHome(p, home);
+                deleteHome(p, home);
+                setHome(p, newName, locS);
+            }
+        }
+    }
+
     public boolean canDimensionalTeleport(OfflinePlayer p) {
         if (p.isOnline()) {
             Player pl = (Player)p;
@@ -98,7 +108,7 @@ public class HomesUtils extends DatabaseEditor {
                 if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
             }, 1L);
         };
-        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
+        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && !WorldGuardUtils.getFlagStateAtPlayer(p, Main.bypassHomeWarmupFlag) && warmupTime() > 0) {
             LanguageUtils.TeleportWarmupMSG langWarmup = new LanguageUtils.TeleportWarmupMSG();
             lang.sendMsg(p, langWarmup.getWarmup(warmupTime()));
             startWarmup(p, langWarmup, lang, homeString, task);

@@ -34,9 +34,17 @@ public class HomeCompleter extends HomesUtils implements TabCompleter {
                 if (p.hasPermission(CmdHomeOthersPermission()))
                     Bukkit.getOnlinePlayers().forEach((on -> commands.add(on.getName() + ":")));
             }
-        }
 
-        StringUtil.copyPartialMatches(args[0], commands, completions);
+            StringUtil.copyPartialMatches(args[0], commands, completions);
+        }else if (args.length == 2) {
+            if (args[0].equalsIgnoreCase("rename")) {
+                if (p.hasPermission(CmdHomeRenamePermission())) {
+                    commands.addAll(homesW(p));
+                }
+            }
+
+            StringUtil.copyPartialMatches(args[1], commands, completions);
+        }
         Collections.sort(commands);
         return completions;
     }

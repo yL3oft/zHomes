@@ -1,5 +1,6 @@
 package me.yleoft.zHomes.commands;
 
+import com.zhomes.api.event.player.RenameHomeEvent;
 import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.ExecuteHomeCommandEvent;
 import com.zhomes.api.event.player.PreExecuteHomeCommandEvent;
@@ -32,19 +33,57 @@ public class HomeCommand extends HomesUtils implements CommandExecutor {
         if (preevent.isCancelled()) return false;
 
         LanguageUtils.Home lang = new LanguageUtils.Home();
+        LanguageUtils.Home.HomeRename lang2 = new LanguageUtils.Home.HomeRename();
 
         if (args.length >= 1) {
             String home = args[0];
+            if(home.equalsIgnoreCase("rename")) {
+                if (!p.hasPermission(CmdHomeRenamePermission())) {
+                    cmdm.sendMsg(p, cmdm.getNoPermission());
+                    return false;
+                }
+
+                if (args.length >= 3) {
+                    home = args[1];
+                    String newName = args[2];
+                    if(home.equals(newName)) {
+                        lang.sendMsg(p, lang2.getSameName());
+                        return false;
+                    }
+                    if (!hasHome(p, home)) {
+                        lang.sendMsg(p, cmdm.getHomeDoesntExist());
+                        return false;
+                    }
+                    if(hasHome(p, newName)) {
+                        lang.sendMsg(p, cmdm.getHomeAlreadyExist());
+                        return false;
+                    }
+
+                    RenameHomeEvent event = new RenameHomeEvent(p, home, newName);
+                    Bukkit.getPluginManager().callEvent(event);
+                    if (event.isCancelled()) return false;
+                    home = event.getHome();
+                    newName = event.getNewName();
+
+                    if (cfguExtras.canAfford(p, CmdHomeRenamePermission(), CmdHomeRenameCost())) {
+                        renameHome(p, home, newName);
+                        lang.sendMsg(p, lang2.getOutput(home, newName));
+                    }
+                }else {
+                    lang.sendMsg(p, lang2.getUsage());
+                }
+                return false;
+            }
             if (home.contains(":")) {
                 if (p.hasPermission(CmdHomeOthersPermission())) {
                     code2(p, home, lang, cmdm);
                 } else {
                     lang.sendMsg(p, cmdm.getCantUse2Dot());
                 }
-            } else {
+            }else {
                 code1(p, home, lang, cmdm);
             }
-        } else {
+        }else {
             lang.sendMsg(p, lang.getUsage());
         }
         return false;

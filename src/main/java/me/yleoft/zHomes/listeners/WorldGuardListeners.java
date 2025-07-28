@@ -10,27 +10,29 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import static me.yleoft.zHomes.utils.WorldGuardUtils.doUseHomes;
+import static me.yleoft.zHomes.Main.setHomesFlag;
+import static me.yleoft.zHomes.Main.useHomesFlag;
+import static me.yleoft.zHomes.utils.WorldGuardUtils.getFlagStateAtPlayer;
 
 public class WorldGuardListeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerExecuteHomeCommand(PreExecuteSethomeCommandEvent e) {
+    public void onPlayerExecuteSethomeCommand(PreExecuteSethomeCommandEvent e) {
         Player p = e.getPlayer();
         LanguageUtils.HooksMSG hooks = new LanguageUtils.HooksMSG();
 
-        if (!doUseHomes(p)) {
+        if (!getFlagStateAtPlayer(p, useHomesFlag) || !getFlagStateAtPlayer(p, setHomesFlag)) {
             e.setCancelled(true);
             hooks.sendMsg(p, hooks.getWorldGuardCantUseHomes());
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerExecuteHomeCommand(PreExecuteDelhomeCommandEvent e) {
+    public void onPlayerExecuteDelhomeCommand(PreExecuteDelhomeCommandEvent e) {
         Player p = e.getPlayer();
         LanguageUtils.HooksMSG hooks = new LanguageUtils.HooksMSG();
 
-        if (!doUseHomes(p)) {
+        if (!getFlagStateAtPlayer(p, useHomesFlag)) {
             e.setCancelled(true);
             hooks.sendMsg(p, hooks.getWorldGuardCantUseHomes());
         }
@@ -41,18 +43,18 @@ public class WorldGuardListeners implements Listener {
         Player p = e.getPlayer();
         LanguageUtils.HooksMSG hooks = new LanguageUtils.HooksMSG();
 
-        if (!doUseHomes(p)) {
+        if (!getFlagStateAtPlayer(p, useHomesFlag)) {
             e.setCancelled(true);
             hooks.sendMsg(p, hooks.getWorldGuardCantUseHomes());
         }
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerExecuteHomeCommand(ExecuteHomesCommandEvent e) {
+    public void onPlayerExecuteHomesCommand(ExecuteHomesCommandEvent e) {
         Player p = e.getPlayer();
         LanguageUtils.HooksMSG hooks = new LanguageUtils.HooksMSG();
 
-        if (!doUseHomes(p)) {
+        if (!getFlagStateAtPlayer(p, useHomesFlag)) {
             e.setCancelled(true);
             hooks.sendMsg(p, hooks.getWorldGuardCantUseHomes());
         }

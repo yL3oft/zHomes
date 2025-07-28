@@ -41,8 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
@@ -55,6 +53,9 @@ public final class Main extends JavaPlugin {
     public static FileUtils configFileUtils;
     public static String homesMenuPath = "menus/menu-homes.yml";
     public static StateFlag useHomesFlag;
+    public static StateFlag setHomesFlag;
+    public static StateFlag bypassHomeWarmupFlag;
+    public static StateFlag bypassHomeCostFlag;
 
     public static boolean usePlaceholderAPI = false;
     public static boolean useWorldGuard = false;
@@ -109,7 +110,7 @@ public final class Main extends JavaPlugin {
             if (wg instanceof WorldGuardPlugin) {
                 useWorldGuard = true;
                 try {
-                    WorldGuardHook.setupFlag(); // Now you can use WorldGuard logic safely
+                    WorldGuardHook.setupFlags();
                 } catch (Exception e) {
                     getLogger().severe("Failed to hook into WorldGuard properly.");
                     e.printStackTrace();
@@ -346,7 +347,7 @@ public final class Main extends JavaPlugin {
             Map<String, Boolean> helpANDmainChildren = new HashMap<>();
             helpANDmainChildren.put(cfgu.CmdMainPermission(), true);
             helpANDmainChildren.put(cfgu.CmdMainHelpPermission(), true);
-            registerPermission(cfgu.CmdMainPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + "' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdMainPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + "' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdMainReloadPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
@@ -357,6 +358,7 @@ public final class Main extends JavaPlugin {
             registerPermission(cfgu.CmdHomesPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + "' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdHomesOthersPermission(), "Permission to use the '/" + cfgu.CmdHomesCommand() + " (Player)' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdHomePermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + "' command", PermissionDefault.TRUE);
+            registerPermission(cfgu.CmdHomeRenamePermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " rename (Home) (NewName)' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassLimit(), "Bypass homes limit", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);

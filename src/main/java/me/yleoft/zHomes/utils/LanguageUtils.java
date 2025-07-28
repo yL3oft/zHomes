@@ -172,6 +172,39 @@ public class LanguageUtils extends ConfigUtils {
             return this.cfg.getString(path);
         }
 
+        public static class HomeRename implements Commands {
+            public YamlConfiguration cfg;
+
+            public HomeRename() {
+                this.cfg = LanguageUtils.getConfigFile();
+            }
+
+            public String getCmd() {
+                return "home.rename";
+            }
+
+            public String getUsage() {
+                String path = formPath(cmds, getCmd(), "usage");
+                return this.cfg.getString(path)
+                        .replace("%command%", Main.cfgu.CmdHomeCommand());
+            }
+
+            public String getOutput() {
+                return null;
+            }
+
+            public String getOutput(String home, String newname) {
+                String path = formPath(cmds, getCmd(), "output");
+                return this.cfg.getString(path)
+                        .replace("%home%", home)
+                        .replace("%newname%", newname);
+            }
+
+            public String getSameName() {
+                String path = formPath(cmds, getCmd(), "same-name");
+                return this.cfg.getString(path);
+            }
+        }
     }
 
     public static class Homes implements Commands {

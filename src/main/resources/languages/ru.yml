@@ -83,6 +83,10 @@ commands:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aТелепортирован к &e%home%&a..."
     cant-dimensional-teleport: "&cТелепортация отменена! Телепортация между измерениями отключена."
+    rename:
+      usage: "&c-> &e/%command% &aпереименовать (Home) (НовоеИмя)"
+      output: "%prefix%&aДом &e%home% &aпереименован в &e%newname%&a."
+      same-name: "%prefix%&cВы не можете переименовать дом в то же самое имя."
   homes:
     output: "%prefix%&7Ваши дома: &f%homes%"
     invalid-page: "%prefix%&cНеверный номер страницы! Пожалуйста, используйте число больше 0."

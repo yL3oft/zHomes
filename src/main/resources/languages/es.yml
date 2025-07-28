@@ -83,6 +83,10 @@ commands:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aTeleportado a &e%home%&a..."
     cant-dimensional-teleport: "&c¡Tu teletransporte fue cancelado! La teletransportación dimensional está desactivada."
+    rename:
+      usage: "&c-> &e/%command% &arenombrar (Home) (NuevoNombre)"
+      output: "%prefix%&aHome &e%home% &aha sido renombrada a &e%newname%&a."
+      same-name: "%prefix%&cNo puedes renombrar una casa con el mismo nombre."
   homes:
     output: "%prefix%&7Tus casas: &f%homes%"
     invalid-page: "%prefix%&c¡Número de página no válido! Por favor, use un número mayor que 0."

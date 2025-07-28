@@ -195,6 +195,13 @@ public class ConfigUtils {
     public String CmdHomeOthersPermission() {
         return main.getConfig().getString(this.cmdPath + "home.others.permission");
     }
+    public String CmdHomeRenamePermission() {
+        return main.getConfig().getString(this.cmdPath + "home.rename.permission");
+    }
+
+    public Float CmdHomeRenameCost() {
+        return (float) main.getConfig().getDouble(this.cmdPath + "home.rename.command-cost");
+    }
     //</editor-fold>
 
     //<editor-fold desc="Permissions">
@@ -252,7 +259,7 @@ public class ConfigUtils {
     public static class ConfigUtilsExtras {
 
         public boolean canAfford(Player p, String commandPermission, Float cost) {
-            if(p.hasPermission(Main.cfgu.PermissionBypassCommandCost(commandPermission))) {
+            if(p.hasPermission(Main.cfgu.PermissionBypassCommandCost(commandPermission)) || WorldGuardUtils.getFlagStateAtPlayer(p, Main.bypassHomeCostFlag)) {
                 return true;
             }
             Economy economy = (Economy) Main.economy;

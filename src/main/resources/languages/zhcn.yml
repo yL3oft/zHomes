@@ -83,6 +83,10 @@ commands:
     usage: "&c-> &e/%command% &a(家名称)"
     output: "%prefix%&a正在传送至 &e%home%&a..."
     cant-dimensional-teleport: "&c传送已取消! 无法跨维度移动."
+    rename:
+      usage: "&c-> &e/%command% &a重命名 (Home) (新名称)"
+      output: "%prefix%&a家 &e%home% &a已重命名为 &e%newname%&a."
+      same-name: "%prefix%&c你不能将家重命名为相同的名字。"
   homes:
     output: "%prefix%&7你设置的家: &f%homes%"
     invalid-page: "%prefix%&c无效的页码！请使用大于0的数字。"

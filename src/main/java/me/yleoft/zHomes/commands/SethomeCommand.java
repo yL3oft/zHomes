@@ -39,7 +39,7 @@ public class SethomeCommand extends HomesUtils implements CommandExecutor {
             home = event.getHome();
 
             if (!inMaxLimit(p)) {
-                if (!hasHome(p, home)) {
+                if(!hasHome(p, home)) {
                     if (cfguExtras.canAfford(p, CmdSethomePermission(), CmdSethomeCost())) {
                         addHome(p, home, p.getLocation());
                         lang.sendMsg(p, lang.getOutput(home));
