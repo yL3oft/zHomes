@@ -14,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import static me.yleoft.zHomes.Main.checker;
 import static me.yleoft.zHomes.Main.needsUpdate;
 import static me.yleoft.zHomes.utils.LanguageUtils.loadzAPIMessages;
 
@@ -38,6 +39,7 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
         LanguageUtils.MainCMD lang = new LanguageUtils.MainCMD();
         LanguageUtils.MainCMD.MainReload lang2 = new LanguageUtils.MainCMD.MainReload();
         LanguageUtils.MainCMD.MainVersion lang3 = new LanguageUtils.MainCMD.MainVersion();
+        LanguageUtils.MainCMD.MainVersion.MainVersionUpdate langvu = new LanguageUtils.MainCMD.MainVersion.MainVersionUpdate();
         LanguageUtils.MainCMD.MainHelp lang4 = new LanguageUtils.MainCMD.MainHelp();
         LanguageUtils.MainCMD.MainConverter lang5 = new LanguageUtils.MainCMD.MainConverter();
 
@@ -101,12 +103,36 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                     lang.sendMsg(s, cmdm.getNoPermission());
                     return false;
                 }
+                if(args.length >= 2) {
+                    subcmd2 = args[1];
+                    switch (subcmd2) {
+                        case "--update":
+                        case "update": {
+                            if (p != null && !p.hasPermission(CmdMainVersionUpdatePermission())) {
+                                lang.sendMsg(s, cmdm.getNoPermission());
+                                return false;
+                            }
+                            if(!needsUpdate) {
+                                lang.sendMsg(s, langvu.getNoUpdate());
+                                return false;
+                            }
+                            try {
+                                checker.update();
+                                lang.sendMsg(s, langvu.getOutput(Main.getInstance().updateVersion));
+                            }catch (Exception e) {
+                                e.printStackTrace();
+                                return false;
+                            }
+                            return true;
+                        }
+                    }
+                }
                 lang.sendMsg(s, lang3.getOutput());
                 if(needsUpdate) {
-                    cmdm.sendMsg(p, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
-                    cmdm.sendMsg(p, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);
-                    cmdm.sendMsg(p, "%prefix%&6Your version: &c" + Main.getInstance().getDescription().getVersion());
-                    cmdm.sendMsg(p, "%prefix%&6You can update your plugin here: &e" + Main.getInstance().site);
+                    cmdm.sendMsg(s, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
+                    cmdm.sendMsg(s, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);
+                    cmdm.sendMsg(s, "%prefix%&6Your version: &c" + Main.getInstance().getDescription().getVersion());
+                    cmdm.sendMsg(s, "%prefix%&6You can update your plugin here: &e" + Main.getInstance().site);
                 }
                 return false;
         }

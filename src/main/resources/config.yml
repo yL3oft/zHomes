@@ -30,6 +30,9 @@ general:
   # Define it the plugin should be updated automatically
   # OPTIONS: [true, false] --- DEFAULT: true
   auto-update: false
+  # Should players with permissions be notified about plugin updates upon joining?
+  # OPTIONS: [true, false] --- DEFAULT: true
+  announce-update: true
   # Here you can define if metrics should be on or off.
   # !WARNING: This option does not work with reload.
   # OPTIONS: [true, false] --- DEFAULT: true
@@ -90,6 +93,8 @@ commands:
     # Sub command - Version
     version:
       permission: "zhomes.command.main.version" # True by default
+      update:
+        permission: "zhomes.command.main.version.update" # Only OP by default
     # Sub command - Reload
     reload:
       permission: "zhomes.command.main.reload" # Only OP by default

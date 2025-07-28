@@ -23,7 +23,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        if(needsUpdate && (p.isOp() || p.hasPermission(CmdMainReloadPermission()))) {
+        if(needsUpdate && doAnnounceUpdate() && (p.isOp() || p.hasPermission(CmdMainVersionUpdatePermission()))) {
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
             Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
                 cmdm.sendMsg(p, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");

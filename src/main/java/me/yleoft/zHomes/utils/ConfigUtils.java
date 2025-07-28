@@ -29,6 +29,9 @@ public class ConfigUtils {
     public Boolean isAutoUpdate() {
         return main.getConfig().getBoolean("general.auto-update");
     }
+    public Boolean doAnnounceUpdate() {
+        return main.getConfig().getBoolean("general.announce-update");
+    }
     public Boolean hasMetrics() {
         return main.getConfig().getBoolean("general.metrics");
     }
@@ -96,6 +99,9 @@ public class ConfigUtils {
     }
     public String CmdMainVersionPermission() {
         return main.getConfig().getString(this.cmdPath + "main.version.permission");
+    }
+    public String CmdMainVersionUpdatePermission() {
+        return main.getConfig().getString(this.cmdPath + "main.version.update.permission");
     }
     public String CmdMainReloadPermission() {
         return main.getConfig().getString(this.cmdPath + "main.reload.permission");

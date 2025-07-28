@@ -40,6 +40,13 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                     }
                     break;
                 }
+                case "version":
+                case "ver": {
+                    if (p.hasPermission(CmdMainVersionUpdatePermission())) {
+                        commands.add("update");
+                    }
+                    break;
+                }
                 case "converter": {
                     if (p.hasPermission(CmdMainConverterPermission())) {
                         commands.add("sqlitetoh2");

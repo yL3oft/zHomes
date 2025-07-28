@@ -31,7 +31,7 @@ commands:
         %prefix%&b命令 &e/%command%&b 的用法:
         &c-> &e/%command% &a(help|?)
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
-        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &a(version|ver) &6[update]
         &c-> &e/%command% &aconverter (转化类型) &7迁移数据
       help-noperm: |-
         %prefix%&b命令 &e/%command%&b 用法:
@@ -39,6 +39,9 @@ commands:
         &c-> &e/%command% &a(version|ver)
     version:
       output: "%prefix%&b当前版本: &a%version%"
+      update:
+        output: "%prefix%&azHomes 已更新到最新版本 &e(%update%)&a，请重启服务器以应用更改。"
+        no-update: "%prefix%&a你已经在使用最新版本的 zHomes。"
     reload:
       usage: |-
         %prefix%&b命令 &e/%command% &a(reload|rl)&b 用法:

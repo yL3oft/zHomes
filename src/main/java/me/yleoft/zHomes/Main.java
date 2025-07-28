@@ -4,6 +4,7 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
+import me.yleoft.zAPI.Metrics;
 import me.yleoft.zAPI.managers.*;
 import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zAPI.zAPI;
@@ -17,24 +18,18 @@ import me.yleoft.zHomes.utils.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.HandlerList;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Driver;
 import java.util.ArrayList;
@@ -79,6 +74,7 @@ public final class Main extends JavaPlugin {
     public static Object papi;
     public static Object economy;
 
+    public static UpdateManager checker;
     public static boolean needsUpdate = false;
     public String updateVersion = getDescription().getVersion();
 
@@ -220,7 +216,11 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         //<editor-fold desc="Metrics">
         if(cfgu.hasMetrics()) {
-            zAPI.startMetrics(bStatsId);
+            Metrics metrics = zAPI.startMetrics(bStatsId);
+            metrics.addCustomChart(new Metrics.DrilldownPie("player_count", () -> {
+                int players = Bukkit.getOnlinePlayers().size();
+                return buildDistribution(players);
+            }));
             helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&',
                     coloredPluginName+"&aMetrics enabled."
             ));
@@ -279,7 +279,7 @@ public final class Main extends JavaPlugin {
 
     public void updatePlugin() {
         LanguageUtils.Helper helper = new LanguageUtils.Helper() {};
-        UpdateManager checker = new UpdateManager(this, "https://api.github.com/repos/yL3oft/zHomes/tags", "zhomes");
+        checker = new UpdateManager(this, "https://api.github.com/repos/yL3oft/zHomes/tags", "zhomes");
         String version = checker.getVersion();
         String pf = "&8&l|> &r";
 
@@ -350,6 +350,7 @@ public final class Main extends JavaPlugin {
             registerPermission(cfgu.CmdMainPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + "' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
+            registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver) update' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainReloadPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
             registerPermission(cfgu.CmdMainConverterPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " converter' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdSethomePermission(), "Permission to use the '/" + cfgu.CmdSethomeCommand() + "' command", PermissionDefault.TRUE);
@@ -406,6 +407,54 @@ public final class Main extends JavaPlugin {
         economy = rsp.getProvider();
         return true;
     }
+
+    //<editor-fold desc="bStats">
+    private Map<String, Map<String, Integer>> buildDistribution(int players) {
+        Map<String, Map<String, Integer>> outer = new HashMap<>();
+        String outerBucket = outerBucket(players);
+        String innerBucket = innerBucket(players);
+        Map<String, Integer> inner = new HashMap<>();
+        inner.put(innerBucket, 1);
+        outer.put(outerBucket, inner);
+        return outer;
+    }
+
+    private String outerBucket(int n) {
+        if (n <= 0) return "0";
+        if (n <= 10) return "1-10";
+        if (n <= 25) return "11-25";
+        if (n <= 50) return "26-50";
+        if (n <= 100) return "51-100";
+        if (n <= 200) return "101-200";
+        return "200+";
+    }
+
+    private String innerBucket(int n) {
+        if (n <= 0) return "0";
+        if (n <= 10) {
+            return String.valueOf(n);
+        }
+        if (n <= 25) {
+            return rangeOfFive(n, 11, 25);
+        }
+        if (n <= 50) {
+            return rangeOfFive(n, 26, 50);
+        }
+        if (n <= 100) {
+            return rangeOfFive(n, 51, 100);
+        }
+        if (n <= 200) {
+            return rangeOfFive(n, 101, 200);
+        }
+        return "200+";
+    }
+
+    private String rangeOfFive(int n, int start, int end) {
+        int bucketStart = ((n - start) / 5) * 5 + start;
+        int bucketEnd = Math.min(bucketStart + 4, end);
+        return bucketStart + "-" + bucketEnd;
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Java Overrides">
     @Override

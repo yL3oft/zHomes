@@ -31,7 +31,7 @@ commands:
         %prefix%&bUtilizzo di &e/%command%&b:
         &c-> &e/%command% &a(help|?)
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
-        &c-> &e/%command% &a(version|ver)
+        &c-> &e/%command% &a(version|ver) &6[update]
         &c-> &e/%command% &aconverter (converter-type) &7Converte i dati da una sorgente a un'altra
       help-noperm: |-
         %prefix%&bUtilizzo di &e/%command%&b:
@@ -39,6 +39,9 @@ commands:
         &c-> &e/%command% &a(version|ver)
     version:
       output: "%prefix%&bVersione corrente: &a%version%"
+      update:
+        output: "%prefix%&azHomes è stato aggiornato all'ultima versione &e(%update%)&a, riavvia il server per applicare le modifiche."
+        no-update: "%prefix%&aStai già utilizzando l'ultima versione di zHomes."
     reload:
       usage: |-
         %prefix%&bUtilizzo di &e/%command% &a(reload|rl)&b:

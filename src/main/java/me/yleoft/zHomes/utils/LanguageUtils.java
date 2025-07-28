@@ -312,6 +312,37 @@ public class LanguageUtils extends ConfigUtils {
                 return this.cfg.getString(path)
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion());
             }
+
+            public static class MainVersionUpdate implements LanguageUtils.Commands {
+                public YamlConfiguration cfg;
+
+                public MainVersionUpdate() {
+                    this.cfg = LanguageUtils.getConfigFile();
+                }
+
+                public String getCmd() {
+                    return "main.version.update";
+                }
+
+                public String getUsage() {
+                    return null;
+                }
+
+                public String getOutput() {
+                    return null;
+                }
+
+                public String getOutput(String newVersion) {
+                    String path = formPath(cmds, getCmd(), "output");
+                    return this.cfg.getString(path)
+                            .replace("%update%", newVersion);
+                }
+
+                public String getNoUpdate() {
+                    String path = formPath(cmds, getCmd(), "no-update");
+                    return this.cfg.getString(path);
+                }
+            }
         }
 
         public static class MainReload implements LanguageUtils.Commands {
