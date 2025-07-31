@@ -265,7 +265,7 @@ public class ConfigUtils {
     public static class ConfigUtilsExtras {
 
         public boolean canAfford(Player p, String commandPermission, Float cost) {
-            if(p.hasPermission(Main.cfgu.PermissionBypassCommandCost(commandPermission)) || WorldGuardUtils.getFlagStateAtPlayer(p, Main.bypassHomeCostFlag)) {
+            if(p.hasPermission(Main.cfgu.PermissionBypassCommandCost(commandPermission)) || (Main.useWorldGuard && WorldGuardUtils.getFlagStateAtPlayer(p, Main.bypassHomeCostFlag))) {
                 return true;
             }
             Economy economy = (Economy) Main.economy;

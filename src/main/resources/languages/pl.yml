@@ -1,7 +1,10 @@
 # Tutaj możesz zarządzać wiadomościami hooków
 hooks:
+  griefprevention:
+    cant-set-homes: "%prefix%&cNie możesz ustawić domu w tym obszarze."
   worldguard:
     cant-use-homes: "%prefix%&cNie możesz używać domów tutaj."
+    cant-set-homes: "%prefix%&cNie możesz ustawić domu tutaj."
   vault:
     cant-afford-command: "%prefix%&cPotrzebujesz &6$%cost% &caby wykonać tę komendę."
 

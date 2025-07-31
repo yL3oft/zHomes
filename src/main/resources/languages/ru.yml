@@ -1,7 +1,10 @@
 # Здесь вы можете управлять сообщениями хуков
 hooks:
+  griefprevention:
+    cant-set-homes: "%prefix%&cВы не можете устанавливать дома в этой области."
   worldguard:
     cant-use-homes: "%prefix%&cВы не можете использовать дома здесь."
+    cant-set-homes: "%prefix%&cВы не можете установить дом здесь."
   vault:
     cant-afford-command: "%prefix%&cВам нужно &6$%cost% &cдля выполнения этой команды."
 

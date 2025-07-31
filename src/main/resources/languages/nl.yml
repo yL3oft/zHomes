@@ -1,7 +1,10 @@
 # Hier kun je hookberichten beheren
 hooks:
+  griefprevention:
+    cant-set-homes: "%prefix%&cJe kunt in dit gebied geen huizen instellen."
   worldguard:
     cant-use-homes: "%prefix%&cJe kunt hier geen homes gebruiken."
+    cant-set-homes: "%prefix%&cJe kunt hier geen huis instellen."
   vault:
     cant-afford-command: "%prefix%&cJe hebt &6$%cost% &cnodig om dit commando uit te voeren."
 

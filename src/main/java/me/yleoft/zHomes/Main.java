@@ -10,8 +10,7 @@ import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.commands.*;
 import me.yleoft.zHomes.hooks.*;
-import me.yleoft.zHomes.listeners.PlayerListeners;
-import me.yleoft.zHomes.listeners.WorldGuardListeners;
+import me.yleoft.zHomes.listeners.*;
 import me.yleoft.zHomes.storage.*;
 import me.yleoft.zHomes.tabcompleters.*;
 import me.yleoft.zHomes.utils.*;
@@ -52,6 +51,7 @@ public final class Main extends JavaPlugin {
     public static StateFlag bypassHomeWarmupFlag;
     public static StateFlag bypassHomeCostFlag;
 
+    public static boolean useGriefPrevention = false;
     public static boolean usePlaceholderAPI = false;
     public static boolean useWorldGuard = false;
     public static boolean useVault = false;
@@ -226,7 +226,6 @@ public final class Main extends JavaPlugin {
             ));
         }
         //</editor-fold>
-        loadCommands();
         loadzAPIMessages();
         //<editor-fold desc="Hooks">
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§fTrying to connect to hooks...");
@@ -256,7 +255,18 @@ public final class Main extends JavaPlugin {
             Bukkit.getLogger().log(Level.SEVERE, "Error hooking into VaultAPI", e);
         }
         //</editor-fold>
+        //<editor-fold desc="GriefPrevention">
+        try {
+            if (getServer().getPluginManager().isPluginEnabled("GriefPrevention")) {
+                useGriefPrevention = true;
+                helper.sendMsg(getServer().getConsoleSender(), coloredPluginName + "§aConnected to GriefPrevention successfully!");
+            }
+        } catch (Exception e) {
+            Bukkit.getLogger().log(Level.SEVERE, "Error hooking into GriefPrevention", e);
+        }
         //</editor-fold>
+        //</editor-fold>
+        loadCommands();
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started (Any errors will be above this message)");
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
     }
@@ -266,6 +276,7 @@ public final class Main extends JavaPlugin {
         if (!getServer().getName().contains("Folia")) {
             Bukkit.getScheduler().cancelTasks(this);
         }
+        unregisterPermissions();
         HandlerList.unregisterAll(this);
         if (db != null) {
             db.closePool();
@@ -350,7 +361,7 @@ public final class Main extends JavaPlugin {
             registerPermission(cfgu.CmdMainPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + "' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
-            registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver) update' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdMainVersionUpdatePermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver) update' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainReloadPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
             registerPermission(cfgu.CmdMainConverterPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " converter' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdSethomePermission(), "Permission to use the '/" + cfgu.CmdSethomeCommand() + "' command", PermissionDefault.TRUE);
@@ -371,6 +382,9 @@ public final class Main extends JavaPlugin {
         registerEvent(new PlayerListeners());
         if(useWorldGuard) {
             registerEvent(new WorldGuardListeners());
+        }
+        if(useGriefPrevention) {
+            registerEvent(new GriefPreventionListeners());
         }
         //</editor-fold>
     }

@@ -26,6 +26,7 @@ public class LanguageUtils extends ConfigUtils {
     public static String hooks = "hooks";
     public static String cmds = "commands";
     public static String tpw = "teleport-warmup";
+    public static String griefprevention = "griefprevention";
     public static String worldguard = "worldguard";
     public static String vault = "vault";
 
@@ -39,11 +40,16 @@ public class LanguageUtils extends ConfigUtils {
 
     public static YamlConfiguration getConfigFile() {
         List<FileUtils> list = new ArrayList<>();
+        list.add(FileManager.getFileUtil("languages/de.yml"));
         list.add(FileManager.getFileUtil("languages/en.yml"));
         list.add(FileManager.getFileUtil("languages/es.yml"));
-        list.add(FileManager.getFileUtil("languages/de.yml"));
         list.add(FileManager.getFileUtil("languages/fr.yml"));
+        list.add(FileManager.getFileUtil("languages/it.yml"));
+        list.add(FileManager.getFileUtil("languages/nl.yml"));
+        list.add(FileManager.getFileUtil("languages/pl.yml"));
         list.add(FileManager.getFileUtil("languages/pt-br.yml"));
+        list.add(FileManager.getFileUtil("languages/ru.yml"));
+        list.add(FileManager.getFileUtil("languages/zhcn.yml"));
         list.add(fuBACKUP);
         boolean found = false;
         YamlConfiguration returned = cfg;
@@ -463,8 +469,18 @@ public class LanguageUtils extends ConfigUtils {
             this.cfg = LanguageUtils.getConfigFile();
         }
 
+        public String getGriefPreventionCantSetHomes() {
+            String path = formPath(hooks, griefprevention, "cant-set-homes");
+            return this.cfg.getString(path);
+        }
+
         public String getWorldGuardCantUseHomes() {
             String path = formPath(hooks, worldguard, "cant-use-homes");
+            return this.cfg.getString(path);
+        }
+
+        public String getWorldGuardCantSetHomes() {
+            String path = formPath(hooks, worldguard, "cant-set-homes");
             return this.cfg.getString(path);
         }
 

@@ -108,7 +108,7 @@ public class HomesUtils extends DatabaseEditor {
                 if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
             }, 1L);
         };
-        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && !WorldGuardUtils.getFlagStateAtPlayer(p, Main.bypassHomeWarmupFlag) && warmupTime() > 0) {
+        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && (!Main.useWorldGuard || !WorldGuardUtils.getFlagStateAtPlayer(p, Main.bypassHomeWarmupFlag)) && warmupTime() > 0) {
             LanguageUtils.TeleportWarmupMSG langWarmup = new LanguageUtils.TeleportWarmupMSG();
             lang.sendMsg(p, langWarmup.getWarmup(warmupTime()));
             startWarmup(p, langWarmup, lang, homeString, task);

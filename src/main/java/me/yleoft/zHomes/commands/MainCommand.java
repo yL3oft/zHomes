@@ -129,10 +129,12 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                 }
                 lang.sendMsg(s, lang3.getOutput());
                 if(needsUpdate) {
-                    cmdm.sendMsg(s, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
-                    cmdm.sendMsg(s, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);
-                    cmdm.sendMsg(s, "%prefix%&6Your version: &c" + Main.getInstance().getDescription().getVersion());
-                    cmdm.sendMsg(s, "%prefix%&6You can update your plugin here: &e" + Main.getInstance().site);
+                    lang.sendMsg(s, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
+                    lang.sendMsg(s, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);
+                    lang.sendMsg(s, "%prefix%&6Your version: &c" + Main.getInstance().getDescription().getVersion());
+                    lang.sendMsg(s, "%prefix%&6You can update your plugin here: &e" + Main.getInstance().site);
+                }else {
+                    lang.sendMsg(s, langvu.getNoUpdate());
                 }
                 return false;
         }

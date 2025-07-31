@@ -6,6 +6,7 @@ author: yLeoft
 website: ${url}
 api-version: "1.13"
 softdepend:
+  - GriefPrevention
   - PlaceholderAPI
   - WorldGuard
   - Vault

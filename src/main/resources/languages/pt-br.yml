@@ -1,7 +1,10 @@
 # Aqui você pode gerenciar mensagens de integração
 hooks:
+  griefprevention:
+    cant-set-homes: "%prefix%&cVocê não pode definir casas nesta área."
   worldguard:
     cant-use-homes: "%prefix%&cVocê não pode usar casas aqui."
+    cant-set-homes: "%prefix%&cVocê não pode definir uma casa aqui."
   vault:
     cant-afford-command: "%prefix%&cVocê precisa de &6$%cost% &cpara executar este comando."
 

@@ -1,7 +1,10 @@
 # 在此可修改对接消息
 hooks:
+  griefprevention:
+    cant-set-homes: "%prefix%&c你不能在此区域设置家。"
   worldguard:
     cant-use-homes: "%prefix%&c你不能在这里设置家."
+    cant-set-homes: "%prefix%&c你不能在这里设置家。"
   vault:
     cant-afford-command: "%prefix%&c你至少需要 &6$%cost% &c才可执行该命令."
 
