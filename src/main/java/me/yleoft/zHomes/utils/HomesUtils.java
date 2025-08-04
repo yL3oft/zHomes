@@ -4,7 +4,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
+import me.yleoft.zAPI.folia.FoliaRunnable;
 import me.yleoft.zAPI.utils.ActionbarUtils;
+import me.yleoft.zAPI.utils.SchedulerUtils;
+import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.TeleportToHomeEvent;
 import me.yleoft.zHomes.storage.DatabaseEditor;
@@ -13,7 +16,6 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import static me.yleoft.zAPI.utils.LocationUtils.*;
 
@@ -21,7 +23,7 @@ public class HomesUtils extends DatabaseEditor {
 
     Main main = Main.getInstance();
 
-    public static HashMap<UUID, BukkitRunnable> warmups = new HashMap<>();
+    public static HashMap<UUID, FoliaRunnable> warmups = new HashMap<>();
 
     public boolean hasHome(OfflinePlayer p, String home) {
         return isInTable(p, home);
@@ -91,24 +93,22 @@ public class HomesUtils extends DatabaseEditor {
         String homeString = p.getUniqueId() == t.getUniqueId() ? home : t.getName() + ":" + home;
         Runnable task = () -> {
             Sound sound = getTeleportSound();
-            if (Main.getInstance().getServer().getName().contains("Folia")) {
+            if (zAPI.isFolia()) {
                 try {
                     Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
                     teleportAsyncMethod.invoke(p, tpLoc);
-                    lang.sendMsg(p, lang.getOutput(homeString));
-                    if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
                 } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                     throw new RuntimeException("Unable to teleport player to home", e);
                 }
-                return;
+            }else {
+                SchedulerUtils.runTaskLater(tpLoc, () -> {
+                    p.teleport(tpLoc);
+                }, 1L);
             }
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-                p.teleport(tpLoc);
-                lang.sendMsg(p, lang.getOutput(homeString));
-                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
-            }, 1L);
+            lang.sendMsg(p, lang.getOutput(homeString));
+            if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
         };
-        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && (!Main.useWorldGuard || !WorldGuardUtils.getFlagStateAtPlayer(p, Main.bypassHomeWarmupFlag)) && warmupTime() > 0) {
+        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
             LanguageUtils.TeleportWarmupMSG langWarmup = new LanguageUtils.TeleportWarmupMSG();
             lang.sendMsg(p, langWarmup.getWarmup(warmupTime()));
             startWarmup(p, langWarmup, lang, homeString, task);
@@ -126,7 +126,7 @@ public class HomesUtils extends DatabaseEditor {
             warmups.get(uuid).cancel();
         }
 
-        BukkitRunnable runnable = new BukkitRunnable() {
+        FoliaRunnable runnable = new FoliaRunnable() {
             int counter = warmupTime();
 
             @Override
@@ -136,14 +136,13 @@ public class HomesUtils extends DatabaseEditor {
                     warmups.remove(uuid);
                     return;
                 }
-
                 if (counter >= 1) {
-                    if(warmupShowOnActionbar()) {
+                    if (warmupShowOnActionbar()) {
                         ActionbarUtils.send(p, LanguageUtils.Helper.getText(p, lang.getWarmupActionbar(counter)));
                     }
                     counter--;
                 } else {
-                    if(warmupShowOnActionbar()) {
+                    if (warmupShowOnActionbar()) {
                         ActionbarUtils.send(p, LanguageUtils.Helper.getText(p, lang2.getOutput(home)));
                     }
                     task.run();
@@ -154,7 +153,7 @@ public class HomesUtils extends DatabaseEditor {
         };
 
         warmups.put(uuid, runnable);
-        runnable.runTaskTimer(Main.getInstance(), 0L, 20L);
+        SchedulerUtils.runTaskTimer(p.getLocation(), runnable, 1L, 20L);
     }
 
     public static Sound getTeleportSound() {

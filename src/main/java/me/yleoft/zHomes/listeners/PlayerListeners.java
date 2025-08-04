@@ -1,6 +1,7 @@
 package me.yleoft.zHomes.listeners;
 
 import me.yleoft.zAPI.utils.ActionbarUtils;
+import me.yleoft.zAPI.utils.SchedulerUtils;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
@@ -25,7 +26,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
         Player p = e.getPlayer();
         if(needsUpdate && doAnnounceUpdate() && (p.isOp() || p.hasPermission(CmdMainVersionUpdatePermission()))) {
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+            SchedulerUtils.runTaskLater(p.getLocation(), () -> {
                 cmdm.sendMsg(p, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
                 cmdm.sendMsg(p, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);
                 cmdm.sendMsg(p, "%prefix%&6Your version: &c" + Main.getInstance().getDescription().getVersion());

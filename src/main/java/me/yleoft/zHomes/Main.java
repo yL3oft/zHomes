@@ -48,8 +48,6 @@ public final class Main extends JavaPlugin {
     public static String homesMenuPath = "menus/menu-homes.yml";
     public static StateFlag useHomesFlag;
     public static StateFlag setHomesFlag;
-    public static StateFlag bypassHomeWarmupFlag;
-    public static StateFlag bypassHomeCostFlag;
 
     public static boolean useGriefPrevention = false;
     public static boolean usePlaceholderAPI = false;
@@ -273,7 +271,7 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (!getServer().getName().contains("Folia")) {
+        if (!zAPI.isFolia()) {
             Bukkit.getScheduler().cancelTasks(this);
         }
         unregisterPermissions();
