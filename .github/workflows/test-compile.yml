@@ -31,3 +31,9 @@ jobs:
 
       - name: Compile and Test with Maven
         run: mvn clean install -DskipTests=false -Dgpg.skip=true
+
+      - name: Upload target artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: target-artifact
+          path: target/
