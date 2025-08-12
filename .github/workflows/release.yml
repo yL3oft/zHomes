@@ -40,6 +40,15 @@ jobs:
           JAR_FILE=$(mvn help:evaluate -Dexpression=project.build.finalName -q -DforceStdout).jar
           echo "jar=$JAR_FILE" >> $GITHUB_OUTPUT
 
+      - name: Read changelog
+        id: changelog
+        run: |
+          changelog_content="$(cat changelog.md)"
+          changelog_content="${changelog_content//'%'/'%25'}"
+          changelog_content="${changelog_content//$'\n'/'%0A'}"
+          changelog_content="${changelog_content//$'\r'/'%0D'}"
+          echo "content=$changelog_content" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -56,7 +65,7 @@ jobs:
           project: veAp6a0M
           name: zHomes ${{ steps.get_version.outputs.version }}
           version: ${{ steps.get_version.outputs.version }}
-          changelog: changelog.md
+          changelog: ${{ steps.changelog.outputs.content }}
           loaders: |-
             folia
             purpur
