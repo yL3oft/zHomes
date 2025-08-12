@@ -49,6 +49,16 @@ jobs:
           echo "$content" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: zHomes ${{ steps.get_version.outputs.version }}
+          body_path: changelog.md
+          files: target/${{ steps.get_jar.outputs.jar }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Release
         uses: HSGamer/action-mcreleaser@main
         with:
@@ -59,9 +69,6 @@ jobs:
           DESCRIPTION: ${{ steps.changelog.outputs.content }}
           GAME_VERSIONS: "1.8..latest"
 
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REF: ${{ steps.get_version.outputs.version }}
-
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           MODRINTH_PROJECT: veAp6a0M
           MODRINTH_LOADERS: "spigot paper purpur folia"
@@ -70,51 +77,3 @@ jobs:
           HANGAR_CHANNEL: Release
           HANGAR_PROJECT: zhomes
           HANGAR_PLATFORM: paper
-
-#      - name: Create GitHub Release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          tag_name: ${{ steps.get_version.outputs.version }}
-#          name: zHomes ${{ steps.get_version.outputs.version }}
-#          body_path: changelog.md
-#          files: target/${{ steps.get_jar.outputs.jar }}
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#
-#      - uses: cloudnode-pro/modrinth-publish@v2
-#        with:
-#          token: ${{ secrets.MODRINTH_TOKEN }}
-#          project: veAp6a0M
-#          name: zHomes ${{ steps.get_version.outputs.version }}
-#          version: ${{ steps.get_version.outputs.version }}
-#          changelog: ${{ steps.changelog.outputs.content }}
-#          loaders: |-
-#            folia
-#            purpur
-#            paper
-#            spigot
-#          game-versions: |-
-#            1.21.x
-#            1.20.x
-#            1.19.x
-#            1.18.x
-#            1.17.x
-#            1.16.x
-#            1.15.x
-#            1.14.x
-#            1.13.x
-#            1.12.x
-#            1.11.x
-#            1.10.x
-#            1.9.x
-#            1.8.x
-#          dependencies: |-
-#            [{
-#                "project_id": "DKY9btbd",
-#                "dependency_type": "optional"
-#            },
-#            {
-#                "project_id": "nfGCP9fk",
-#                "dependency_type": "embedded"
-#            }]
-#          files: target/${{ steps.get_jar.outputs.jar }}
