@@ -40,6 +40,15 @@ jobs:
           JAR_FILE=$(mvn help:evaluate -Dexpression=project.build.finalName -q -DforceStdout).jar
           echo "jar=$JAR_FILE" >> $GITHUB_OUTPUT
 
+      - name: Read changelog.md into output
+        id: changelog
+        run: |
+          {
+            echo 'content<<EOF'
+            cat changelog.md
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -49,13 +58,6 @@ jobs:
           files: target/${{ steps.get_jar.outputs.jar }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Read changelog.md into variable
-        id: changelog
-        run: |
-          echo "content<<EOF" >> $GITHUB_OUTPUT
-          cat changelog.md >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
 
       - uses: cloudnode-pro/modrinth-publish@v2
         with:
