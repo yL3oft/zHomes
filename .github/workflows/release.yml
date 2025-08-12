@@ -50,13 +50,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Read changelog.md into variable
+        id: changelog
+        run: |
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          cat changelog.md >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
           project: veAp6a0M
           name: zHomes ${{ steps.get_version.outputs.version }}
           version: ${{ steps.get_version.outputs.version }}
-          changelog: ./changelog.md
+          changelog: ${{ steps.changelog.outputs.content }}
           loaders: |-
             folia
             purpur
