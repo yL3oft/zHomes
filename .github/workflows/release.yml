@@ -50,29 +50,40 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload to Modrinth (debug)
-        env:
-          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-        run: |
-          set -e
-          RESPONSE=$(curl -s -w "\n%{http_code}" \
-            -H "Authorization: $MODRINTH_TOKEN" \
-            -F "project_id=veAp6a0M" \
-            -F "version_number=${{ steps.get_version.outputs.version }}" \
-            -F "version_type=release" \
-            -F "changelog=@changelog.md" \
-            -F "file=@target/${{ steps.get_jar.outputs.jar }}" \
-            -F "loaders[]=folia" \
-            -F "loaders[]=paper" \
-            -F "loaders[]=purpur" \
-            -F "loaders[]=spigot" \
-            -F "game_versions[]=1.8" \
-            https://api.modrinth.com/v2/version)
-
-          BODY=$(echo "$RESPONSE" | head -n -1)
-          STATUS=$(echo "$RESPONSE" | tail -n 1)
-
-          echo "Status: $STATUS"
-          echo "Body: $BODY"
-
-          [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]
+      - uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: veAp6a0M
+          name: zHomes ${{ steps.get_version.outputs.version }}
+          version: ${{ steps.get_version.outputs.version }}
+          changelog: changelog.md
+          loaders: |-
+            folia
+            purpur
+            paper
+            spigot
+          game-versions: |-
+            1.21.x
+            1.20.x
+            1.19.x
+            1.18.x
+            1.17.x
+            1.16.x
+            1.15.x
+            1.14.x
+            1.13.x
+            1.12.x
+            1.11.x
+            1.10.x
+            1.9.x
+            1.8.x
+          dependencies: |-
+            [{
+                "project_id": "DKY9btbd",
+                "dependency_type": "optional"
+            },
+            {
+                "project_id": "nfGCP9fk",
+                "dependency_type": "embedded"
+            }]
+          files: target/${{ steps.get_jar.outputs.jar }}
