@@ -50,12 +50,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload to Modrinth (using curl)
+      - name: Upload to Modrinth (debug)
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
           set -e
-          curl --fail -v -X POST "https://api.modrinth.com/v2/version" \
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
             -H "Authorization: $MODRINTH_TOKEN" \
             -F "project_id=veAp6a0M" \
             -F "version_number=${{ steps.get_version.outputs.version }}" \
@@ -66,19 +66,13 @@ jobs:
             -F "loaders[]=paper" \
             -F "loaders[]=purpur" \
             -F "loaders[]=spigot" \
-            $(for v in 1.8{,.1,.2,.3,.4,.5,.6,.7,.8} \
-                       1.9{,.1,.2} \
-                       1.10{,.1,.2} \
-                       1.11{,.1,.2} \
-                       1.12{,.1,.2} \
-                       1.13{,.1,.2} \
-                       1.14{,.1,.2,.3,.4} \
-                       1.15{,.1,.2} \
-                       1.16{,.1,.2,.3,.4,.5} \
-                       1.17{,.1} \
-                       1.18{,.1,.2} \
-                       1.19{,.1,.2,.3,.4} \
-                       1.20{,.1,.2} \
-                       1.21{,.1,.2,.3,.4,.5,.6,.7,.8}; do \
-                 echo -n "-F game_versions[]=$v "; \
-             done)
+            -F "game_versions[]=1.8" \
+            https://api.modrinth.com/v2/version)
+
+          BODY=$(echo "$RESPONSE" | head -n -1)
+          STATUS=$(echo "$RESPONSE" | tail -n 1)
+
+          echo "Status: $STATUS"
+          echo "Body: $BODY"
+
+          [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 300 ]
