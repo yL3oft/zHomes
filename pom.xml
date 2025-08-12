@@ -261,7 +261,7 @@
         <dependency>
             <groupId>me.yleoft</groupId>
             <artifactId>zAPI</artifactId>
-            <version>1.4.3-SNAPSHOT</version>
+            <version>1.4.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
