@@ -54,74 +54,31 @@ jobs:
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
         run: |
-          curl -X POST https://api.modrinth.com/v2/version \
+          set -e
+          curl --fail -v -X POST "https://api.modrinth.com/v2/version" \
             -H "Authorization: $MODRINTH_TOKEN" \
             -F "project_id=veAp6a0M" \
             -F "version_number=${{ steps.get_version.outputs.version }}" \
             -F "version_type=release" \
-            -F "changelog=$(cat changelog.md)" \
+            -F "changelog=@changelog.md" \
             -F "file=@target/${{ steps.get_jar.outputs.jar }}" \
             -F "loaders[]=folia" \
             -F "loaders[]=paper" \
             -F "loaders[]=purpur" \
             -F "loaders[]=spigot" \
-            -F "game_versions[]=1.8" \
-            -F "game_versions[]=1.8.1" \
-            -F "game_versions[]=1.8.2" \
-            -F "game_versions[]=1.8.3" \
-            -F "game_versions[]=1.8.4" \
-            -F "game_versions[]=1.8.5" \
-            -F "game_versions[]=1.8.6" \
-            -F "game_versions[]=1.8.7" \
-            -F "game_versions[]=1.8.8" \
-            -F "game_versions[]=1.9" \
-            -F "game_versions[]=1.9.1" \
-            -F "game_versions[]=1.9.2" \
-            -F "game_versions[]=1.10" \
-            -F "game_versions[]=1.10.1" \
-            -F "game_versions[]=1.10.2" \
-            -F "game_versions[]=1.11" \
-            -F "game_versions[]=1.11.1" \
-            -F "game_versions[]=1.11.2" \
-            -F "game_versions[]=1.12" \
-            -F "game_versions[]=1.12.1" \
-            -F "game_versions[]=1.12.2" \
-            -F "game_versions[]=1.13" \
-            -F "game_versions[]=1.13.1" \
-            -F "game_versions[]=1.13.2" \
-            -F "game_versions[]=1.14" \
-            -F "game_versions[]=1.14.1" \
-            -F "game_versions[]=1.14.2" \
-            -F "game_versions[]=1.14.3" \
-            -F "game_versions[]=1.14.4" \
-            -F "game_versions[]=1.15" \
-            -F "game_versions[]=1.15.1" \
-            -F "game_versions[]=1.15.2" \
-            -F "game_versions[]=1.16" \
-            -F "game_versions[]=1.16.1" \
-            -F "game_versions[]=1.16.2" \
-            -F "game_versions[]=1.16.3" \
-            -F "game_versions[]=1.16.4" \
-            -F "game_versions[]=1.16.5" \
-            -F "game_versions[]=1.17" \
-            -F "game_versions[]=1.17.1" \
-            -F "game_versions[]=1.18" \
-            -F "game_versions[]=1.18.1" \
-            -F "game_versions[]=1.18.2" \
-            -F "game_versions[]=1.19" \
-            -F "game_versions[]=1.19.1" \
-            -F "game_versions[]=1.19.2" \
-            -F "game_versions[]=1.19.3" \
-            -F "game_versions[]=1.19.4" \
-            -F "game_versions[]=1.20" \
-            -F "game_versions[]=1.20.1" \
-            -F "game_versions[]=1.20.2" \
-            -F "game_versions[]=1.21" \
-            -F "game_versions[]=1.21.1" \
-            -F "game_versions[]=1.21.2" \
-            -F "game_versions[]=1.21.3" \
-            -F "game_versions[]=1.21.4" \
-            -F "game_versions[]=1.21.5" \
-            -F "game_versions[]=1.21.6" \
-            -F "game_versions[]=1.21.7" \
-            -F "game_versions[]=1.21.8"
+            $(for v in 1.8{,.1,.2,.3,.4,.5,.6,.7,.8} \
+                       1.9{,.1,.2} \
+                       1.10{,.1,.2} \
+                       1.11{,.1,.2} \
+                       1.12{,.1,.2} \
+                       1.13{,.1,.2} \
+                       1.14{,.1,.2,.3,.4} \
+                       1.15{,.1,.2} \
+                       1.16{,.1,.2,.3,.4,.5} \
+                       1.17{,.1} \
+                       1.18{,.1,.2} \
+                       1.19{,.1,.2,.3,.4} \
+                       1.20{,.1,.2} \
+                       1.21{,.1,.2,.3,.4,.5,.6,.7,.8}; do \
+                 echo -n "-F game_versions[]=$v "; \
+             done)
