@@ -54,13 +54,13 @@ jobs:
         with:
           files: target/${{ steps.get_jar.outputs.jar }}
         env:
-          NAME: zHomes
+          NAME: zHomes ${{ steps.get_version.outputs.version }}
           VERSION: ${{ steps.get_version.outputs.version }}
           DESCRIPTION: ${{ steps.changelog.outputs.content }}
           GAME_VERSIONS: "1.8..latest"
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REF: refs/tags/${{ steps.get_version.outputs.version }}
+          GITHUB_REF: ${{ steps.get_version.outputs.version }}
 
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           MODRINTH_PROJECT: veAp6a0M
