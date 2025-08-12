@@ -40,14 +40,14 @@ jobs:
           JAR_FILE=$(mvn help:evaluate -Dexpression=project.build.finalName -q -DforceStdout).jar
           echo "jar=$JAR_FILE" >> $GITHUB_OUTPUT
 
-      - name: Read changelog.md into output
+      - name: Read changelog
         id: changelog
         run: |
-          {
-            echo 'content<<EOF'
-            cat changelog.md
-            echo 'EOF'
-          } >> $GITHUB_OUTPUT
+          content=$(cat ./changelog.md)
+          # Save to step output
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$content" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
