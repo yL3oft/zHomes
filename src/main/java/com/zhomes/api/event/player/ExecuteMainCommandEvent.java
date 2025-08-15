@@ -3,7 +3,7 @@ package com.zhomes.api.event.player;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;;
+import org.bukkit.event.player.PlayerEvent;
 
 public class ExecuteMainCommandEvent extends PlayerEvent implements Cancellable {
     private static final HandlerList HANDLERS = new HandlerList();

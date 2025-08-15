@@ -22,7 +22,7 @@
 ##
 ![About the Project](https://cdn.modrinth.com/data/cached_images/2939adae27590da621f6332a61d92a12bd474204.png)
 **zHomes** is a plugin for Spigot/Paper/Purpur/PufferFish servers to make player transportation easier and 100% customizable.
-It's is 100% free, and only maintained by [yLeoft](https://github.com/yL3oft), has support for PlaceholderAPI, customizable commands, permissions, messages and more.
+It's 100% free, and only maintained by [yLeoft](https://github.com/yL3oft), has support for PlaceholderAPI, customizable commands, permissions, messages and more.
 
 This plugin can also convert homes you had from previous plugins (The famous ones) See more in: [/zhomes converter](https://github.com/yL3oft/zHomes/wiki/Commands-&-Permissions#zhomes-converter)
 

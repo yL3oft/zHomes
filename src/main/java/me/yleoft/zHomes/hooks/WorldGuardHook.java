@@ -9,7 +9,7 @@ import me.yleoft.zHomes.Main;
 
 public class WorldGuardHook {
 
-    public static void setupFlags() throws Exception {
+    public static void setupFlags() {
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         // use-homes flag
         try {

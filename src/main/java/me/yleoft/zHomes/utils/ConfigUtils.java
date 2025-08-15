@@ -13,13 +13,13 @@ import static java.util.Objects.requireNonNull;
 public class ConfigUtils {
     private static final Main main = Main.getInstance();
 
-    protected String cmdPath = "commands.";
-    protected String permissionsPath = "permissions.";
-    protected String permissionsBypassPath = permissionsPath+"bypass.";
-    protected String databasePath = "database.";
-    protected String lim = "limits.";
-    protected String tpo = "teleport-options.";
-    protected String warmup = tpo+"warmup.";
+    protected final String cmdPath = "commands.";
+    protected final String permissionsPath = "permissions.";
+    protected final String permissionsBypassPath = permissionsPath+"bypass.";
+    protected final String databasePath = "database.";
+    protected final String lim = "limits.";
+    protected final String tpo = "teleport-options.";
+    protected final String warmup = tpo+"warmup.";
 
     public ConfigUtilsExtras cfguExtras = new ConfigUtilsExtras();
 

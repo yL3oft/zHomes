@@ -1,6 +1,5 @@
 package me.yleoft.zHomes.utils;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -23,7 +22,7 @@ public class HomesUtils extends DatabaseEditor {
 
     Main main = Main.getInstance();
 
-    public static HashMap<UUID, FoliaRunnable> warmups = new HashMap<>();
+    public static final HashMap<UUID, FoliaRunnable> warmups = new HashMap<>();
 
     public boolean hasHome(OfflinePlayer p, String home) {
         return isInTable(p, home);
@@ -84,37 +83,38 @@ public class HomesUtils extends DatabaseEditor {
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }
-        Location tpLoc = findNearestSafeLocation(loc, 4, 50);
-        if(tpLoc == null) {
-            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
-            return;
-        }
-        String homeString = p.getUniqueId() == t.getUniqueId() ? home : t.getName() + ":" + home;
-        Runnable task = () -> {
-            Sound sound = getTeleportSound();
-            if (zAPI.isFolia()) {
-                try {
-                    Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
-                    teleportAsyncMethod.invoke(p, tpLoc);
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException("Unable to teleport player to home", e);
-                }
-            }else {
-                SchedulerUtils.runTaskLater(tpLoc, () -> {
-                    p.teleport(tpLoc);
-                }, 1L);
+        findNearestSafeLocationAsync(loc, 4, 50, tpLoc -> {
+            if (tpLoc == null) {
+                new LanguageUtils.CommandsMSG().sendMsg(p, "Unable to find a safe location");
+                return;
             }
-            lang.sendMsg(p, lang.getOutput(homeString));
-            if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
-        };
-        if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
-            LanguageUtils.TeleportWarmupMSG langWarmup = new LanguageUtils.TeleportWarmupMSG();
-            lang.sendMsg(p, langWarmup.getWarmup(warmupTime()));
-            startWarmup(p, langWarmup, lang, homeString, task);
-            return;
-        }
-        task.run();
+            String homeString = p.getUniqueId() == t.getUniqueId() ? home : t.getName() + ":" + home;
+            Runnable task = () -> {
+                Sound sound = getTeleportSound();
+                if (zAPI.isFolia()) {
+                    try {
+                        Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
+                        teleportAsyncMethod.invoke(p, tpLoc);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Unable to teleport player", e);
+                    }
+                } else {
+                    SchedulerUtils.runTaskLater(tpLoc, () -> p.teleport(tpLoc), 1L);
+                }
+
+                lang.sendMsg(p, lang.getOutput(homeString));
+                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+            };
+
+            if (doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
+                LanguageUtils.TeleportWarmupMSG warmupMsg = new LanguageUtils.TeleportWarmupMSG();
+                lang.sendMsg(p, warmupMsg.getWarmup(warmupTime()));
+                startWarmup(p, warmupMsg, lang, homeString, task);
+                return;
+            }
+
+            task.run();
+        });
     }
     public void teleportPlayer(Player p, String home) {
         teleportPlayer(p, p, home);

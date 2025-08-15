@@ -1,10 +1,8 @@
 package me.yleoft.zHomes.commands;
 
 import com.zhomes.api.event.player.RenameHomeEvent;
-import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.ExecuteHomeCommandEvent;
 import com.zhomes.api.event.player.PreExecuteHomeCommandEvent;
-import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;

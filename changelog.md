@@ -1,11 +1,10 @@
 ## Dependency Changes
-- Plugin now uses [zAPI 1.4.3](https://github.com/yL3oft/zAPI/releases/tag/1.4.3)
-- Plugin now uses NBTAPI 2.15.2-SNAPSHOT
+- Plugin now uses [zAPI 1.4.4](https://github.com/yL3oft/zAPI/releases/tag/1.4.4)
 
 ## General Changes
-- Added 1.21.8 support
-- Setup github actions for automatic releases
+- Fixed folia support (Finally!)
+- Fixed permission registration
+- Code cleanup and optimizations
 
-**zAPI Changelog**: https://github.com/yL3oft/zAPI/compare/1.4.2...1.4.3
-**NBTAPI Changelog**: https://github.com/tr7zw/Item-NBT-API/compare/2.15.1...master
-**Full Changelog**: https://github.com/yL3oft/zHomes/compare/2.1.2...2.1.3
+**zAPI Changelog**: https://github.com/yL3oft/zAPI/compare/1.4.3...1.4.4
+**Full Changelog**: https://github.com/yL3oft/zHomes/compare/2.1.3...2.1.4

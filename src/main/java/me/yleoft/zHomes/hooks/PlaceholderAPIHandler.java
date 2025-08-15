@@ -1,6 +1,5 @@
 package me.yleoft.zHomes.hooks;
 
-import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
 import org.bukkit.OfflinePlayer;

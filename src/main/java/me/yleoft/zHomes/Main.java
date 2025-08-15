@@ -45,7 +45,7 @@ import static me.yleoft.zHomes.utils.LanguageUtils.loadzAPIMessages;
 public final class Main extends JavaPlugin {
 
     public static FileUtils configFileUtils;
-    public static String homesMenuPath = "menus/menu-homes.yml";
+    public static final String homesMenuPath = "menus/menu-homes.yml";
     public static StateFlag useHomesFlag;
     public static StateFlag setHomesFlag;
 
@@ -76,13 +76,13 @@ public final class Main extends JavaPlugin {
     public static boolean needsUpdate = false;
     public String updateVersion = getDescription().getVersion();
 
-    public String pluginName = getDescription().getName();
+    public final String pluginName = getDescription().getName();
     public String coloredPluginName = this.pluginName;
-    public String pluginVer = getDescription().getVersion();
-    public String site = "https://modrinth.com/plugin/zhomes/version/latest";
-    public static int bStatsId = 25021;
+    public final String pluginVer = getDescription().getVersion();
+    public final String site = "https://modrinth.com/plugin/zhomes/version/latest";
+    public final static int bStatsId = 25021;
 
-    public File libsFolder = new File(getDataFolder(), "libs");
+    public final File libsFolder = new File(getDataFolder(), "libs");
 
     public final String mysqlVersion = "8.0.23";
     public final String mysqlJar = "mysql-connector-java-" + mysqlVersion + ".jar";
@@ -121,9 +121,7 @@ public final class Main extends JavaPlugin {
         zAPI.init(this, pluginName, coloredPluginName, NBT.preloadApi());
         //<editor-fold desc="Variables">
         main = Main.this;
-        pluginName = getDescription().getName();
         coloredPluginName = this.pluginName;
-        pluginVer = getDescription().getVersion();
         cfgu = new ConfigUtils();
         hu = new HomesUtils();
         db = new DatabaseConnection();

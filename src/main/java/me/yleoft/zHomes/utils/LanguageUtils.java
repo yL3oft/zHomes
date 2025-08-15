@@ -23,14 +23,14 @@ public class LanguageUtils extends ConfigUtils {
     private static final Main main = Main.getInstance();
     private static FileUtils fuBACKUP = null;
 
-    public static String hooks = "hooks";
-    public static String cmds = "commands";
-    public static String tpw = "teleport-warmup";
-    public static String griefprevention = "griefprevention";
-    public static String worldguard = "worldguard";
-    public static String vault = "vault";
+    public static final String hooks = "hooks";
+    public static final String cmds = "commands";
+    public static final String tpw = "teleport-warmup";
+    public static final String griefprevention = "griefprevention";
+    public static final String worldguard = "worldguard";
+    public static final String vault = "vault";
 
-    public static File f = new File(main.getDataFolder(), "languages/en.yml");
+    public static final File f = new File(main.getDataFolder(), "languages/en.yml");
 
     public static YamlConfiguration cfg = YamlConfiguration.loadConfiguration(f);
 
@@ -81,7 +81,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class Sethome extends HomesUtils implements Commands {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public Sethome() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -117,7 +117,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class Delhome implements Commands {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public Delhome() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -146,7 +146,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class Home implements Commands {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public Home() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -179,7 +179,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public static class HomeRename implements Commands {
-            public YamlConfiguration cfg;
+            public final YamlConfiguration cfg;
 
             public HomeRename() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -214,7 +214,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class Homes implements Commands {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public Homes() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -250,7 +250,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class MainCMD implements Commands {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public MainCMD() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -269,7 +269,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public static class MainHelp implements LanguageUtils.Commands {
-            public YamlConfiguration cfg;
+            public final YamlConfiguration cfg;
 
             public MainHelp() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -299,7 +299,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public static class MainVersion implements LanguageUtils.Commands {
-            public YamlConfiguration cfg;
+            public final YamlConfiguration cfg;
 
             public MainVersion() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -320,7 +320,7 @@ public class LanguageUtils extends ConfigUtils {
             }
 
             public static class MainVersionUpdate implements LanguageUtils.Commands {
-                public YamlConfiguration cfg;
+                public final YamlConfiguration cfg;
 
                 public MainVersionUpdate() {
                     this.cfg = LanguageUtils.getConfigFile();
@@ -352,7 +352,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public static class MainReload implements LanguageUtils.Commands {
-            public YamlConfiguration cfg;
+            public final YamlConfiguration cfg;
 
             public MainReload() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -402,7 +402,7 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public static class MainConverter implements LanguageUtils.Commands {
-            public YamlConfiguration cfg;
+            public final YamlConfiguration cfg;
 
             public MainConverter() {
                 this.cfg = LanguageUtils.getConfigFile();
@@ -433,7 +433,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class TeleportWarmupMSG implements Helper {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public TeleportWarmupMSG() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -463,7 +463,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class HooksMSG implements Helper {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public HooksMSG() {
             this.cfg = LanguageUtils.getConfigFile();
@@ -492,7 +492,7 @@ public class LanguageUtils extends ConfigUtils {
     }
 
     public static class CommandsMSG implements Helper {
-        public YamlConfiguration cfg;
+        public final YamlConfiguration cfg;
 
         public CommandsMSG() {
             this.cfg = LanguageUtils.getConfigFile();

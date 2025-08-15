@@ -4,6 +4,6 @@ public enum database_type {
 
     SQLITE,
     H2,
-    EXTERNAL;
+    EXTERNAL
 
 }

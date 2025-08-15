@@ -94,8 +94,7 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                     lang.sendMsg(s, lang5.getUsage());
                     return false;
                 }
-                if(p != null) Main.db.migrateData(p, args[1]);
-                else Main.db.migrateData(null, args[1]);
+                Main.db.migrateData(p, args[1]);
                 return false;
             case "version":
             case "ver":

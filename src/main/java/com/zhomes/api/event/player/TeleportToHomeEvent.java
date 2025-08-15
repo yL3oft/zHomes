@@ -12,17 +12,17 @@ public class TeleportToHomeEvent extends PlayerEvent implements Cancellable {
 
     private boolean isCancelled;
 
-    protected Location from;
+    protected final Location from;
 
-    protected Location to;
+    protected final Location to;
 
-    protected boolean isDimensionalTeleport;
+    protected final boolean isDimensionalTeleport;
 
     protected boolean playerOwnHome = true;
 
     protected String home;
 
-    protected OfflinePlayer owner;
+    protected final OfflinePlayer owner;
 
     public TeleportToHomeEvent(Player who, String home, Location from, Location to, boolean isDimensionalTeleport) {
         super(who);
