@@ -1,5 +1,6 @@
 package me.yleoft.zHomes.utils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -15,6 +16,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 import static me.yleoft.zAPI.utils.LocationUtils.*;
 
@@ -83,37 +85,46 @@ public class HomesUtils extends DatabaseEditor {
             lang.sendMsg(p, lang.getCantDimensionalTeleport());
             return;
         }
-        findNearestSafeLocationAsync(loc, 4, 50, tpLoc -> {
-            if (tpLoc == null) {
-                new LanguageUtils.CommandsMSG().sendMsg(p, "Unable to find a safe location");
-                return;
-            }
-            String homeString = p.getUniqueId() == t.getUniqueId() ? home : t.getName() + ":" + home;
-            Runnable task = () -> {
-                Sound sound = getTeleportSound();
-                if (zAPI.isFolia()) {
-                    try {
-                        Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
-                        teleportAsyncMethod.invoke(p, tpLoc);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Unable to teleport player", e);
-                    }
-                } else {
-                    SchedulerUtils.runTaskLater(tpLoc, () -> p.teleport(tpLoc), 1L);
+        SchedulerUtils.runTask(loc, new FoliaRunnable() {
+            @Override
+            public void run() {
+                Location tpLoc = findNearestSafeLocation(loc, 4, 50);
+                if(tpLoc == null) {
+                    LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+                    cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
+                    return;
                 }
-
-                lang.sendMsg(p, lang.getOutput(homeString));
-                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
-            };
-
-            if (doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
-                LanguageUtils.TeleportWarmupMSG warmupMsg = new LanguageUtils.TeleportWarmupMSG();
-                lang.sendMsg(p, warmupMsg.getWarmup(warmupTime()));
-                startWarmup(p, warmupMsg, lang, homeString, task);
-                return;
+                String homeString = p.getUniqueId() == t.getUniqueId() ? home : t.getName() + ":" + home;
+                Runnable task = () -> {
+                    Sound sound = getTeleportSound();
+                    if (zAPI.isFolia()) {
+                        try {
+                            Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
+                            teleportAsyncMethod.invoke(p, tpLoc);
+                            SchedulerUtils.runTask(tpLoc, () -> {
+                                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                            });
+                        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                            throw new RuntimeException("Unable to teleport player to home", e);
+                        }
+                    }else {
+                        SchedulerUtils.runTaskLater(tpLoc, () -> {
+                            p.teleport(tpLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                            SchedulerUtils.runTask(tpLoc, () -> {
+                                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                            });
+                        }, 1L);
+                    }
+                    lang.sendMsg(p, lang.getOutput(homeString));
+                };
+                if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
+                    LanguageUtils.TeleportWarmupMSG langWarmup = new LanguageUtils.TeleportWarmupMSG();
+                    lang.sendMsg(p, langWarmup.getWarmup(warmupTime()));
+                    startWarmup(p, langWarmup, lang, homeString, task);
+                    return;
+                }
+                task.run();
             }
-
-            task.run();
         });
     }
     public void teleportPlayer(Player p, String home) {

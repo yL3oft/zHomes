@@ -370,6 +370,7 @@ public final class Main extends JavaPlugin {
             registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassLimit(), "Bypass homes limit", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
+            registerPermission(cfgu.PermissionBypassWarmup(), "Bypass teleportation warmup time", PermissionDefault.OP);
         } catch (Exception e) {
             helper.sendMsg(getServer().getConsoleSender(), this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");
         }

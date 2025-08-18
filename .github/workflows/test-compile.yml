@@ -32,8 +32,14 @@ jobs:
       - name: Compile and Test with Maven
         run: mvn clean install -DskipTests=false -Dgpg.skip=true
 
+      - name: Get project version
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Upload target artifact
         uses: actions/upload-artifact@v4
         with:
-          name: target-artifact
+          name: zHomes ${{ steps.get_version.outputs.version }}
           path: target/
