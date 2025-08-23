@@ -369,6 +369,7 @@ public final class Main extends JavaPlugin {
             registerPermission(cfgu.CmdHomeRenamePermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " rename (Home) (NewName)' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdHomeOthersPermission(), "Permission to use the '/" + cfgu.CmdHomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassLimit(), "Bypass homes limit", PermissionDefault.OP);
+            registerPermission(cfgu.PermissionBypassST(), "Bypass safe teleport", PermissionDefault.FALSE);
             registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassWarmup(), "Bypass teleportation warmup time", PermissionDefault.OP);
         } catch (Exception e) {

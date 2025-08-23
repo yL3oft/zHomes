@@ -88,7 +88,7 @@ public class HomesUtils extends DatabaseEditor {
         SchedulerUtils.runTask(loc, new FoliaRunnable() {
             @Override
             public void run() {
-                Location tpLoc = findNearestSafeLocation(loc, 4, 50);
+                Location tpLoc = (enableSafeTeleport() && !p.hasPermission(PermissionBypassST())) ? findNearestSafeLocation(loc, 4, 50) : loc;
                 if(tpLoc == null) {
                     LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
                     cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());

@@ -40,6 +40,9 @@ general:
 
 # In this section you can change the teleport options for the players
 teleport-options:
+  # This option defines if the plugin should check for a safe location upon trying to teleport to a home.
+  # OPTIONS: [true, false] --- DEFAULT: true
+  enable-safe-teleport: true
   # This option defines if the players can teleport to other dimensions with homes.
   # OPTIONS: [true, false] --- DEFAULT: true
   dimensional-teleportation: true # There is also a permission to bypass in permissions.bypass.dimensional-teleportation in this file
@@ -157,6 +160,9 @@ permissions:
     # This permission allows the player to bypass the dimensional teleportation
     # Default: zhomes.bypass.dimensionalteleportation
     dimensional-teleportation: "zhomes.bypass.dimensionalteleportation" # Only OP by default
+    # Allow player's to bypass safe teleportation
+    # Default: zhomes.bypass.safeteleport
+    safe-teleportation: "zhomes.bypass.safeteleport" # False by default
     # This permission allows the player to bypass the teleportation warmup
     # Default: zhomes.bypass.warmup
     warmup: "zhomes.bypass.warmup" # Only OP by default

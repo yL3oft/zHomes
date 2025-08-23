@@ -40,6 +40,9 @@ public class ConfigUtils {
     }
 
     //<editor-fold desc="Plugin Information">
+    public boolean enableSafeTeleport() {
+        return main.getConfig().getBoolean(this.tpo + "enable-safe-teleport");
+    }
     public boolean canDimensionalTeleport() {
         return main.getConfig().getBoolean(this.tpo + "dimensional-teleportation");
     }
@@ -216,6 +219,9 @@ public class ConfigUtils {
     }
     public String PermissionBypassDT() {
         return main.getConfig().getString(permissionsBypassPath+"dimensional-teleportation");
+    }
+    public String PermissionBypassST() {
+        return main.getConfig().getString(permissionsBypassPath+"safe-teleportation");
     }
     public String PermissionBypassWarmup() {
         return main.getConfig().getString(permissionsBypassPath+"warmup");
