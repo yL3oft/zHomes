@@ -9,7 +9,6 @@
     <version>2.1.7-SNAPSHOT</version>
     <description>Your new favorite homes plugin</description>
     <url>https://github.com/yL3oft/zHomes</url>
-    <packaging>jar</packaging>
 
     <name>zHomes</name>
 
@@ -167,7 +166,6 @@
             <id>sk89q-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
             <releases>
-                <enabled>true</enabled>
                 <updatePolicy>never</updatePolicy>
             </releases>
             <snapshots>
