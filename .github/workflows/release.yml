@@ -26,7 +26,7 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Compile and Test with Maven
-        run: mvn clean install -DskipTests=false -Dgpg.skip=true
+        run: mvn clean install
 
       - name: Get project version
         id: get_version
