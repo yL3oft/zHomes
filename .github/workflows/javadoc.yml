@@ -36,4 +36,4 @@ jobs:
           external_repository: yL3oft/zPlugins
           publish_branch: gh-pages
           publish_dir: target/reports/apidocs
-          destination_dir: zHomes
+          destination_dir: zHomes/javadocs
