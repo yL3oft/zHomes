@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.yleoft.zAPI.folia.FoliaRunnable;
+import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zAPI.utils.SchedulerUtils;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.ConfigUtils;
@@ -472,8 +473,7 @@ public class DatabaseConnection extends ConfigUtils {
                                     int count = 0;
                                     int countH = 0;
                                     for (String player : fYaml.getKeys(false)) {
-                                        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-                                        OfflinePlayer offplayer = Bukkit.getOfflinePlayer(player);
+                                        OfflinePlayer offplayer = PlayerUtils.getOfflinePlayer(player);
                                         if (offplayer == null) {
                                             count++;
                                             if (p != null) {
@@ -484,22 +484,25 @@ public class DatabaseConnection extends ConfigUtils {
                                         }
                                         String uuid = offplayer.getUniqueId().toString();
 
-                                        ConfigurationSection homesSection = yaml.getConfigurationSection(player);
+                                        ConfigurationSection homesSection = fYaml.getConfigurationSection(player);
                                         assert homesSection != null;
                                         for (String homeName : homesSection.getKeys(false)) {
-                                            String[] homeS = Objects.requireNonNull(homesSection.getString(homeName)).split(",");
+                                            String homeRaw = homesSection.getString(homeName);
+                                            if (homeRaw == null) continue;
+                                            String[] homeS = homeRaw.split(",");
+                                            if (homeS.length != 11) continue;
                                             String worldName = homeS[0];
-                                            double x = Double.parseDouble(homeS[1]);
-                                            double y = Double.parseDouble(homeS[2]);
-                                            double z = Double.parseDouble(homeS[3]);
-                                            float yaw = Float.parseFloat(homeS[4]);
-                                            float pitch = Float.parseFloat(homeS[5]);
+                                            double x = Double.parseDouble(homeS[1]+"."+homeS[2]);
+                                            double y = Double.parseDouble(homeS[3]+"."+homeS[4]);
+                                            double z = Double.parseDouble(homeS[5]+"."+homeS[6]);
+                                            float yaw = Float.parseFloat(homeS[7]+"."+homeS[8]);
+                                            float pitch = Float.parseFloat(homeS[9]+"."+homeS[10]);
                                             String location = serialize(worldName, x, y, z, yaw, pitch);
 
                                             pstmt.setString(1, uuid);
                                             pstmt.setString(2, homeName);
                                             pstmt.setString(3, location);
-                                            pstmt.executeUpdate();
+                                            pstmt.addBatch();
                                             countH++;
                                         }
                                         count++;
@@ -508,6 +511,7 @@ public class DatabaseConnection extends ConfigUtils {
                                             p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
                                         }
                                     }
+                                    pstmt.executeBatch();
                                     if (p != null) {
                                         String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
                                         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
