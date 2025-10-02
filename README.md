@@ -1,4 +1,4 @@
-# ![zHomes Banner](https://cdn.modrinth.com/data/cached_images/25d6ef484d24c1eae8114966bbf5b49b4ff51f44.png)
+![zHomes Banner](https://cdn.modrinth.com/data/cached_images/390b76823fb5785189aa005591a5a7cbc4a0beb8.png)
 
 <p align="center">
   <a href="https://modrinth.com/plugin/zhomes">
