@@ -33,13 +33,29 @@ commands:
       help-perm: |-
         %prefix%&bUsos de &e/%command%&b:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
         &c-> &e/%command% &aconverter (converter-type) &7Convierte datos de un lugar a otro
       help-noperm: |-
         %prefix%&bUsos de &e/%command%&b:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(version|ver)
+    info:
+      output: |-
+        %prefix%&2Ejecutando &4%name% v%version% &2por &b%author%&2.
+        %prefix%&r- &bVersión actual: &a%version%
+        %prefix%&r- &bRequiere actualización: &a%requpdate%
+        %prefix%&r- &bTipo de almacenamiento: &a%storage.type%
+        %prefix%&r- &bIdioma: &a%language%
+        %prefix%&r- &3Hooks:
+        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
+        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
+        %prefix%&r   &bWorldGuard: &a%use.worldguard%
+        %prefix%&r   &bVault: &a%use.vault%
+      requpdate-yes: "&cSí &7(Más información con &e/%command% version&7)"
+      requpdate-no: "&aNo"
     version:
       output: "%prefix%&bVersión actual: &a%version%"
       update:

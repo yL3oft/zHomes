@@ -100,7 +100,9 @@ public class ConfigUtils {
     public String CmdMainHelpPermission() {
         return main.getConfig().getString(this.cmdPath + "main.help.permission");
     }
-    public String CmdMainVersionPermission() {
+    public String CmdMainInfoPermission() {
+        return main.getConfig().getString(this.cmdPath + "main.info.permission");
+    }public String CmdMainVersionPermission() {
         return main.getConfig().getString(this.cmdPath + "main.version.permission");
     }
     public String CmdMainVersionUpdatePermission() {

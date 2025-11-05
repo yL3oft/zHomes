@@ -90,9 +90,12 @@ commands:
     cooldown: 0.0
     aliases:
       - zh
-    # Sub command - Help
+    # Sub command - Help (Admin)
     help:
       permission: "zhomes.command.main.help" # Only OP by default
+    # Sub command - Info
+    info:
+      permission: "zhomes.command.main.info" # True by default
     # Sub command - Version
     version:
       permission: "zhomes.command.main.version" # True by default

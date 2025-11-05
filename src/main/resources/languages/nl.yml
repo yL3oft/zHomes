@@ -33,13 +33,29 @@ commands:
       help-perm: |-
         %prefix%&bGebruik van &e/%command%&b:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
         &c-> &e/%command% &aconverter (converter-type) &7Converteer gegevens van de ene naar de andere plek
       help-noperm: |-
         %prefix%&bGebruik van &e/%command%&b:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(version|ver)
+    info:
+      output: |-
+        %prefix%&2Draait &4%name% v%version% &2door &b%author%&2.
+        %prefix%&r- &bHuidige versie: &a%version%
+        %prefix%&r- &bVereist update: &a%requpdate%
+        %prefix%&r- &bOpslagtype: &a%storage.type%
+        %prefix%&r- &bTaal: &a%language%
+        %prefix%&r- &3Hooks:
+        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
+        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
+        %prefix%&r   &bWorldGuard: &a%use.worldguard%
+        %prefix%&r   &bVault: &a%use.vault%
+      requpdate-yes: "&cJa &7(Meer info met &e/%command% version&7)"
+      requpdate-no: "&aNee"
     version:
       output: "%prefix%&bHuidige versie: &a%version%"
       update:

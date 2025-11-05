@@ -33,13 +33,29 @@ commands:
       help-perm: |-
         %prefix%&b命令 &e/%command%&b 的用法:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
         &c-> &e/%command% &aconverter (转化类型) &7迁移数据
       help-noperm: |-
         %prefix%&b命令 &e/%command%&b 用法:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(version|ver)
+    info:
+      output: |-
+        %prefix%&2正在运行 &4%name% v%version% &2作者 &b%author%&2。
+        %prefix%&r- &b当前版本: &a%version%
+        %prefix%&r- &b需要更新: &a%requpdate%
+        %prefix%&r- &b存储类型: &a%storage.type%
+        %prefix%&r- &b语言: &a%language%
+        %prefix%&r- &3Hooks:
+        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
+        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
+        %prefix%&r   &bWorldGuard: &a%use.worldguard%
+        %prefix%&r   &bVault: &a%use.vault%
+      requpdate-yes: "&c是 &7(更多信息请使用 &e/%command% version&7)"
+      requpdate-no: "&a否"
     version:
       output: "%prefix%&b当前版本: &a%version%"
       update:

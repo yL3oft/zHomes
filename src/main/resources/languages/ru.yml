@@ -33,13 +33,29 @@ commands:
       help-perm: |-
         %prefix%&bИспользование &e/%command%&b:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
         &c-> &e/%command% &aconverter (converter-type) &7Преобразование данных из одного источника в другой
       help-noperm: |-
         %prefix%&bИспользование &e/%command%&b:
         &c-> &e/%command% &a(help|?)
+        &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(version|ver)
+    info:
+      output: |-
+        %prefix%&2Запуск &4%name% v%version% &2от &b%author%&2.
+        %prefix%&r- &bТекущая версия: &a%version%
+        %prefix%&r- &bТребуется обновление: &a%requpdate%
+        %prefix%&r- &bТип хранения: &a%storage.type%
+        %prefix%&r- &bЯзык: &a%language%
+        %prefix%&r- &3Hooks:
+        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
+        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
+        %prefix%&r   &bWorldGuard: &a%use.worldguard%
+        %prefix%&r   &bVault: &a%use.vault%
+      requpdate-yes: "&cДа &7(Подробнее с &e/%command% version&7)"
+      requpdate-no: "&aНет"
     version:
       output: "%prefix%&bТекущая версия: &a%version%"
       update:

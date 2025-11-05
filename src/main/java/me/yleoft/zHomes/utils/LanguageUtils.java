@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 
 import static me.yleoft.zAPI.utils.ConfigUtils.formPath;
 import static me.yleoft.zAPI.utils.StringUtils.transform;
+import static me.yleoft.zHomes.Main.needsUpdate;
 
 public class LanguageUtils extends ConfigUtils {
 
@@ -348,6 +349,38 @@ public class LanguageUtils extends ConfigUtils {
                     String path = formPath(cmds, getCmd(), "no-update");
                     return this.cfg.getString(path);
                 }
+            }
+        }
+
+        public static class MainInfo implements LanguageUtils.Commands {
+            public final YamlConfiguration cfg;
+
+            public MainInfo() {
+                this.cfg = LanguageUtils.getConfigFile();
+            }
+
+            public String getCmd() {
+                return "main.info";
+            }
+
+            public String getUsage() {
+                return null;
+            }
+
+            public String getOutput() {
+                String path = formPath(cmds, getCmd(), "output");
+                return this.cfg.getString(path)
+                        .replace("%name%", LanguageUtils.main.getDescription().getName())
+                        .replace("%version%", LanguageUtils.main.getDescription().getVersion())
+                        .replace("%author%", String.join(", ", LanguageUtils.main.getDescription().getAuthors()))
+                        .replace("%requpdate%", (needsUpdate ? this.cfg.getString(formPath(cmds, getCmd(), "requpdate-yes")) : this.cfg.getString(formPath(cmds, getCmd(), "requpdate-no"))))
+                        .replace("%command%", Main.cfgu.CmdMainCommand())
+                        .replace("%storage.type%", Main.db.databaseType())
+                        .replace("%language%", langType())
+                        .replace("%use.placeholderapi%", (Main.usePlaceholderAPI ? "&aYes" : "&cNo"))
+                        .replace("%use.griefprevention%", (Main.useGriefPrevention ? "&aYes" : "&cNo"))
+                        .replace("%use.worldguard%", (Main.useWorldGuard ? "&aYes" : "&cNo"))
+                        .replace("%use.vault%", (Main.useVault ? "&aYes" : "&cNo"));
             }
         }
 

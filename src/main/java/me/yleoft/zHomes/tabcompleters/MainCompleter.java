@@ -23,6 +23,8 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
         if (args.length == 1) {
             if (p.hasPermission(CmdMainReloadPermission()))
                 commands.add("reload");
+            if (p.hasPermission(CmdMainInfoPermission()))
+                commands.add("info");
             if (p.hasPermission(CmdMainVersionPermission()))
                 commands.add("version");
             if (p.hasPermission(CmdMainConverterPermission()))

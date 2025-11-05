@@ -39,6 +39,7 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
         LanguageUtils.MainCMD lang = new LanguageUtils.MainCMD();
         LanguageUtils.MainCMD.MainReload lang2 = new LanguageUtils.MainCMD.MainReload();
         LanguageUtils.MainCMD.MainVersion lang3 = new LanguageUtils.MainCMD.MainVersion();
+        LanguageUtils.MainCMD.MainInfo langi = new LanguageUtils.MainCMD.MainInfo();
         LanguageUtils.MainCMD.MainVersion.MainVersionUpdate langvu = new LanguageUtils.MainCMD.MainVersion.MainVersionUpdate();
         LanguageUtils.MainCMD.MainHelp lang4 = new LanguageUtils.MainCMD.MainHelp();
         LanguageUtils.MainCMD.MainConverter lang5 = new LanguageUtils.MainCMD.MainConverter();
@@ -95,6 +96,13 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                     return false;
                 }
                 Main.db.migrateData(p, args[1]);
+                return false;
+            case "info":
+                if (p != null && !p.hasPermission(CmdMainInfoPermission())) {
+                    lang.sendMsg(s, cmdm.getNoPermission());
+                    return false;
+                }
+                lang.sendMsg(s, langi.getOutput());
                 return false;
             case "version":
             case "ver":
