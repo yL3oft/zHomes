@@ -6,7 +6,7 @@
 
     <groupId>me.yleoft</groupId>
     <artifactId>zHomes</artifactId>
-    <version>2.1.9-SNAPSHOT</version>
+    <version>2.1.9</version>
     <description>Your new favorite homes plugin</description>
     <url>https://github.com/yL3oft/zHomes</url>
 
