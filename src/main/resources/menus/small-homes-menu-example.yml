@@ -3,7 +3,7 @@
 Inventory:
   title: "&c> Homes"
   title-other: "&c> &e%player%&c's Homes"
-  rows: 6
+  rows: 3 #Changed to 3 rows instead of 6
 
 Config:
   homes-item:
@@ -24,7 +24,7 @@ Config:
       - PURPLE_BED
       - MAGENTA_BED
       - PINK_BED
-    slot: 0-44
+    slot: 0-17 # Adjusted slots for smaller menu
     name: "&aHome: &e%home%"
     lore:
       - "&bClick to teleport!"
@@ -33,31 +33,25 @@ Config:
       - "[INV]close"
   previous-page-item:
     material: ARROW
-    slot: 47
+    slot: 20 # Adjusted slot for smaller menu
     name: "&cPrevious page"
     commands:
       - "homes %previous-page%"
-    enchantments: FIRE_ASPECT;1
-    itemflags: HIDE_ENCHANTS
   next-page-item:
     material: ARROW
-    slot: 51
+    slot: 24 # Adjusted slot for smaller menu
     name: "&aNext page"
     commands:
       - "homes %next-page%"
-    enchantments: FIRE_ASPECT;1
-    itemflags: HIDE_ENCHANTS
 
 Items:
   'filler':
     material: GRAY_STAINED_GLASS_PANE
-    slot: 0-53
+    slot: 0-26 # Adjusted slots for smaller menu
     name: ""
   'close':
     material: BARRIER
-    slot: 49
+    slot: 22 # Adjusted slot for smaller menu
     name: "&cClose"
     commands:
       - "[INV]close"
-    enchantments: FIRE_ASPECT;1
-    itemflags: HIDE_ENCHANTS

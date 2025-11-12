@@ -1,13 +1,13 @@
 ## Dependency Changes
-- Plugin now uses [NBTAPI 2.15.3](https://github.com/tr7zw/Item-NBT-API/releases/tag/2.15.3)
-- Plugin now uses [zAPI 1.5.0](https://github.com/yL3oft/zAPI/releases/tag/1.5.0)
+- Plugin now uses [zAPI 1.5.1](https://github.com/yL3oft/zAPI/releases/tag/1.5.1)
 
 ## General Changes
-- Added support for 1.21.9 and 1.21.10
-- Fixed converter for xhomes
-- Added new info subcommand for the main command (``/zhomes info``) that shows useful information about the plugin
+- Fixed support for WorldGuard 6.x
+- Added a new shorter homes menu example in folder menus/
+- Changed a little the default homes menu
+- Fixed head items in menus not showing correctly in some versions
+- Fixed action bar on older versions
 
 
-**zAPI Changelog**: https://github.com/yL3oft/zAPI/compare/1.4.9...1.5.0
-**NBTAPI Changelog**: https://github.com/tr7zw/Item-NBT-API/compare/2.15.2...2.15.3
-**Full Changelog**: https://github.com/yL3oft/zHomes/compare/2.1.8...2.1.9
+**zAPI Changelog**: https://github.com/yL3oft/zAPI/compare/1.5.0...1.5.1
+**Full Changelog**: https://github.com/yL3oft/zHomes/compare/2.1.9...2.2.0

@@ -46,12 +46,14 @@ public final class Main extends JavaPlugin {
 
     public static FileUtils configFileUtils;
     public static final String homesMenuPath = "menus/menu-homes.yml";
+    public static final String smallerHomesMenuExamplePath = "menus/small-homes-menu-example.yml";
     public static StateFlag useHomesFlag;
     public static StateFlag setHomesFlag;
 
     public static boolean useGriefPrevention = false;
     public static boolean usePlaceholderAPI = false;
     public static boolean useWorldGuard = false;
+    public static boolean isWG7 = false;
     public static boolean useVault = false;
 
     private static Main main;
@@ -101,17 +103,27 @@ public final class Main extends JavaPlugin {
         //<editor-fold desc="WorldGuard Hook">
         try {
             Plugin wg = getServer().getPluginManager().getPlugin("WorldGuard");
-            if (wg instanceof WorldGuardPlugin) {
+            if (wg != null) {
                 useWorldGuard = true;
+                try {
+                    Class.forName("com.sk89q.worldguard.WorldGuard");
+                    isWG7 = true;
+                } catch (ClassNotFoundException ignored) {
+                    isWG7 = false;
+                    getLogger().warning("Legacy WorldGuard version found, some features may not work as expected.");
+                }
+
                 try {
                     WorldGuardHook.setupFlags();
                 } catch (Exception e) {
-                    getLogger().severe("Failed to hook into WorldGuard properly.");
+                    getLogger().severe("Failed to setup custom flags with WorldGuard.");
                     e.printStackTrace();
                 }
+            } else {
+                getLogger().warning("WorldGuard not found, continuing without it.");
             }
         } catch (Exception e) {
-            Bukkit.getLogger().log(Level.SEVERE, "Error hooking into WorldGuard");
+            getLogger().log(Level.SEVERE, "Error hooking into WorldGuard", e);
         }
         //</editor-fold>
     }
@@ -153,13 +165,17 @@ public final class Main extends JavaPlugin {
             fu.saveDefaultConfig();
             fu.reloadConfig();
         }
-        FileUtils fu = FileManager.createFile(homesMenuPath);
-        if(!fu.getFile().exists()) {
-            fu.saveDefaultConfig();
-            fu.reloadConfig(true);
-        }else {
-            fu.saveDefaultConfig();
-            fu.reloadConfig(false);
+        List<FileUtils> menusFus = new ArrayList<>();
+        menusFus.add(FileManager.createFile(homesMenuPath));
+        menusFus.add(FileManager.createFile(smallerHomesMenuExamplePath));
+        for(FileUtils fu : menusFus) {
+            if (!fu.getFile().exists()) {
+                fu.saveDefaultConfig();
+                fu.reloadConfig(true);
+            } else {
+                fu.saveDefaultConfig();
+                fu.reloadConfig(false);
+            }
         }
         helper.sendMsg(getServer().getConsoleSender(), ChatColor.translateAlternateColorCodes('&', coloredPluginName + "&fAll files have been created!"));
         //</editor-fold>

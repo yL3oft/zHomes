@@ -126,7 +126,14 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
                     .replace("%player%", requireNonNull(t.getName()))));
             homes.forEach(home -> finalHomes.add(t.getName()+":"+home));
         }else finalHomes = homes;
-        int slots = 45;
+        String slotString = config.getString(formPath(path, "slot"));
+        int slots;
+        if (slotString.matches("\\d+-\\d+")) {
+            String[] parts = slotString.split("-");
+            int start = Integer.parseInt(parts[0]);
+            int end = Integer.parseInt(parts[1]);
+            slots = end - start + 1;
+        }else slots = Integer.parseInt(slotString)+1;
         if (page > 1) {
             int startIndex = 0;
             int endIndex = Math.min(startIndex + (slots*(page-1)), finalHomes.size());
@@ -134,7 +141,7 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
             inv.setItem(p, config, pathPP, "%previous-page%", Collections.singletonList(String.valueOf(page - 1)));
         }
         if(!finalHomes.isEmpty()) {
-            if (finalHomes.size() > 45) {
+            if (finalHomes.size() > slots) {
                 inv.setItem(p, config, pathNP, "%next-page%", Collections.singletonList(String.valueOf(page + 1)));
             }
             inv.setItem(p, config, path, "%home%", finalHomes);
