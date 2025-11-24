@@ -1,82 +1,89 @@
-# 在此可修改对接消息
+# 在这里可以管理钩子消息
 hooks:
   griefprevention:
-    cant-set-homes: "%prefix%&c你不能在此区域设置家。"
+    cant-set-homes: "%prefix%&c你无法在此区域设置家。"
   worldguard:
-    cant-use-homes: "%prefix%&c你不能在这里设置家."
-    cant-set-homes: "%prefix%&c你不能在这里设置家。"
+    cant-use-homes: "%prefix%&c你无法在此使用家。"
+    cant-set-homes: "%prefix%&c你无法在此设置家。"
   vault:
-    cant-afford-command: "%prefix%&c你至少需要 &6$%cost% &c才可执行该命令."
+    cant-afford-command: "%prefix%&c你需要 &6$%cost% &c才能执行此命令。"
 
-# 传送预热相关消息提示
+# 与传送准备时间相关的消息
 teleport-warmup:
-  warmup: "%prefix%&a将在 %time% 秒内传送... 请勿移动!"
-  warmup-actionbar: "&a将在 %time% 秒内传送..."
-  cancelled: "%prefix%&c你移动了! 传送已取消."
-  cancelled-actionbar: "&c你移动了! 传送已取消."
+  warmup: "%prefix%&a将在 %time% 秒后传送... 请勿移动！"
+  warmup-actionbar: "&a将在 %time% 秒后传送..."
+  cancelled: "%prefix%&c你移动了！传送已取消。"
+  cancelled-actionbar: "&c你移动了！传送已取消。"
 
-# 命令相关消息提示
+# 与命令相关的消息
 commands:
-  # 多个命令中使用的消息文本
-  no-permission: "%prefix%&c你没有权限执行此命令."
-  in-cooldown: "%prefix%&c你必须等待 %timeleft% 秒才可再次使用该命令."
-  home-already-exist: "%prefix%&c你已经设置了同名的家."
-  home-doesnt-exist: "%prefix%&c你没有设置过该名称的家."
-  home-doesnt-exist-others: "%prefix%&e%player% &c没有设置过该名称的家."
-  cant-use-2dot: "%prefix%&c你不能在命令中使用英文冒号 &e':'&c."
-  cant-find-player: "%prefix%&c玩家不存在."
-  unable-to-find-safe-location: "%prefix%&c无法寻找安全传送点."
+  # 上面是可以在多个命令中使用的通用消息
+  no-permission: "%prefix%&c你没有权限执行此命令。"
+  only-players: "%prefix%&c只有玩家可以执行此命令。"
+  in-cooldown: "%prefix%&c你必须等待 %timeleft% 秒才能再次使用此命令。"
+  home-already-exist: "%prefix%&c你已经有一个同名的家。"
+  home-doesnt-exist: "%prefix%&c你没有此名称的家。"
+  home-doesnt-exist-others: "%prefix%&e%player% &c没有此名称的家。"
+  cant-use-2dot: "%prefix%&c你不能在此命令中使用 &e':' &c。"
+  cant-find-player: "%prefix%&c未找到该玩家。"
+  unable-to-find-safe-location: "%prefix%&c无法找到安全的传送位置。"
 
-  # 部分命令使用的特殊消息文本
+  # 下面是各命令的专用消息
   main:
     help:
       help-perm: |-
-        %prefix%&b命令 &e/%command%&b 的用法:
+        %prefix%&b/%command% 的用法 &e:
         &c-> &e/%command% &a(help|?)
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &aconverter (转化类型) &7迁移数据
+        &c-> &e/%command% &anearhomes &6(<半径>) &7列出一定半径内你附近的家
+        &c-> &e/%command% &aconverter (<converter-type>) &7将数据从一种来源转换到另一种来源
       help-noperm: |-
-        %prefix%&b命令 &e/%command%&b 用法:
+        %prefix%&b/%command% 的用法 &e:
         &c-> &e/%command% &a(help|?)
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2正在运行 &4%name% v%version% &2作者 &b%author%&2。
+        %prefix%&2正在运行 &4%name% v%version% &2，作者 &b%author%&2。
         %prefix%&r- &b当前版本: &a%version%
-        %prefix%&r- &b需要更新: &a%requpdate%
+        %prefix%&r- &b是否需要更新: &a%requpdate%
         %prefix%&r- &b存储类型: &a%storage.type%
         %prefix%&r- &b语言: &a%language%
-        %prefix%&r- &3Hooks:
+        %prefix%&r- &3钩子:
         %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
         %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
         %prefix%&r   &bWorldGuard: &a%use.worldguard%
         %prefix%&r   &bVault: &a%use.vault%
-      requpdate-yes: "&c是 &7(更多信息请使用 &e/%command% version&7)"
+      requpdate-yes: "&c是 &7(更多信息使用 &e/%command% version&7)"
       requpdate-no: "&a否"
     version:
       output: "%prefix%&b当前版本: &a%version%"
       update:
         output: "%prefix%&azHomes 已更新到最新版本 &e(%update%)&a，请重启服务器以应用更改。"
-        no-update: "%prefix%&a你已经在使用最新版本的 zHomes。"
+        no-update: "%prefix%&a你已使用 zHomes 的最新版本。"
     reload:
       usage: |-
-        %prefix%&b命令 &e/%command% &a(reload|rl)&b 用法:
+        %prefix%&b/%command% &a(reload|rl) 的用法 &e:
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
-      output: "%prefix%&a重载完毕, 耗时 &b%time%ms&a."
+      output: "%prefix%&a已在 &b%time%ms&a 内重新加载插件。"
       commands:
-        output: "%prefix%&a重载插件所有命令完毕, 耗时 &b%time%ms&a."
+        output: "%prefix%&a已在 &b%time%ms&a 内重新加载所有插件命令。"
       config:
-        output: "%prefix%&a重载插件所有配置完毕, 耗时 &b%time%ms&a."
+        output: "%prefix%&a已在 &b%time%ms&a 内重新加载插件配置文件。"
       languages:
         output: |-
-          %prefix%&a重载插件所有语言配置完毕, 耗时 &b%time%ms&a.
-          &7注意: 这不会更新 config.yml 中的语言文本, 若要如此, 请输入命令 '/%command% reload config'.
+          %prefix%&a已在 &b%time%ms&a 内重新加载插件语言文件。
+          &7注意：这不会从 config.yml 更新语言，要那样做请使用 '/%command% reload config'。
+    nearhomes:
+      usage: "&c-> &e/%command% nearhomes &a[<半径>]"
+      output: "%prefix%&7在半径 &e%radius% &7方块内的家: &f%homes%"
+      output-not-found: "%prefix%&c在半径 &e%radius% &c方块内未找到家。"
+      home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
-        %prefix%&b命令 &e/%command% &aconverter&b:
+        %prefix%&b/%command% &aconverter 的用法 &e:
         &c-> &e/%command% &aconverter sqlitetoh2
         &c-> &e/%command% &aconverter sqlitetomysql
         &c-> &e/%command% &aconverter sqlitetomariadb
@@ -92,25 +99,25 @@ commands:
         &c-> &e/%command% &aconverter ultimatehomes
         &c-> &e/%command% &aconverter xhomes
         &c-> &e/%command% &aconverter zhome
-      output: "%prefix%&a所有数据转化完毕!"
-      error: "%prefix%&c转化数据时遇到问题, 请检查控制台获知详情."
+      output: "%prefix%&a所有数据已转换！"
+      error: "%prefix%&c转换数据时出错，请检查服务器控制台。"
   sethome:
-    usage: "&c-> &e/%command% &a(家名称)"
-    output: "%prefix%&a已将家 &e%home% &a设置在当前位置."
-    limit-reached: "&c你不能再设置更多家 &e(%limit% 个) 了&c!"
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&a家 &e%home% &a已在你的位置设置。"
+    limit-reached: "&c你不能设置更多的家，因为你已达到上限 &e(%limit% 个家)&c！"
   delhome:
-    usage: "&c-> &e/%command% &a(家名称)"
-    output: "%prefix%&c已删除家 &e%home% &c."
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&c家 &e%home% &c已删除。"
   home:
-    usage: "&c-> &e/%command% &a(家名称)"
-    output: "%prefix%&a正在传送至 &e%home%&a..."
-    cant-dimensional-teleport: "&c传送已取消! 无法跨维度移动."
+    usage: "&c-> &e/%command% &a(Home)"
+    output: "%prefix%&a正在传送到 &e%home%&a..."
+    cant-dimensional-teleport: "&c你的传送已取消！跨维度传送已被禁用。"
     rename:
-      usage: "&c-> &e/%command% &a重命名 (Home) (新名称)"
-      output: "%prefix%&a家 &e%home% &a已重命名为 &e%newname%&a."
-      same-name: "%prefix%&c你不能将家重命名为相同的名字。"
+      usage: "&c-> &e/%command% &arenomear (Home) (NewName)"
+      output: "%prefix%&a家 &e%home% &a已重命名为 &e%newname%&a。"
+      same-name: "%prefix%&c你不能将家重命名为相同的名称。"
   homes:
-    output: "%prefix%&7你设置的家: &f%homes%"
-    invalid-page: "%prefix%&c无效的页码！请使用大于0的数字。"
+    output: "%prefix%&7你的家: &f%homes%"
+    invalid-page: "%prefix%&c无效的页码！请使用大于 0 的数字。"
     others:
-      output: "%prefix%&e%player% &7设置的家: &f%homes%"
+      output: "%prefix%&7玩家 &e%player% &7的家: &f%homes%"

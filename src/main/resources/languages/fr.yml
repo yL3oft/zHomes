@@ -19,6 +19,7 @@ teleport-warmup:
 commands:
   # En haut, vous trouverez des messages pouvant être utilisés dans plusieurs commandes
   no-permission: "%prefix%&cVous n'avez pas la permission d'exécuter cette commande."
+  only-players: "%prefix%&cSeuls les joueurs peuvent exécuter cette commande."
   in-cooldown: "%prefix%&cVous devez attendre %timeleft% secondes avant d'utiliser cette commande à nouveau."
   home-already-exist: "%prefix%&cVous avez déjà un home avec ce nom."
   home-doesnt-exist: "%prefix%&cVous n'avez aucun home avec ce nom."
@@ -36,6 +37,7 @@ commands:
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
+        &c-> &e/%command% &anearhomes &6(<Radius>) &7Liste les homes proches de vous dans un certain rayon
         &c-> &e/%command% &aconverter (converter-type) &7Convertit les données d’un endroit à un autre
       help-noperm: |-
         %prefix%&bUtilisations de &e/%command%&b :
@@ -74,6 +76,11 @@ commands:
         output: |-
           %prefix%&aLangues rechargées en &b%time%ms&a.
           &7Remarque : Cela ne mettra pas à jour la langue dans config.yml, utilisez '/%command% reload config' pour cela.
+    nearhomes:
+      usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
+      output: "%prefix%&7Homes proches dans un rayon de &e%radius% &7blocs: &f%homes%"
+      output-not-found: "%prefix%&cAucun home trouvé dans un rayon de &e%radius% &cblocs."
+      home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
         %prefix%&bUtilisations de &e/%command% &aconverter&b:

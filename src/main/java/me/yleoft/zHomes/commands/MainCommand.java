@@ -3,6 +3,7 @@ package me.yleoft.zHomes.commands;
 import me.yleoft.zAPI.managers.FileManager;
 import me.yleoft.zAPI.managers.PluginYAMLManager;
 import me.yleoft.zAPI.utils.FileUtils;
+import me.yleoft.zAPI.utils.StringUtils;
 import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.ExecuteMainCommandEvent;
 import me.yleoft.zHomes.utils.ConfigUtils;
@@ -43,6 +44,7 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
         LanguageUtils.MainCMD.MainVersion.MainVersionUpdate langvu = new LanguageUtils.MainCMD.MainVersion.MainVersionUpdate();
         LanguageUtils.MainCMD.MainHelp lang4 = new LanguageUtils.MainCMD.MainHelp();
         LanguageUtils.MainCMD.MainConverter lang5 = new LanguageUtils.MainCMD.MainConverter();
+        LanguageUtils.MainCMD.MainNearhomes lang6 = new LanguageUtils.MainCMD.MainNearhomes();
 
         //<editor-fold desc="Checks">
         if (args.length == 0) {
@@ -54,11 +56,12 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
         String subcmd = args[0];
         switch (subcmd) {
             case "help":
-            case "?":
+            case "?": {
                 lang.sendMsg(s, getUsage(s, lang4));
                 return false;
+            }
             case "reload":
-            case "rl":
+            case "rl": {
                 //<editor-fold desc="Checks">
                 if (p != null && !p.hasPermission(CmdMainReloadPermission())) {
                     lang.sendMsg(s, cmdm.getNoPermission());
@@ -86,7 +89,8 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                 }
                 lang.sendMsg(s, lang2.getUsage());
                 return false;
-            case "converter":
+            }
+            case "converter": {
                 if (p != null && !p.hasPermission(CmdMainConverterPermission())) {
                     lang.sendMsg(s, cmdm.getNoPermission());
                     return false;
@@ -97,20 +101,22 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                 }
                 Main.db.migrateData(p, args[1]);
                 return false;
-            case "info":
+            }
+            case "info": {
                 if (p != null && !p.hasPermission(CmdMainInfoPermission())) {
                     lang.sendMsg(s, cmdm.getNoPermission());
                     return false;
                 }
                 lang.sendMsg(s, langi.getOutput());
                 return false;
+            }
             case "version":
-            case "ver":
+            case "ver": {
                 if (p != null && !p.hasPermission(CmdMainVersionPermission())) {
                     lang.sendMsg(s, cmdm.getNoPermission());
                     return false;
                 }
-                if(args.length >= 2) {
+                if (args.length >= 2) {
                     subcmd2 = args[1];
                     switch (subcmd2) {
                         case "--update":
@@ -119,14 +125,14 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                                 lang.sendMsg(s, cmdm.getNoPermission());
                                 return false;
                             }
-                            if(!needsUpdate) {
+                            if (!needsUpdate) {
                                 lang.sendMsg(s, langvu.getNoUpdate());
                                 return false;
                             }
                             try {
                                 checker.update();
                                 lang.sendMsg(s, langvu.getOutput(Main.getInstance().updateVersion));
-                            }catch (Exception e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                                 return false;
                             }
@@ -135,15 +141,39 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                     }
                 }
                 lang.sendMsg(s, lang3.getOutput());
-                if(needsUpdate) {
+                if (needsUpdate) {
                     lang.sendMsg(s, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
                     lang.sendMsg(s, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);
                     lang.sendMsg(s, "%prefix%&6Your version: &c" + Main.getInstance().getDescription().getVersion());
                     lang.sendMsg(s, "%prefix%&6You can update your plugin here: &e" + Main.getInstance().site);
-                }else {
+                } else {
                     lang.sendMsg(s, langvu.getNoUpdate());
                 }
                 return false;
+            }
+            case "nearhomes": {
+                //<editor-fold desc="Checks">
+                if(p == null) {
+                    lang.sendMsg(s, cmdm.getOnlyPlayers());
+                    return false;
+                }
+                if (!p.hasPermission(CmdMainNearhomesPermission())) {
+                    lang.sendMsg(s, cmdm.getNoPermission());
+                    return false;
+                }
+                if(args.length != 2 || !StringUtils.isInteger(args[1])) {
+                    lang.sendMsg(s, lang6.getUsage());
+                    return false;
+                }
+                double radius = Double.parseDouble(args[1]);
+                if(radius <= 0) {
+                    lang.sendMsg(s, lang6.getUsage());
+                    return false;
+                }
+                //</editor-fold>
+                lang.sendMsg(s, lang6.getOutput(Main.hu.getNearHomes(p.getLocation(), radius), radius));
+                return false;
+            }
         }
         lang.sendMsg(s, getUsage(s, lang4));
         return false;

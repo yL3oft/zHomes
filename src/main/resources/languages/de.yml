@@ -19,6 +19,7 @@ teleport-warmup:
 commands:
   # Oben findest du Nachrichten, die in mehreren Befehlen verwendet werden können
   no-permission: "%prefix%&cDu hast keine Berechtigung, diesen Befehl auszuführen."
+  only-players: "%prefix%&cNur Spieler können diesen Befehl ausführen."
   in-cooldown: "%prefix%&cDu musst %timeleft% Sekunden warten, bevor du diesen Befehl erneut verwenden kannst."
   home-already-exist: "%prefix%&cDu hast bereits ein Home mit diesem Namen."
   home-doesnt-exist: "%prefix%&cDu hast kein Home mit diesem Namen."
@@ -36,6 +37,7 @@ commands:
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
+        &c-> &e/%command% &anearhomes &6(<Radius>) &7Listet Homes in deiner Nähe innerhalb eines Radius auf
         &c-> &e/%command% &aconverter (converter-type) &7Konvertiere Daten von einem Ort zum anderen
       help-noperm: |-
         %prefix%&bVerwendung von &e/%command%&b:
@@ -74,6 +76,11 @@ commands:
         output: |-
           %prefix%&aSprachen des Plugins wurden in &b%time%ms&a neu geladen.
           &7Hinweis: Dies aktualisiert nicht die Sprache in config.yml. Verwende '/%command% reload config', um das zu tun.
+    nearhomes:
+      usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
+      output: "%prefix%&7Homes in deiner Nähe innerhalb von &e%radius% &7Blöcken: &f%homes%"
+      output-not-found: "%prefix%&cKeine Homes innerhalb von &e%radius% &cBlöcken gefunden."
+      home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
         %prefix%&bVerwendung von &e/%command% &aconverter&b:
@@ -111,6 +118,6 @@ commands:
       same-name: "%prefix%&cDu kannst ein Zuhause nicht in denselben Namen umbenennen."
   homes:
     output: "%prefix%&7Deine Homes: &f%homes%"
-    invalid-page: "%prefix%&cUngültige Seitennummer! Bitte verwenden Sie eine Zahl größer als 0."
+    invalid-page: "%prefix%&cUngültige Seitennummer! Bitte verwende eine Zahl größer als 0."
     others:
       output: "%prefix%&7Homes von &e%player%: &f%homes%"

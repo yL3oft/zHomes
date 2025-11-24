@@ -19,6 +19,7 @@ teleport-warmup:
 commands:
   # Bovenaan staan berichten die in meerdere commando's worden gebruikt
   no-permission: "%prefix%&cJe hebt geen toestemming om dit commando uit te voeren."
+  only-players: "%prefix%&cAlleen spelers kunnen dit commando uitvoeren."
   in-cooldown: "%prefix%&cJe moet %timeleft% seconden wachten voordat je dit commando opnieuw kunt gebruiken."
   home-already-exist: "%prefix%&cJe hebt al een home met deze naam."
   home-doesnt-exist: "%prefix%&cJe hebt geen home met deze naam."
@@ -36,6 +37,7 @@ commands:
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
+        &c-> &e/%command% &anearhomes &6(<Radius>) &7Toont homes bij jou in de buurt binnen een bepaald bereik
         &c-> &e/%command% &aconverter (converter-type) &7Converteer gegevens van de ene naar de andere plek
       help-noperm: |-
         %prefix%&bGebruik van &e/%command%&b:
@@ -74,6 +76,11 @@ commands:
         output: |-
           %prefix%&aTalen opnieuw geladen in &b%time%ms&a.
           &7Let op: Dit zal de taal in config.yml niet bijwerken, gebruik '/%command% reload config' om dat te doen.
+    nearhomes:
+      usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
+      output: "%prefix%&7Homes bij jou binnen &e%radius% &7blokken: &f%homes%"
+      output-not-found: "%prefix%&cGeen homes gevonden binnen &e%radius% &cblokken."
+      home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
         %prefix%&bGebruik van &e/%command% &aconverter&b:

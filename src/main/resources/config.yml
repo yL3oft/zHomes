@@ -104,6 +104,9 @@ commands:
     # Sub command - Reload
     reload:
       permission: "zhomes.command.main.reload" # Only OP by default
+    # Sub command - Nearhomes
+    nearhomes:
+      permission: "zhomes.command.main.nearhomes" # Only OP by default
     # Sub command - Converter
     converter:
       permission: "zhomes.command.main.converter" # Only OP by default

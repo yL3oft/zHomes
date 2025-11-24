@@ -1,14 +1,14 @@
 # Здесь вы можете управлять сообщениями хуков
 hooks:
   griefprevention:
-    cant-set-homes: "%prefix%&cВы не можете устанавливать дома в этой области."
+    cant-set-homes: "%prefix%&cВы не можете устанавливать дома в этой зоне."
   worldguard:
     cant-use-homes: "%prefix%&cВы не можете использовать дома здесь."
     cant-set-homes: "%prefix%&cВы не можете установить дом здесь."
   vault:
-    cant-afford-command: "%prefix%&cВам нужно &6$%cost% &cдля выполнения этой команды."
+    cant-afford-command: "%prefix%&cВам нужно &6$%cost% &cчтобы выполнить эту команду."
 
-# Сообщения, связанные с ожиданием перед телепортацией
+# Сообщения, связанные с подготовкой телепортации
 teleport-warmup:
   warmup: "%prefix%&aТелепортация через %time% секунд... Не двигайтесь!"
   warmup-actionbar: "&aТелепортация через %time% секунд..."
@@ -17,9 +17,10 @@ teleport-warmup:
 
 # Сообщения, связанные с командами
 commands:
-  # Вверху находятся сообщения, используемые в нескольких командах
+  # Вверху вы найдете сообщения, которые могут использоваться в нескольких командах
   no-permission: "%prefix%&cУ вас нет прав для выполнения этой команды."
-  in-cooldown: "%prefix%&cВы должны подождать %timeleft% секунд, прежде чем снова использовать эту команду."
+  only-players: "%prefix%&cТолько игроки могут выполнять эту команду."
+  in-cooldown: "%prefix%&cВам нужно подождать %timeleft% секунд перед повторным использованием этой команды."
   home-already-exist: "%prefix%&cУ вас уже есть дом с таким именем."
   home-doesnt-exist: "%prefix%&cУ вас нет дома с таким именем."
   home-doesnt-exist-others: "%prefix%&e%player% &cне имеет дома с таким именем."
@@ -27,7 +28,7 @@ commands:
   cant-find-player: "%prefix%&cИгрок не найден."
   unable-to-find-safe-location: "%prefix%&cНе удалось найти безопасное место для телепортации."
 
-  # Ниже находятся сообщения, специфичные для команд
+  # Ниже вы найдете сообщения, специфичные для команд
   main:
     help:
       help-perm: |-
@@ -36,7 +37,8 @@ commands:
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &aconverter (converter-type) &7Преобразование данных из одного источника в другой
+        &c-> &e/%command% &anearhomes &6(<Radius>) &7Показать дома рядом с вами в пределах указанного радиуса
+        &c-> &e/%command% &aconverter (<converter-type>) &7Конвертировать данные из одного места в другое
       help-noperm: |-
         %prefix%&bИспользование &e/%command%&b:
         &c-> &e/%command% &a(help|?)
@@ -44,12 +46,12 @@ commands:
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2Запуск &4%name% v%version% &2от &b%author%&2.
+        %prefix%&2Запущен &4%name% v%version% &2от &b%author%&2.
         %prefix%&r- &bТекущая версия: &a%version%
         %prefix%&r- &bТребуется обновление: &a%requpdate%
         %prefix%&r- &bТип хранения: &a%storage.type%
         %prefix%&r- &bЯзык: &a%language%
-        %prefix%&r- &3Hooks:
+        %prefix%&r- &3Хуки:
         %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
         %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
         %prefix%&r   &bWorldGuard: &a%use.worldguard%
@@ -65,15 +67,20 @@ commands:
       usage: |-
         %prefix%&bИспользование &e/%command% &a(reload|rl)&b:
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
-      output: "%prefix%&aПлагин перезагружен за &b%time%мс&a."
+      output: "%prefix%&aПлагин перезагружен за &b%time%ms&a."
       commands:
-        output: "%prefix%&aКоманды перезагружены за &b%time%мс&a."
+        output: "%prefix%&aВсе команды плагина перезагружены за &b%time%ms&a."
       config:
-        output: "%prefix%&aФайл конфигурации перезагружен за &b%time%мс&a."
+        output: "%prefix%&aФайл конфигурации плагина перезагружен за &b%time%ms&a."
       languages:
         output: |-
-          %prefix%&aЯзыки перезагружены за &b%time%мс&a.
+          %prefix%&aЯзыки плагина перезагружены за &b%time%ms&a.
           &7Примечание: это не обновит язык в config.yml, используйте '/%command% reload config' для этого.
+    nearhomes:
+      usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
+      output: "%prefix%&7Дома рядом с вами в радиусе &e%radius% &7блоков: &f%homes%"
+      output-not-found: "%prefix%&cДома не найдены в радиусе &e%radius% &cблоков."
+      home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
         %prefix%&bИспользование &e/%command% &aconverter&b:
@@ -92,21 +99,21 @@ commands:
         &c-> &e/%command% &aconverter ultimatehomes
         &c-> &e/%command% &aconverter xhomes
         &c-> &e/%command% &aconverter zhome
-      output: "%prefix%&aВсе данные были успешно конвертированы!"
-      error: "%prefix%&cПроизошла ошибка при конвертации данных. Проверьте консоль сервера."
+      output: "%prefix%&aВсе данные конвертированы!"
+      error: "%prefix%&cПроизошла ошибка при конвертации данных, пожалуйста, проверьте консоль сервера."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aДом &e%home% &aустановлен на вашей позиции."
-    limit-reached: "&cВы достигли лимита домов: &e(%limit% домов)&c!"
+    limit-reached: "&cВы не можете установить больше домов — вы достигли лимита &e(%limit% домов)&c!"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&cДом &e%home% &aудалён."
+    output: "%prefix%&cДом &e%home% &cудален."
   home:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aТелепортирован к &e%home%&a..."
-    cant-dimensional-teleport: "&cТелепортация отменена! Телепортация между измерениями отключена."
+    output: "%prefix%&aТелепортируюсь к &e%home%&a..."
+    cant-dimensional-teleport: "&cВаш телепорт был отменён! Телепортация между измерениями отключена."
     rename:
-      usage: "&c-> &e/%command% &aпереименовать (Home) (НовоеИмя)"
+      usage: "&c-> &e/%command% &apереименовать (Home) (НовоеИмя)"
       output: "%prefix%&aДом &e%home% &aпереименован в &e%newname%&a."
       same-name: "%prefix%&cВы не можете переименовать дом в то же самое имя."
   homes:

@@ -4,12 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
+import me.yleoft.zAPI.utils.LocationUtils;
+import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zHomes.Main;
+import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 
 public class DatabaseEditor extends DatabaseConnection {
 
@@ -19,14 +22,6 @@ public class DatabaseEditor extends DatabaseConnection {
             ps.executeUpdate();
         } catch (SQLException e) {
             Main.getInstance().getLogger().log(Level.SEVERE, "Error creating table: " + table, e);
-        }
-    }
-
-    public void renameTable(String oldtable, String newtable) {
-        try (Connection con = getConnection();
-             PreparedStatement ps = con.prepareStatement("ALTER TABLE " + oldtable + " RENAME TO " + newtable)) {
-            ps.executeUpdate();
-        } catch (SQLException ignored) {
         }
     }
 
@@ -116,6 +111,31 @@ public class DatabaseEditor extends DatabaseConnection {
             Main.getInstance().getLogger().log(Level.SEVERE, "Error getting homes for player: " + p.getName(), e);
         }
         return list;
+    }
+
+    public HashMap<OfflinePlayer, List<String>> getNearHomes(Location loc, double radius) {
+        HashMap<OfflinePlayer, List<String>> result = new HashMap<>();
+        if (loc == null || loc.getWorld() == null) return result;
+        double radiusSq = radius * radius;
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT UUID, HOME, LOCATION FROM " + databaseTable());
+             ResultSet rs = ps.executeQuery()) {
+            World world = loc.getWorld();
+            while (rs.next()) {
+                String uuid = rs.getString("UUID");
+                String home = rs.getString("HOME");
+                String locStr = rs.getString("LOCATION");
+                Location homeLoc = LocationUtils.deserialize(locStr);
+                if (!Objects.equals(homeLoc.getWorld(), world)) continue;
+                if (homeLoc.distanceSquared(loc) <= radiusSq) {
+                    OfflinePlayer owner = PlayerUtils.getOfflinePlayer(UUID.fromString(uuid));
+                    result.computeIfAbsent(owner, k -> new ArrayList<>()).add(home);
+                }
+            }
+        } catch (SQLException e) {
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error getting near homes", e);
+        } catch (Exception ignored) {}
+        return result;
     }
 
     public boolean isInTable(OfflinePlayer p, String home) {

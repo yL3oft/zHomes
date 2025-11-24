@@ -19,6 +19,7 @@ teleport-warmup:
 commands:
   # Arriba encontrarás mensajes que pueden usarse en múltiples comandos
   no-permission: "%prefix%&cNo tienes permiso para ejecutar este comando."
+  only-players: "%prefix%&cSolo los jugadores pueden ejecutar este comando."
   in-cooldown: "%prefix%&cDebes esperar %timeleft% segundos antes de usar este comando nuevamente."
   home-already-exist: "%prefix%&cYa tienes una casa con este nombre."
   home-doesnt-exist: "%prefix%&cNo tienes ninguna casa con este nombre."
@@ -36,6 +37,7 @@ commands:
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
+        &c-> &e/%command% &anearhomes &6(<Radius>) &7Lista las casas cerca de ti dentro de un radio
         &c-> &e/%command% &aconverter (converter-type) &7Convierte datos de un lugar a otro
       help-noperm: |-
         %prefix%&bUsos de &e/%command%&b:
@@ -74,6 +76,11 @@ commands:
         output: |-
           %prefix%&aIdiomas del plugin recargados en &b%time%ms&a.
           &7Nota: Esto no actualizará el idioma desde config.yml, usa '/%command% reload config' para hacerlo.
+    nearhomes:
+      usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
+      output: "%prefix%&7Casas cercanas dentro de &e%radius% &7bloques: &f%homes%"
+      output-not-found: "%prefix%&cNo se encontraron casas dentro de &e%radius% &cbloques."
+      home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
         %prefix%&bUsos de &e/%command% &aconverter&b:
@@ -111,6 +118,6 @@ commands:
       same-name: "%prefix%&cNo puedes renombrar una casa con el mismo nombre."
   homes:
     output: "%prefix%&7Tus casas: &f%homes%"
-    invalid-page: "%prefix%&c¡Número de página no válido! Por favor, use un número mayor que 0."
+    invalid-page: "%prefix%&c¡Número de página no válido! Por favor, usa un número mayor que 0."
     others:
       output: "%prefix%&7Casas de &e%player%: &f%homes%"

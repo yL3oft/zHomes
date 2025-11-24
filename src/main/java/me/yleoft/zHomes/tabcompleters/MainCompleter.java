@@ -27,6 +27,8 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                 commands.add("info");
             if (p.hasPermission(CmdMainVersionPermission()))
                 commands.add("version");
+            if (p.hasPermission(CmdMainNearhomesPermission()))
+                commands.add("nearhomes");
             if (p.hasPermission(CmdMainConverterPermission()))
                 commands.add("converter");
             StringUtil.copyPartialMatches(args[0], commands, completions);

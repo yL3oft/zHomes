@@ -15,16 +15,28 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static me.yleoft.zHomes.Main.needsUpdate;
 
 public class PlayerListeners extends HomesUtils implements Listener {
 
+    private final ConcurrentHashMap<UUID, Long> lastAnnounced = new ConcurrentHashMap<>();
+
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        if(lastAnnounced.containsKey(uuid)) {
+            long lastTime = lastAnnounced.get(uuid);
+            long currentTime = System.currentTimeMillis();
+            if(currentTime - lastTime <= 1000L * 60L * 30L) { // 30 minutes
+                return;
+            }
+        }
         if(needsUpdate && doAnnounceUpdate() && (p.isOp() || p.hasPermission(CmdMainVersionUpdatePermission()))) {
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            lastAnnounced.put(uuid, System.currentTimeMillis());
             SchedulerUtils.runTaskLater(p.getLocation(), () -> {
                 cmdm.sendMsg(p, "%prefix%&6You are using an outdated version of zHomes! Please update to the latest version.");
                 cmdm.sendMsg(p, "%prefix%&6New version: &a" + Main.getInstance().updateVersion);

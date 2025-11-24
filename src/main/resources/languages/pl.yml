@@ -19,6 +19,7 @@ teleport-warmup:
 commands:
   # Powyżej znajdziesz wiadomości używane w wielu komendach
   no-permission: "%prefix%&cNie masz uprawnień do wykonania tej komendy."
+  only-players: "%prefix%&cTylko gracze mogą wykonać tę komendę."
   in-cooldown: "%prefix%&cMusisz poczekać %timeleft% sekund przed ponownym użyciem tej komendy."
   home-already-exist: "%prefix%&cMasz już dom o tej nazwie."
   home-doesnt-exist: "%prefix%&cNie masz domu o tej nazwie."
@@ -36,6 +37,7 @@ commands:
         &c-> &e/%command% &ainfo
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
+        &c-> &e/%command% &anearhomes &6(<Radius>) &7Wyświetla domy w pobliżu w określonym promieniu
         &c-> &e/%command% &aconverter (converter-type) &7Konwertuj dane z jednego miejsca do drugiego
       help-noperm: |-
         %prefix%&bUżycie &e/%command%&b:
@@ -74,6 +76,11 @@ commands:
         output: |-
           %prefix%&aJęzyki pluginu przeładowane w &b%time%ms&a.
           &7Uwaga: To nie zaktualizuje języka z config.yml, użyj '/%command% reload config' aby to zrobić.
+    nearhomes:
+      usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
+      output: "%prefix%&7Domy w pobliżu w promieniu &e%radius% &7bloków: &f%homes%"
+      output-not-found: "%prefix%&cNie znaleziono domów w promieniu &e%radius% &cbloków."
+      home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
         %prefix%&bUżycie &e/%command% &aconverter&b:

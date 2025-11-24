@@ -111,6 +111,9 @@ public class ConfigUtils {
     public String CmdMainReloadPermission() {
         return main.getConfig().getString(this.cmdPath + "main.reload.permission");
     }
+    public String CmdMainNearhomesPermission() {
+        return main.getConfig().getString(this.cmdPath + "main.nearhomes.permission");
+    }
     public String CmdMainConverterPermission() {
         return main.getConfig().getString(this.cmdPath + "main.converter.permission");
     }

@@ -223,7 +223,6 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         //<editor-fold desc="Database">
         db.connect();
-        dbe.renameTable("ZHOMES", db.databaseTable());
         dbe.createTable(db.databaseTable(), "(UUID VARCHAR(36),HOME VARCHAR(100),LOCATION VARCHAR(255),PRIMARY KEY (UUID, HOME))");
         //</editor-fold>
         //<editor-fold desc="Metrics">

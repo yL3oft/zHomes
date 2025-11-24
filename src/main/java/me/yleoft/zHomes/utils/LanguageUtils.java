@@ -2,6 +2,7 @@ package me.yleoft.zHomes.utils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -434,6 +435,55 @@ public class LanguageUtils extends ConfigUtils {
             }
         }
 
+        public static class MainNearhomes implements LanguageUtils.Commands {
+            public final YamlConfiguration cfg;
+
+            public MainNearhomes() {
+                this.cfg = LanguageUtils.getConfigFile();
+            }
+
+            public String getCmd() {
+                return "main.nearhomes";
+            }
+
+            public String getUsage() {
+                String path = formPath(cmds, getCmd(), "usage");
+                return this.cfg.getString(path)
+                        .replace("%command%", Main.cfgu.CmdMainCommand());
+            }
+
+            public String getOutput() {
+                return null;
+            }
+
+            public String getOutput(HashMap<OfflinePlayer, List<String>> homes, double radius) {
+                String path = formPath(cmds, getCmd(), "output");
+                StringBuilder homesList = new StringBuilder();
+                for (OfflinePlayer p : homes.keySet()) {
+                    for(String home : homes.get(p)) {
+                        if(!homesList.toString().isEmpty()) homesList.append(", ");
+                        homesList.append(getHomeString(p, home));
+                    }
+                }
+                if(homesList.toString().isEmpty()) {
+                    return this.cfg.getString(path + "-not-found")
+                            .replace("%command%", Main.cfgu.CmdMainCommand())
+                            .replace("%radius%", String.valueOf(radius));
+                }
+                return this.cfg.getString(path)
+                        .replace("%command%", Main.cfgu.CmdMainCommand())
+                        .replace("%radius%", String.valueOf(radius))
+                        .replace("%homes%", homesList.toString());
+            }
+
+            private String getHomeString(OfflinePlayer p, String home) {
+                String path = formPath(cmds, getCmd(), "home-string");
+                return this.cfg.getString(path)
+                        .replace("%owner%", Objects.requireNonNull(p.getName()))
+                        .replace("%home%", home);
+            }
+        }
+
         public static class MainConverter implements LanguageUtils.Commands {
             public final YamlConfiguration cfg;
 
@@ -549,6 +599,11 @@ public class LanguageUtils extends ConfigUtils {
 
         public String getNoPermission() {
             String path = formPath(cmds, "no-permission");
+            return this.cfg.getString(path);
+        }
+
+        public String getOnlyPlayers() {
+            String path = formPath(cmds, "only-players");
             return this.cfg.getString(path);
         }
 
