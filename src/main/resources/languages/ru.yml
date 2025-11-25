@@ -1,7 +1,7 @@
 # Здесь вы можете управлять сообщениями хуков
 hooks:
   griefprevention:
-    cant-set-homes: "%prefix%&cВы не можете устанавливать дома в этой зоне."
+    cant-set-homes: "%prefix%&cВы не можете устанавливать дома в этой области."
   worldguard:
     cant-use-homes: "%prefix%&cВы не можете использовать дома здесь."
     cant-set-homes: "%prefix%&cВы не можете установить дом здесь."
@@ -17,7 +17,7 @@ teleport-warmup:
 
 # Сообщения, связанные с командами
 commands:
-  # Вверху вы найдете сообщения, которые могут использоваться в нескольких командах
+  # Вверху вы найдете сообщения, используемые в нескольких командах
   no-permission: "%prefix%&cУ вас нет прав для выполнения этой команды."
   only-players: "%prefix%&cТолько игроки могут выполнять эту команду."
   in-cooldown: "%prefix%&cВам нужно подождать %timeleft% секунд перед повторным использованием этой команды."
@@ -27,18 +27,21 @@ commands:
   cant-use-2dot: "%prefix%&cВы не можете использовать &e':' &cв этой команде."
   cant-find-player: "%prefix%&cИгрок не найден."
   unable-to-find-safe-location: "%prefix%&cНе удалось найти безопасное место для телепортации."
+  world-restricted: "%prefix%&cВы не можете использовать дома в этом мире."
 
-  # Ниже вы найдете сообщения, специфичные для команд
+  # Ниже — сообщения, специфичные для команд
   main:
     help:
       help-perm: |-
         %prefix%&bИспользование &e/%command%&b:
-        &c-> &e/%command% &a(help|?)
-        &c-> &e/%command% &ainfo
+        &c-> &e/%command% &ahelp &7Показать это сообщение помощи
+        &c-> &e/%command% &ainfo &7Показать информацию о плагине
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &anearhomes &6(<Radius>) &7Показать дома рядом с вами в пределах указанного радиуса
-        &c-> &e/%command% &aconverter (<converter-type>) &7Конвертировать данные из одного места в другое
+        &c-> &e/%command% &anearhomes &6(<radius>) &7Показать дома в радиусе
+        &c-> &e/%command% &aconverter (<converter-type>) &7Конвертировать данные между хранилищами
+        &c-> &e/%command% &aexport &7Экспортировать все дома в файл
+        &c-> &e/%command% &aimport (<file>) &7Импортировать дома из файла
       help-noperm: |-
         %prefix%&bИспользование &e/%command%&b:
         &c-> &e/%command% &a(help|?)
@@ -46,22 +49,27 @@ commands:
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2Запущен &4%name% v%version% &2от &b%author%&2.
-        %prefix%&r- &bТекущая версия: &a%version%
-        %prefix%&r- &bТребуется обновление: &a%requpdate%
-        %prefix%&r- &bТип хранения: &a%storage.type%
-        %prefix%&r- &bЯзык: &a%language%
-        %prefix%&r- &3Хуки:
-        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
-        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
-        %prefix%&r   &bWorldGuard: &a%use.worldguard%
-        %prefix%&r   &bVault: &a%use.vault%
-      requpdate-yes: "&cДа &7(Подробнее с &e/%command% version&7)"
+        %prefix%&bЗапущен &3%name% v%version% &bот &3%author%&b:
+        %prefix%&b- Информация о сервере:
+        %prefix%&3   ПО: &f%server.software%
+        %prefix%&3   Версия: &f%server.version%
+        %prefix%&3   Требуется обновление: &f%requpdate%
+        %prefix%&3   Язык: &f%language%
+        %prefix%&b- Хранилище:
+        %prefix%&3   Тип: &f%storage.type%
+        %prefix%&3   Пользователи: &f%storage.users%
+        %prefix%&3   Дома: &f%storage.homes%
+        %prefix%&b- Хуки:
+        %prefix%&3   PlaceholderAPI: &f%use.placeholderapi%
+        %prefix%&3   GriefPrevention: &f%use.griefprevention%
+        %prefix%&3   WorldGuard: &f%use.worldguard%
+        %prefix%&3   Vault: &f%use.vault%
+      requpdate-yes: "&cДа &7(Используйте &e/%command% version &7для подробностей)"
       requpdate-no: "&aНет"
     version:
       output: "%prefix%&bТекущая версия: &a%version%"
       update:
-        output: "%prefix%&azHomes обновлён до последней версии &e(%update%)&a, пожалуйста, перезапустите сервер, чтобы применить изменения."
+        output: "%prefix%&azHomes обновлён до последней версии &e(%update%)&a, пожалуйста перезапустите сервер, чтобы применить изменения."
         no-update: "%prefix%&aВы уже используете последнюю версию zHomes."
     reload:
       usage: |-
@@ -71,14 +79,14 @@ commands:
       commands:
         output: "%prefix%&aВсе команды плагина перезагружены за &b%time%ms&a."
       config:
-        output: "%prefix%&aФайл конфигурации плагина перезагружен за &b%time%ms&a."
+        output: "%prefix%&aФайл конфигурации перезагружен за &b%time%ms&a."
       languages:
         output: |-
-          %prefix%&aЯзыки плагина перезагружены за &b%time%ms&a.
-          &7Примечание: это не обновит язык в config.yml, используйте '/%command% reload config' для этого.
+          %prefix%&aФайлы локализации перезагружены за &b%time%ms&a.
+          &7Примечание: Это не обновит язык в config.yml. Используйте '/%command% reload config' для этого.
     nearhomes:
       usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
-      output: "%prefix%&7Дома рядом с вами в радиусе &e%radius% &7блоков: &f%homes%"
+      output: "%prefix%&7Дома рядом в радиусе &e%radius% &7блоков: &f%homes%"
       output-not-found: "%prefix%&cДома не найдены в радиусе &e%radius% &cблоков."
       home-string: "&e%home% &7(%owner%)"
     converter:
@@ -99,25 +107,32 @@ commands:
         &c-> &e/%command% &aconverter ultimatehomes
         &c-> &e/%command% &aconverter xhomes
         &c-> &e/%command% &aconverter zhome
-      output: "%prefix%&aВсе данные конвертированы!"
-      error: "%prefix%&cПроизошла ошибка при конвертации данных, пожалуйста, проверьте консоль сервера."
+      output: "%prefix%&aВсе данные успешно конвертированы!"
+      error: "%prefix%&cПри конвертации данных произошла ошибка. Проверьте консоль сервера."
+    export:
+      output: "%prefix%&aВсе дома экспортированы в &e%file%&a!"
+      error: "%prefix%&cПроизошла ошибка при экспорте данных. Проверьте консоль сервера."
+    import:
+      usage: "&c-> &e/%command% import &a(<file>)"
+      output: "%prefix%&aВсе дома импортированы из &e%file%&a!"
+      error: "%prefix%&cПроизошла ошибка при импорте данных. Проверьте консоль сервера."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aДом &e%home% &aустановлен на вашей позиции."
-    limit-reached: "&cВы не можете установить больше домов — вы достигли лимита &e(%limit% домов)&c!"
+    limit-reached: "&cВы не можете установить больше домов — вы достигли лимита &e(%limit% homes)&c!"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&cДом &e%home% &cудален."
+    output: "%prefix%&cДом &e%home% &aудален."
   home:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aТелепортируюсь к &e%home%&a..."
-    cant-dimensional-teleport: "&cВаш телепорт был отменён! Телепортация между измерениями отключена."
+    output: "%prefix%&aТелепортирование к &e%home%&a..."
+    cant-dimensional-teleport: "&cВаш телепорт был отменён! Межпространственная телепортация отключена."
     rename:
-      usage: "&c-> &e/%command% &apереименовать (Home) (НовоеИмя)"
+      usage: "&c-> &e/%command% &arenome (Home) (NewName)"
       output: "%prefix%&aДом &e%home% &aпереименован в &e%newname%&a."
-      same-name: "%prefix%&cВы не можете переименовать дом в то же самое имя."
+      same-name: "%prefix%&cВы не можете переименовать дом в то же имя."
   homes:
     output: "%prefix%&7Ваши дома: &f%homes%"
-    invalid-page: "%prefix%&cНеверный номер страницы! Пожалуйста, используйте число больше 0."
+    invalid-page: "%prefix%&cНеверный номер страницы! Используйте число больше 0."
     others:
       output: "%prefix%&7Дома игрока &e%player%: &f%homes%"

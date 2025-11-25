@@ -1,10 +1,10 @@
 # Hier kannst du die Hook-Nachrichten verwalten
 hooks:
   griefprevention:
-    cant-set-homes: "%prefix%&cDu kannst in diesem Bereich kein Zuhause setzen."
+    cant-set-homes: "%prefix%&cDu kannst in diesem Bereich keine Homes setzen."
   worldguard:
     cant-use-homes: "%prefix%&cDu kannst hier keine Homes benutzen."
-    cant-set-homes: "%prefix%&cDu kannst hier kein Zuhause setzen."
+    cant-set-homes: "%prefix%&cDu kannst hier kein Home setzen."
   vault:
     cant-afford-command: "%prefix%&cDu benötigst &6$%cost% &cum diesen Befehl auszuführen."
 
@@ -27,18 +27,21 @@ commands:
   cant-use-2dot: "%prefix%&cDu kannst &e':' &cnicht in diesem Befehl verwenden."
   cant-find-player: "%prefix%&cSpieler wurde nicht gefunden."
   unable-to-find-safe-location: "%prefix%&cEs konnte kein sicherer Ort zum Teleportieren gefunden werden."
+  world-restricted: "%prefix%&cDu kannst in dieser Welt keine Homes benutzen."
 
   # Unten findest du spezifische Nachrichten für die Befehle
   main:
     help:
       help-perm: |-
         %prefix%&bVerwendung von &e/%command%&b:
-        &c-> &e/%command% &a(help|?)
-        &c-> &e/%command% &ainfo
+        &c-> &e/%command% &ahelp &7Zeigt diese Hilfe
+        &c-> &e/%command% &ainfo &7Zeigt Plugin-Informationen
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &anearhomes &6(<Radius>) &7Listet Homes in deiner Nähe innerhalb eines Radius auf
-        &c-> &e/%command% &aconverter (converter-type) &7Konvertiere Daten von einem Ort zum anderen
+        &c-> &e/%command% &anearhomes &6(<radius>) &7Listet Homes in deiner Nähe innerhalb eines Radius auf
+        &c-> &e/%command% &aconverter (<converter-type>) &7Konvertiere Daten von einem Speicher zu einem anderen
+        &c-> &e/%command% &aexport &7Exportiert alle Homes in eine Datei
+        &c-> &e/%command% &aimport (<file>) &7Importiert Homes aus einer Datei
       help-noperm: |-
         %prefix%&bVerwendung von &e/%command%&b:
         &c-> &e/%command% &a(help|?)
@@ -46,16 +49,21 @@ commands:
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2Läuft &4%name% v%version% &2von &b%author%&2.
-        %prefix%&r- &bAktuelle Version: &a%version%
-        %prefix%&r- &bAktualisierung erforderlich: &a%requpdate%
-        %prefix%&r- &bSpeichertyp: &a%storage.type%
-        %prefix%&r- &bSprache: &a%language%
-        %prefix%&r- &3Hooks:
-        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
-        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
-        %prefix%&r   &bWorldGuard: &a%use.worldguard%
-        %prefix%&r   &bVault: &a%use.vault%
+        %prefix%&bLäuft &3%name% v%version% &bvon &3%author%&b:
+        %prefix%&b- Server Info:
+        %prefix%&3   Software: &f%server.software%
+        %prefix%&3   Version: &f%server.version%
+        %prefix%&3   Aktualisierung erforderlich: &f%requpdate%
+        %prefix%&3   Sprache: &f%language%
+        %prefix%&b- Speicher:
+        %prefix%&3   Typ: &f%storage.type%
+        %prefix%&3   Benutzer: &f%storage.users%
+        %prefix%&3   Homes: &f%storage.homes%
+        %prefix%&b- Hooks:
+        %prefix%&3   PlaceholderAPI: &f%use.placeholderapi%
+        %prefix%&3   GriefPrevention: &f%use.griefprevention%
+        %prefix%&3   WorldGuard: &f%use.worldguard%
+        %prefix%&3   Vault: &f%use.vault%
       requpdate-yes: "&cJa &7(Mehr Infos mit &e/%command% version&7)"
       requpdate-no: "&aNein"
     version:
@@ -101,13 +109,20 @@ commands:
         &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aAlle Daten wurden erfolgreich konvertiert!"
       error: "%prefix%&cBeim Konvertieren der Daten ist ein Fehler aufgetreten. Bitte prüfe die Server-Konsole."
+    export:
+      output: "%prefix%&aAlle Homes wurden nach &e%file%&a exportiert!"
+      error: "%prefix%&cBeim Exportieren der Daten ist ein Fehler aufgetreten. Bitte prüfe die Server-Konsole."
+    import:
+      usage: "&c-> &e/%command% import &a(<file>)"
+      output: "%prefix%&aAlle Homes wurden aus &e%file%&a importiert!"
+      error: "%prefix%&cBeim Importieren der Daten ist ein Fehler aufgetreten. Bitte prüfe die Server-Konsole."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &awurde an deiner Position gesetzt."
     limit-reached: "&cDu kannst keine weiteren Homes setzen – du hast dein Limit von &e(%limit% Homes)&c erreicht!"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&cHome &e%home% &awurde gelöscht."
+    output: "%prefix%&cHome &e%home% &cwurde gelöscht."
   home:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aZu &e%home%&a teleportiert..."

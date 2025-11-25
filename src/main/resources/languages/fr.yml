@@ -1,10 +1,10 @@
 # Ici, vous pouvez gérer les messages des hooks
 hooks:
   griefprevention:
-    cant-set-homes: "%prefix%&cVous ne pouvez pas définir de maisons dans cette zone."
+    cant-set-homes: "%prefix%&cVous ne pouvez pas définir de homes dans cette zone."
   worldguard:
     cant-use-homes: "%prefix%&cVous ne pouvez pas utiliser de homes ici."
-    cant-set-homes: "%prefix%&cVous ne pouvez pas définir de maison ici."
+    cant-set-homes: "%prefix%&cVous ne pouvez pas définir un home ici."
   vault:
     cant-afford-command: "%prefix%&cVous avez besoin de &6$%cost% &cpour exécuter cette commande."
 
@@ -26,19 +26,22 @@ commands:
   home-doesnt-exist-others: "%prefix%&e%player% &cn'a aucun home avec ce nom."
   cant-use-2dot: "%prefix%&cVous ne pouvez pas utiliser &e':' &cdans cette commande."
   cant-find-player: "%prefix%&cCe joueur est introuvable."
-  unable-to-find-safe-location: "%prefix%&cImpossible de trouver un endroit sûr pour vous téléporter."
+  unable-to-find-safe-location: "%prefix%&cImpossible de trouver un emplacement sûr pour vous téléporter."
+  world-restricted: "%prefix%&cVous ne pouvez pas utiliser les homes dans ce monde."
 
   # Ci-dessous, vous trouverez des messages spécifiques aux commandes
   main:
     help:
       help-perm: |-
         %prefix%&bUtilisations de &e/%command%&b :
-        &c-> &e/%command% &a(help|?)
-        &c-> &e/%command% &ainfo
+        &c-> &e/%command% &ahelp &7Affiche cette aide
+        &c-> &e/%command% &ainfo &7Affiche les informations du plugin
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &anearhomes &6(<Radius>) &7Liste les homes proches de vous dans un certain rayon
-        &c-> &e/%command% &aconverter (converter-type) &7Convertit les données d’un endroit à un autre
+        &c-> &e/%command% &anearhomes &6(<radius>) &7Liste les homes proches dans un rayon donné
+        &c-> &e/%command% &aconverter (<converter-type>) &7Convertit les données d'un stockage à un autre
+        &c-> &e/%command% &aexport &7Exporte tous les homes dans un fichier
+        &c-> &e/%command% &aimport (<file>) &7Importe des homes depuis un fichier
       help-noperm: |-
         %prefix%&bUtilisations de &e/%command%&b :
         &c-> &e/%command% &a(help|?)
@@ -46,22 +49,27 @@ commands:
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2Exécution de &4%name% v%version% &2par &b%author%&2.
-        %prefix%&r- &bVersion actuelle : &a%version%
-        %prefix%&r- &bMise à jour requise : &a%requpdate%
-        %prefix%&r- &bType de stockage : &a%storage.type%
-        %prefix%&r- &bLangue : &a%language%
-        %prefix%&r- &3Hooks :
-        %prefix%&r   &bPlaceholderAPI : &a%use.placeholderapi%
-        %prefix%&r   &bGriefPrevention : &a%use.griefprevention%
-        %prefix%&r   &bWorldGuard : &a%use.worldguard%
-        %prefix%&r   &bVault : &a%use.vault%
-      requpdate-yes: "&cOui &7(Plus d'infos avec &e/%command% version&7)"
+        %prefix%&bExécution de &3%name% v%version% &bpar &3%author%&b :
+        %prefix%&b- Informations serveur :
+        %prefix%&3   Logiciel : &f%server.software%
+        %prefix%&3   Version : &f%server.version%
+        %prefix%&3   Mise à jour requise : &f%requpdate%
+        %prefix%&3   Langue : &f%language%
+        %prefix%&b- Stockage :
+        %prefix%&3   Type : &f%storage.type%
+        %prefix%&3   Utilisateurs : &f%storage.users%
+        %prefix%&3   Homes : &f%storage.homes%
+        %prefix%&b- Hooks :
+        %prefix%&3   PlaceholderAPI : &f%use.placeholderapi%
+        %prefix%&3   GriefPrevention : &f%use.griefprevention%
+        %prefix%&3   WorldGuard : &f%use.worldguard%
+        %prefix%&3   Vault : &f%use.vault%
+      requpdate-yes: "&cOui &7(Utilisez &e/%command% version &7pour plus d'infos)"
       requpdate-no: "&aNon"
     version:
       output: "%prefix%&bVersion actuelle : &a%version%"
       update:
-        output: "%prefix%&azHomes a été mis à jour vers la dernière version &e(%update%)&a, veuillez redémarrer votre serveur pour appliquer les modifications."
+        output: "%prefix%&azHomes a été mis à jour vers la dernière version &e(%update%)&a, veuillez redémarrer votre serveur pour appliquer les changements."
         no-update: "%prefix%&aVous utilisez déjà la dernière version de zHomes."
     reload:
       usage: |-
@@ -69,21 +77,21 @@ commands:
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
       output: "%prefix%&aPlugin rechargé en &b%time%ms&a."
       commands:
-        output: "%prefix%&aToutes les commandes ont été rechargées en &b%time%ms&a."
+        output: "%prefix%&aToutes les commandes rechargées en &b%time%ms&a."
       config:
         output: "%prefix%&aFichier de configuration rechargé en &b%time%ms&a."
       languages:
         output: |-
           %prefix%&aLangues rechargées en &b%time%ms&a.
-          &7Remarque : Cela ne mettra pas à jour la langue dans config.yml, utilisez '/%command% reload config' pour cela.
+          &7Remarque : Cela n'actualisera pas la langue dans config.yml. Utilisez '/%command% reload config' pour cela.
     nearhomes:
       usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
-      output: "%prefix%&7Homes proches dans un rayon de &e%radius% &7blocs: &f%homes%"
+      output: "%prefix%&7Homes proches dans un rayon de &e%radius% &7blocs : &f%homes%"
       output-not-found: "%prefix%&cAucun home trouvé dans un rayon de &e%radius% &cblocs."
       home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
-        %prefix%&bUtilisations de &e/%command% &aconverter&b:
+        %prefix%&bUtilisations de &e/%command% &aconverter&b :
         &c-> &e/%command% &aconverter sqlitetoh2
         &c-> &e/%command% &aconverter sqlitetomysql
         &c-> &e/%command% &aconverter sqlitetomariadb
@@ -100,11 +108,18 @@ commands:
         &c-> &e/%command% &aconverter xhomes
         &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aToutes les données ont été converties !"
-      error: "%prefix%&cUne erreur est survenue lors de la conversion des données. Veuillez vérifier la console du serveur."
+      error: "%prefix%&cUne erreur est survenue lors de la conversion des données. Vérifiez la console du serveur."
+    export:
+      output: "%prefix%&aTous les homes ont été exportés vers &e%file%&a !"
+      error: "%prefix%&cUne erreur est survenue lors de l'export. Vérifiez la console du serveur."
+    import:
+      usage: "&c-> &e/%command% import &a(<file>)"
+      output: "%prefix%&aTous les homes ont été importés depuis &e%file%&a !"
+      error: "%prefix%&cUne erreur est survenue lors de l'import. Vérifiez la console du serveur."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &adéfini à votre position."
-    limit-reached: "&cVous ne pouvez pas créer plus de homes, vous avez atteint votre limite de &e(%limit% homes)&c !"
+    limit-reached: "&cVous ne pouvez pas définir plus de homes, vous avez atteint votre limite &e(%limit% homes)&c !"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&cHome &e%home% &asupprimé."
@@ -114,10 +129,10 @@ commands:
     cant-dimensional-teleport: "&cTéléportation annulée ! La téléportation inter-dimensionnelle est désactivée."
     rename:
       usage: "&c-> &e/%command% &arenommer (Home) (NouveauNom)"
-      output: "%prefix%&aHome &e%home% &aa été renommée en &e%newname%&a."
-      same-name: "%prefix%&cVous ne pouvez pas renommer une maison avec le même nom."
+      output: "%prefix%&aHome &e%home% &aa été renommé en &e%newname%&a."
+      same-name: "%prefix%&cVous ne pouvez pas renommer un home avec le même nom."
   homes:
     output: "%prefix%&7Vos homes : &f%homes%"
-    invalid-page: "%prefix%&cNuméro de page invalide ! Veuillez utiliser un nombre supérieur à 0."
+    invalid-page: "%prefix%&cNuméro de page invalide ! Utilisez un nombre supérieur à 0."
     others:
       output: "%prefix%&7Homes de &e%player% : &f%homes%"

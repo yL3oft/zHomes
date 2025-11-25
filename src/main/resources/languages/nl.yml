@@ -1,10 +1,10 @@
 # Hier kun je hookberichten beheren
 hooks:
   griefprevention:
-    cant-set-homes: "%prefix%&cJe kunt in dit gebied geen huizen instellen."
+    cant-set-homes: "%prefix%&cJe kunt in dit gebied geen homes instellen."
   worldguard:
     cant-use-homes: "%prefix%&cJe kunt hier geen homes gebruiken."
-    cant-set-homes: "%prefix%&cJe kunt hier geen huis instellen."
+    cant-set-homes: "%prefix%&cJe kunt hier geen home instellen."
   vault:
     cant-afford-command: "%prefix%&cJe hebt &6$%cost% &cnodig om dit commando uit te voeren."
 
@@ -26,19 +26,22 @@ commands:
   home-doesnt-exist-others: "%prefix%&e%player% &cheeft geen home met deze naam."
   cant-use-2dot: "%prefix%&cJe kunt &e':' &cniet gebruiken in dit commando."
   cant-find-player: "%prefix%&cSpeler niet gevonden."
-  unable-to-find-safe-location: "%prefix%&cGeen veilige locatie gevonden om naartoe te teleporteren."
+  unable-to-find-safe-location: "%prefix%&cKan geen veilige locatie vinden om naar te teleporteren."
+  world-restricted: "%prefix%&cJe kunt in deze wereld geen homes gebruiken."
 
   # Hieronder vind je specifieke berichten voor de commando's
   main:
     help:
       help-perm: |-
         %prefix%&bGebruik van &e/%command%&b:
-        &c-> &e/%command% &a(help|?)
-        &c-> &e/%command% &ainfo
+        &c-> &e/%command% &ahelp &7Toont deze help
+        &c-> &e/%command% &ainfo &7Toont plugin-informatie
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &anearhomes &6(<Radius>) &7Toont homes bij jou in de buurt binnen een bepaald bereik
-        &c-> &e/%command% &aconverter (converter-type) &7Converteer gegevens van de ene naar de andere plek
+        &c-> &e/%command% &anearhomes &6(<radius>) &7Toont homes in de buurt binnen een straal
+        &c-> &e/%command% &aconverter (<converter-type>) &7Converteer data tussen opslagplaatsen
+        &c-> &e/%command% &aexport &7Exporteert alle homes naar een bestand
+        &c-> &e/%command% &aimport (<file>) &7Importeert homes vanuit een bestand
       help-noperm: |-
         %prefix%&bGebruik van &e/%command%&b:
         &c-> &e/%command% &a(help|?)
@@ -46,16 +49,21 @@ commands:
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2Draait &4%name% v%version% &2door &b%author%&2.
-        %prefix%&r- &bHuidige versie: &a%version%
-        %prefix%&r- &bVereist update: &a%requpdate%
-        %prefix%&r- &bOpslagtype: &a%storage.type%
-        %prefix%&r- &bTaal: &a%language%
-        %prefix%&r- &3Hooks:
-        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
-        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
-        %prefix%&r   &bWorldGuard: &a%use.worldguard%
-        %prefix%&r   &bVault: &a%use.vault%
+        %prefix%&bDraait &3%name% v%version% &bdoor &3%author%&b:
+        %prefix%&b- Server info:
+        %prefix%&3   Software: &f%server.software%
+        %prefix%&3   Versie: &f%server.version%
+        %prefix%&3   Vereist update: &f%requpdate%
+        %prefix%&3   Taal: &f%language%
+        %prefix%&b- Opslag:
+        %prefix%&3   Type: &f%storage.type%
+        %prefix%&3   Gebruikers: &f%storage.users%
+        %prefix%&3   Homes: &f%storage.homes%
+        %prefix%&b- Hooks:
+        %prefix%&3   PlaceholderAPI: &f%use.placeholderapi%
+        %prefix%&3   GriefPrevention: &f%use.griefprevention%
+        %prefix%&3   WorldGuard: &f%use.worldguard%
+        %prefix%&3   Vault: &f%use.vault%
       requpdate-yes: "&cJa &7(Meer info met &e/%command% version&7)"
       requpdate-no: "&aNee"
     version:
@@ -75,7 +83,7 @@ commands:
       languages:
         output: |-
           %prefix%&aTalen opnieuw geladen in &b%time%ms&a.
-          &7Let op: Dit zal de taal in config.yml niet bijwerken, gebruik '/%command% reload config' om dat te doen.
+          &7Opmerking: Dit zal de taal in config.yml niet bijwerken. Gebruik '/%command% reload config' om dat te doen.
     nearhomes:
       usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
       output: "%prefix%&7Homes bij jou binnen &e%radius% &7blokken: &f%homes%"
@@ -100,11 +108,18 @@ commands:
         &c-> &e/%command% &aconverter xhomes
         &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aAlle gegevens zijn geconverteerd!"
-      error: "%prefix%&cEr is een fout opgetreden tijdens het converteren van gegevens. Controleer de serverconsole."
+      error: "%prefix%&cEr is iets misgegaan tijdens het converteren van de data. Controleer de serverconsole."
+    export:
+      output: "%prefix%&aAlle homes geëxporteerd naar &e%file%&a!"
+      error: "%prefix%&cEr is iets misgegaan bij het exporteren. Controleer de serverconsole."
+    import:
+      usage: "&c-> &e/%command% import &a(<file>)"
+      output: "%prefix%&aAlle homes geïmporteerd vanuit &e%file%&a!"
+      error: "%prefix%&cEr is iets misgegaan bij het importeren. Controleer de serverconsole."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &ais ingesteld op je locatie."
-    limit-reached: "&cJe hebt het limiet van &e(%limit% homes)&c bereikt!"
+    limit-reached: "&cJe kunt geen extra homes instellen, je hebt je limiet bereikt &e(%limit% homes)&c!"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&cHome &e%home% &ais verwijderd."
@@ -115,9 +130,9 @@ commands:
     rename:
       usage: "&c-> &e/%command% &ahernoem (Home) (NieuweNaam)"
       output: "%prefix%&aHome &e%home% &ais hernoemd naar &e%newname%&a."
-      same-name: "%prefix%&cJe kunt een huis niet hernoemen naar dezelfde naam."
+      same-name: "%prefix%&cJe kunt een home niet hernoemen naar dezelfde naam."
   homes:
     output: "%prefix%&7Jouw homes: &f%homes%"
-    invalid-page: "%prefix%&cOngeldig paginanummer! Gebruik een getal hoger dan 0."
+    invalid-page: "%prefix%&cOngeldig paginanummer! Gebruik een nummer groter dan 0."
     others:
       output: "%prefix%&7Homes van &e%player%: &f%homes%"

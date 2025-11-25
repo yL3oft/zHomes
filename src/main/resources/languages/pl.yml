@@ -1,10 +1,10 @@
 # Tutaj możesz zarządzać wiadomościami hooków
 hooks:
   griefprevention:
-    cant-set-homes: "%prefix%&cNie możesz ustawić domu w tym obszarze."
+    cant-set-homes: "%prefix%&cNie możesz ustawić home'ów w tym obszarze."
   worldguard:
-    cant-use-homes: "%prefix%&cNie możesz używać domów tutaj."
-    cant-set-homes: "%prefix%&cNie możesz ustawić domu tutaj."
+    cant-use-homes: "%prefix%&cNie możesz używać home'ów tutaj."
+    cant-set-homes: "%prefix%&cNie możesz ustawić home'a tutaj."
   vault:
     cant-afford-command: "%prefix%&cPotrzebujesz &6$%cost% &caby wykonać tę komendę."
 
@@ -21,24 +21,27 @@ commands:
   no-permission: "%prefix%&cNie masz uprawnień do wykonania tej komendy."
   only-players: "%prefix%&cTylko gracze mogą wykonać tę komendę."
   in-cooldown: "%prefix%&cMusisz poczekać %timeleft% sekund przed ponownym użyciem tej komendy."
-  home-already-exist: "%prefix%&cMasz już dom o tej nazwie."
-  home-doesnt-exist: "%prefix%&cNie masz domu o tej nazwie."
-  home-doesnt-exist-others: "%prefix%&e%player% &cnie ma domu o tej nazwie."
+  home-already-exist: "%prefix%&cMasz już home o tej nazwie."
+  home-doesnt-exist: "%prefix%&cNie masz home o tej nazwie."
+  home-doesnt-exist-others: "%prefix%&e%player% &cnie ma home o tej nazwie."
   cant-use-2dot: "%prefix%&cNie możesz używać &e':' &cw tej komendzie."
   cant-find-player: "%prefix%&cNie znaleziono gracza."
-  unable-to-find-safe-location: "%prefix%&cNie można znaleźć bezpiecznego miejsca do teleportacji."
+  unable-to-find-safe-location: "%prefix%&cNie można znaleźć bezpiecznej lokacji do teleportacji."
+  world-restricted: "%prefix%&cNie możesz używać home'ów w tym świecie."
 
   # Poniżej znajdziesz wiadomości specyficzne dla komend
   main:
     help:
       help-perm: |-
         %prefix%&bUżycie &e/%command%&b:
-        &c-> &e/%command% &a(help|?)
-        &c-> &e/%command% &ainfo
+        &c-> &e/%command% &ahelp &7Wyświetla pomoc
+        &c-> &e/%command% &ainfo &7Wyświetla informacje o pluginie
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &anearhomes &6(<Radius>) &7Wyświetla domy w pobliżu w określonym promieniu
-        &c-> &e/%command% &aconverter (converter-type) &7Konwertuj dane z jednego miejsca do drugiego
+        &c-> &e/%command% &anearhomes &6(<radius>) &7Pokaż home'y w pobliżu w określonym promieniu
+        &c-> &e/%command% &aconverter (<converter-type>) &7Konwertuj dane między magazynami
+        &c-> &e/%command% &aexport &7Eksportuj wszystkie home'y do pliku
+        &c-> &e/%command% &aimport (<file>) &7Importuj home'y z pliku
       help-noperm: |-
         %prefix%&bUżycie &e/%command%&b:
         &c-> &e/%command% &a(help|?)
@@ -46,17 +49,22 @@ commands:
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2Uruchamianie &4%name% v%version% &2przez &b%author%&2.
-        %prefix%&r- &bAktualna wersja: &a%version%
-        %prefix%&r- &bWymaga aktualizacji: &a%requpdate%
-        %prefix%&r- &bTyp przechowywania: &a%storage.type%
-        %prefix%&r- &bJęzyk: &a%language%
-        %prefix%&r- &3Hooks:
-        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
-        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
-        %prefix%&r   &bWorldGuard: &a%use.worldguard%
-        %prefix%&r   &bVault: &a%use.vault%
-      requpdate-yes: "&cTak &7(Więcej informacji z &e/%command% version&7)"
+        %prefix%&bUruchomiono &3%name% v%version% &bprzez &3%author%&b:
+        %prefix%&b- Informacje o serwerze:
+        %prefix%&3   Oprogramowanie: &f%server.software%
+        %prefix%&3   Wersja: &f%server.version%
+        %prefix%&3   Wymagana aktualizacja: &f%requpdate%
+        %prefix%&3   Język: &f%language%
+        %prefix%&b- Pamięć:
+        %prefix%&3   Typ: &f%storage.type%
+        %prefix%&3   Użytkownicy: &f%storage.users%
+        %prefix%&3   Home'y: &f%storage.homes%
+        %prefix%&b- Hooki:
+        %prefix%&3   PlaceholderAPI: &f%use.placeholderapi%
+        %prefix%&3   GriefPrevention: &f%use.griefprevention%
+        %prefix%&3   WorldGuard: &f%use.worldguard%
+        %prefix%&3   Vault: &f%use.vault%
+      requpdate-yes: "&cTak &7(Użyj &e/%command% version &7po więcej info)"
       requpdate-no: "&aNie"
     version:
       output: "%prefix%&bAktualna wersja: &a%version%"
@@ -69,17 +77,17 @@ commands:
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
       output: "%prefix%&aPlugin przeładowany w &b%time%ms&a."
       commands:
-        output: "%prefix%&aKomendy pluginu przeładowane w &b%time%ms&a."
+        output: "%prefix%&aWszystkie komendy przeładowane w &b%time%ms&a."
       config:
         output: "%prefix%&aPlik konfiguracyjny przeładowany w &b%time%ms&a."
       languages:
         output: |-
-          %prefix%&aJęzyki pluginu przeładowane w &b%time%ms&a.
-          &7Uwaga: To nie zaktualizuje języka z config.yml, użyj '/%command% reload config' aby to zrobić.
+          %prefix%&aJęzyki przeładowane w &b%time%ms&a.
+          &7Uwaga: To nie zaktualizuje języka w config.yml. Użyj '/%command% reload config' aby to zrobić.
     nearhomes:
       usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
-      output: "%prefix%&7Domy w pobliżu w promieniu &e%radius% &7bloków: &f%homes%"
-      output-not-found: "%prefix%&cNie znaleziono domów w promieniu &e%radius% &cbloków."
+      output: "%prefix%&7Home'y w pobliżu w promieniu &e%radius% &7bloków: &f%homes%"
+      output-not-found: "%prefix%&cNie znaleziono home'ów w promieniu &e%radius% &cbloków."
       home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
@@ -101,13 +109,20 @@ commands:
         &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aWszystkie dane zostały skonwertowane!"
       error: "%prefix%&cWystąpił błąd podczas konwertowania danych. Sprawdź konsolę serwera."
+    export:
+      output: "%prefix%&aWszystkie home'y wyeksportowane do &e%file%&a!"
+      error: "%prefix%&cWystąpił błąd podczas eksportu. Sprawdź konsolę serwera."
+    import:
+      usage: "&c-> &e/%command% import &a(<file>)"
+      output: "%prefix%&aWszystkie home'y zaimportowane z &e%file%&a!"
+      error: "%prefix%&cWystąpił błąd podczas importu. Sprawdź konsolę serwera."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&aDom &e%home% &azapisany w twojej lokalizacji."
-    limit-reached: "&cOsiągnąłeś limit domów &e(%limit% domów)&c!"
+    output: "%prefix%&aHome &e%home% &azapisany w twojej lokalizacji."
+    limit-reached: "&cOsiągnąłeś limit home'ów &e(%limit% home'ów)&c!"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
-    output: "%prefix%&cDom &e%home% &ausunięty."
+    output: "%prefix%&cHome &e%home% &ausunięty."
   home:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aPrzeteleportowano do &e%home%&a..."
@@ -115,9 +130,9 @@ commands:
     rename:
       usage: "&c-> &e/%command% &azamieńnazwę (Home) (NowaNazwa)"
       output: "%prefix%&aHome &e%home% &azostał zmieniony na &e%newname%&a."
-      same-name: "%prefix%&cNie możesz zmienić nazwy domu na tę samą nazwę."
+      same-name: "%prefix%&cNie możesz zmienić nazwy home'a na tę samą nazwę."
   homes:
-    output: "%prefix%&7Twoje domy: &f%homes%"
+    output: "%prefix%&7Twoje home'y: &f%homes%"
     invalid-page: "%prefix%&cNieprawidłowy numer strony! Użyj liczby większej niż 0."
     others:
-      output: "%prefix%&7Domy gracza &e%player%: &f%homes%"
+      output: "%prefix%&7Home'y gracza &e%player%: &f%homes%"
