@@ -132,7 +132,7 @@ commands:
       output: "%prefix%&aHome &e%home% &arenomeado para &e%newname%&a."
       same-name: "%prefix%&cVocê não pode renomear um home para o mesmo nome."
   homes:
-    output: "%prefix%&7Seus homes: &f%homes%"
+    output: "%prefix%&7Suas homes (%amount%): &f%homes%"
     invalid-page: "%prefix%&cNúmero de página inválido! Use um número maior que 0."
     others:
-      output: "%prefix%&7Homes de &e%player%&7: &f%homes%"
+      output: "%prefix%&7Homes de &e%player%&7 (%amount%): &f%homes%"

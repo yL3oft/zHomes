@@ -132,7 +132,7 @@ commands:
       output: "%prefix%&a家 &e%home% &a已重命名为 &e%newname%&a。"
       same-name: "%prefix%&c你不能将家重命名为相同的名称。"
   homes:
-    output: "%prefix%&7你的家： &f%homes%"
+    output: "%prefix%&7你的家 (%amount%)： &f%homes%"
     invalid-page: "%prefix%&c无效的页码！请选择大于 0 的数字。"
     others:
-      output: "%prefix%&7%e%player% 的家： &f%homes%"
+      output: "%prefix%&e%player%&7 的家 (%amount%)： &f%homes%"

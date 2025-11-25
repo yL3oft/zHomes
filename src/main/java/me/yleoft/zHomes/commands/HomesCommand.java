@@ -30,10 +30,22 @@ import static me.yleoft.zHomes.Main.homesMenuPath;
 public class HomesCommand extends HomesUtils implements CommandExecutor {
 
     public boolean onCommand(@NotNull CommandSender s, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if (!(s instanceof Player))
-            return false;
-        Player p = (Player)s;
         LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+        LanguageUtils.Homes lang = new LanguageUtils.Homes();
+        if (!(s instanceof Player)) {
+            if (args.length == 1) {
+                lang.sendMsg(s, cmdm.getCantFindPlayer());
+                return true;
+            }
+            OfflinePlayer t = PlayerUtils.getOfflinePlayer(args[0]);
+            if (t == null) {
+                lang.sendMsg(s, cmdm.getCantFindPlayer());
+                return false;
+            }
+            lang.sendMsg(s, lang.getOutput(t));
+            return false;
+        }
+        Player p = (Player)s;
 
         if (!p.hasPermission(CmdHomesPermission())) {
             cmdm.sendMsg(p, cmdm.getNoPermission());
@@ -43,8 +55,6 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
         ExecuteHomesCommandEvent event = new ExecuteHomesCommandEvent(p);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled()) return false;
-
-        LanguageUtils.Homes lang = new LanguageUtils.Homes();
 
         if (args.length >= 1) {
             if(StringUtils.isInteger(args[0])) {
@@ -98,7 +108,7 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
                         lang.sendMsg(p, lang.getOutput(t));
                         break;
                     }
-                    lang.sendMsg(p, lang.getOutput());
+                    lang.sendMsg(p, lang.getOutputSelf(p));
                     break;
                 default:
                     lang.sendMsg(p, cmdm.getCantFindPlayer());

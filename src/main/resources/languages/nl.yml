@@ -132,7 +132,7 @@ commands:
       output: "%prefix%&aHome &e%home% &ais hernoemd naar &e%newname%&a."
       same-name: "%prefix%&cJe kunt een home niet hernoemen naar dezelfde naam."
   homes:
-    output: "%prefix%&7Jouw homes: &f%homes%"
+    output: "%prefix%&7Jouw homes (%amount%): &f%homes%"
     invalid-page: "%prefix%&cOngeldig paginanummer! Gebruik een nummer groter dan 0."
     others:
-      output: "%prefix%&7Homes van &e%player%: &f%homes%"
+      output: "%prefix%&7Homes van &e%player%&7 (%amount%): &f%homes%"

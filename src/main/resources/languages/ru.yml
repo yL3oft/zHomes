@@ -132,7 +132,7 @@ commands:
       output: "%prefix%&aДом &e%home% &aпереименован в &e%newname%&a."
       same-name: "%prefix%&cВы не можете переименовать дом в то же имя."
   homes:
-    output: "%prefix%&7Ваши дома: &f%homes%"
+    output: "%prefix%&7Ваши дома (%amount%): &f%homes%"
     invalid-page: "%prefix%&cНеверный номер страницы! Используйте число больше 0."
     others:
-      output: "%prefix%&7Дома игрока &e%player%: &f%homes%"
+      output: "%prefix%&7Дома игрока &e%player%&7 (%amount%): &f%homes%"

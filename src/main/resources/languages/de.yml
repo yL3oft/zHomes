@@ -135,4 +135,4 @@ commands:
     output: "%prefix%&7Deine Homes: &f%homes%"
     invalid-page: "%prefix%&cUngültige Seitennummer! Bitte verwende eine Zahl größer als 0."
     others:
-      output: "%prefix%&7Homes von &e%player%: &f%homes%"
+      output: "%prefix%&7Homes von &e%player%&7 (%amount%): &f%homes%"

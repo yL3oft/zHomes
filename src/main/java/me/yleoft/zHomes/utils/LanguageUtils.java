@@ -231,9 +231,15 @@ public class LanguageUtils extends ConfigUtils {
         }
 
         public String getOutput() {
+            return null;
+        }
+
+        public String getOutputSelf(Player p) {
             String path = formPath(cmds, getCmd(), "output");
             return this.cfg.getString(path)
-                    .replace("%command%", Main.cfgu.CmdHomesCommand());
+                    .replace("%command%", Main.cfgu.CmdHomesCommand())
+                    .replace("%homes%", Main.hu.homes(p))
+                    .replace("%amount%", String.valueOf(Main.hu.numberOfHomes(p)));
         }
 
         public String getInvalidPage() {
@@ -247,6 +253,7 @@ public class LanguageUtils extends ConfigUtils {
             return this.cfg.getString(path)
                     .replace("%command%", Main.cfgu.CmdHomesCommand())
                     .replace("%homes%", Main.hu.homes(p))
+                    .replace("%amount%", String.valueOf(Main.hu.numberOfHomes(p)))
                     .replace("%player%", Objects.requireNonNull(p.getName()));
         }
     }

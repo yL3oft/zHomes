@@ -7,6 +7,7 @@
 - Fix support for Geyser-Standalone
 - Fix events loading more than one time in `/zhomes reload`
 - Added a new section to the config.yml to restrict homes in certain worlds: `restricted-worlds`
+- Added new internal placeholder for `/homes`: `%amount%` - Shows the amount of homes the player has
 
 
 **Full Changelog**: https://github.com/yL3oft/zHomes/compare/2.2.0...2.2.1
