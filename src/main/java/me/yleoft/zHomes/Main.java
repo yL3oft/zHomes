@@ -278,6 +278,7 @@ public final class Main extends JavaPlugin {
         //</editor-fold>
         //</editor-fold>
         loadCommands();
+        registerEvents();
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§fPlugin started (Any errors will be above this message)");
         helper.sendMsg(getServer().getConsoleSender(), coloredPluginName+"§f------------------------------------------------------");
     }
@@ -373,8 +374,11 @@ public final class Main extends JavaPlugin {
             registerPermission(cfgu.CmdMainHelpPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainVersionPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdMainVersionUpdatePermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (version|ver) update' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdMainInfoPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " info' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainReloadPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
+            registerPermission(cfgu.CmdMainNearhomesPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " nearhomes' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdMainConverterPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " converter' command", PermissionDefault.OP);
+            registerPermission(cfgu.CmdMainImportexportPermission(), "Permission to use the '/" + cfgu.CmdMainCommand() + " (export|import)' command", PermissionDefault.OP);
             registerPermission(cfgu.CmdSethomePermission(), "Permission to use the '/" + cfgu.CmdSethomeCommand() + "' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdDelhomePermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + "' command", PermissionDefault.TRUE);
             registerPermission(cfgu.CmdDelhomeOthersPermission(), "Permission to use the '/" + cfgu.CmdDelhomeCommand() + " (Player:Home)' command", PermissionDefault.OP);
@@ -386,11 +390,14 @@ public final class Main extends JavaPlugin {
             registerPermission(cfgu.PermissionBypassLimit(), "Bypass homes limit", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassST(), "Bypass safe teleport", PermissionDefault.FALSE);
             registerPermission(cfgu.PermissionBypassDT(), "Bypass dimensional teleportation config", PermissionDefault.OP);
+            registerPermission(cfgu.PermissionBypassRestrictedWorlds(), "Bypass restricted worlds", PermissionDefault.OP);
             registerPermission(cfgu.PermissionBypassWarmup(), "Bypass teleportation warmup time", PermissionDefault.OP);
         } catch (Exception e) {
             helper.sendMsg(getServer().getConsoleSender(), this.coloredPluginName + "§cError registering permissions (This doesn't affect anything in general)!");
         }
         //</editor-fold>
+    }
+    public void registerEvents() {
         //<editor-fold desc="Listeners">
         registerEvent(new PlayerListeners());
         if(useWorldGuard) {

@@ -625,6 +625,11 @@ public class LanguageUtils extends ConfigUtils {
             String path = formPath(cmds, "unable-to-find-safe-location");
             return this.cfg.getString(path);
         }
+
+        public String getWorldRestricted() {
+            String path = formPath(cmds, "world-restricted");
+            return this.cfg.getString(path);
+        }
     }
 
     public static void loadzAPIMessages() {

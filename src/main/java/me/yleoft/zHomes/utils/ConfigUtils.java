@@ -1,5 +1,6 @@
 package me.yleoft.zHomes.utils;
 
+import java.util.Collections;
 import java.util.List;
 
 import me.yleoft.zAPI.utils.StringUtils;
@@ -19,6 +20,7 @@ public class ConfigUtils {
     protected final String databasePath = "database.";
     protected final String lim = "limits.";
     protected final String tpo = "teleport-options.";
+    protected final String restrictedworlds = tpo+"restricted-worlds.";
     protected final String warmup = tpo+"warmup.";
 
     public ConfigUtilsExtras cfguExtras = new ConfigUtilsExtras();
@@ -48,6 +50,16 @@ public class ConfigUtils {
     }
     public boolean playSound() {
         return main.getConfig().getBoolean(this.tpo + "play-sound");
+    }
+    public boolean useRestrictedWorlds() {
+        return main.getConfig().getBoolean(this.restrictedworlds + "enable");
+    }
+    public String restrictedWorldsMode() {
+        return main.getConfig().getString(this.restrictedworlds + "mode").equalsIgnoreCase("whitelist") ? "whitelist" : "blacklist";
+    }
+    public List<String> restrictedWorldsList() {
+        if(main.getConfig().isList(this.restrictedworlds + "worlds")) return main.getConfig().getStringList(this.restrictedworlds + "worlds");
+        else return Collections.singletonList(main.getConfig().getString(this.restrictedworlds + "worlds"));
     }
     public boolean doWarmup() {
         return main.getConfig().getBoolean(this.warmup + "enable");
@@ -230,6 +242,9 @@ public class ConfigUtils {
     }
     public String PermissionBypassST() {
         return main.getConfig().getString(permissionsBypassPath+"safe-teleportation");
+    }
+    public String PermissionBypassRestrictedWorlds() {
+        return main.getConfig().getString(permissionsBypassPath+"restricted-worlds");
     }
     public String PermissionBypassWarmup() {
         return main.getConfig().getString(permissionsBypassPath+"warmup");

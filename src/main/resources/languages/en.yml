@@ -27,6 +27,7 @@ commands:
   cant-use-2dot: "%prefix%&cYou can't use &e':' &cin this command."
   cant-find-player: "%prefix%&cThis player was not found."
   unable-to-find-safe-location: "%prefix%&cUnable to find a safe location to teleport you."
+  world-restricted: "%prefix%&cYou can't use homes in this world."
 
   # Below you will find messages specific for the commands
   main:

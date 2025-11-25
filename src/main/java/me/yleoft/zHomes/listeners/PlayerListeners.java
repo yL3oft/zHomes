@@ -1,5 +1,6 @@
 package me.yleoft.zHomes.listeners;
 
+import com.zhomes.api.event.player.*;
 import me.yleoft.zAPI.utils.ActionbarUtils;
 import me.yleoft.zAPI.utils.SchedulerUtils;
 import me.yleoft.zHomes.Main;
@@ -66,6 +67,50 @@ public class PlayerListeners extends HomesUtils implements Listener {
                     ActionbarUtils.send(p, LanguageUtils.Helper.getText(p, lang.getCancelledActionbar()));
                 }
             }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerExecuteSethomeCommand(PreExecuteSethomeCommandEvent e) {
+        Player p = e.getPlayer();
+
+        if(!isAllowedInWorld(p)) {
+            e.setCancelled(true);
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            cmdm.sendMsg(p, cmdm.getWorldRestricted());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerExecuteDelhomeCommand(PreExecuteDelhomeCommandEvent e) {
+        Player p = e.getPlayer();
+
+        if(!isAllowedInWorld(p)) {
+            e.setCancelled(true);
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            cmdm.sendMsg(p, cmdm.getWorldRestricted());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerExecuteHomeCommand(PreExecuteHomeCommandEvent e) {
+        Player p = e.getPlayer();
+
+        if(!isAllowedInWorld(p)) {
+            e.setCancelled(true);
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            cmdm.sendMsg(p, cmdm.getWorldRestricted());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerExecuteHomesCommand(ExecuteHomesCommandEvent e) {
+        Player p = e.getPlayer();
+
+        if(!isAllowedInWorld(p)) {
+            e.setCancelled(true);
+            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
+            cmdm.sendMsg(p, cmdm.getWorldRestricted());
         }
     }
 

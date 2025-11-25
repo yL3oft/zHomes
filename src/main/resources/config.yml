@@ -47,8 +47,19 @@ teleport-options:
   # OPTIONS: [true, false] --- DEFAULT: true
   dimensional-teleportation: true # There is also a permission to bypass in permissions.bypass.dimensional-teleportation in this file
   # Should the plugin play an enderman warp sound when the player teleports to a home?
-    # OPTIONS: [true, false] --- DEFAULT: true
+  # OPTIONS: [true, false] --- DEFAULT: true
   play-sound: true
+
+  restricted-worlds:
+    # This option defines if the restricted worlds feature is enabled
+    # OPTIONS: [true, false] --- DEFAULT: false
+    enable: false
+    # Here you can define the restriction mode and the worlds
+    # OPTIONS: [blacklist, whitelist] --- DEFAULT: blacklist
+    mode: blacklist
+    worlds:
+      - world_nether
+      - world_the_end
 
   # Teleportation warmup options
   warmup:
@@ -95,7 +106,7 @@ commands:
       permission: "zhomes.command.main.help" # Only OP by default
     # Sub command - Info
     info:
-      permission: "zhomes.command.main.info" # True by default
+      permission: "zhomes.command.main.info" # Only OP by default
     # Sub command - Version
     version:
       permission: "zhomes.command.main.version" # True by default
@@ -172,6 +183,9 @@ permissions:
     # Allow player's to bypass safe teleportation
     # Default: zhomes.bypass.safeteleport
     safe-teleportation: "zhomes.bypass.safeteleport" # False by default
+    # This permission allows the player to bypass the restricted worlds feature
+    # Default: zhomes.bypass.restrictedworlds
+    restricted-worlds: "zhomes.bypass.restrictedworlds" # Only OP by default
     # This permission allows the player to bypass the teleportation warmup
     # Default: zhomes.bypass.warmup
     warmup: "zhomes.bypass.warmup" # Only OP by default

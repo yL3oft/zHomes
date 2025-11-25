@@ -11,10 +11,7 @@ import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.Main;
 import com.zhomes.api.event.player.TeleportToHomeEvent;
 import me.yleoft.zHomes.storage.DatabaseEditor;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -40,6 +37,18 @@ public class HomesUtils extends DatabaseEditor {
             return getLimit(p) >= getMaxLimit(p);
         }
         return false;
+    }
+
+    public boolean isAllowedInWorld(Player p) {
+        if(!useRestrictedWorlds() || p.hasPermission(PermissionBypassRestrictedWorlds())) return true;
+        World world = p.getWorld();
+        List<String> restrictedWorlds = restrictedWorldsList();
+        String mode = restrictedWorldsMode();
+        if(mode.equalsIgnoreCase("blacklist")) {
+            return !restrictedWorlds.contains(world.getName());
+        }else {
+            return restrictedWorlds.contains(world.getName());
+        }
     }
 
     public int getLimit(OfflinePlayer p) {
