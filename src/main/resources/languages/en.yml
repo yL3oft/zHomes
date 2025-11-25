@@ -33,12 +33,14 @@ commands:
     help:
       help-perm: |-
         %prefix%&bUsages of &e/%command%&b:
-        &c-> &e/%command% &a(help|?)
-        &c-> &e/%command% &ainfo
+        &c-> &e/%command% &ahelp &7Shows this exact help message
+        &c-> &e/%command% &ainfo &7Shows plugin information
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
-        &c-> &e/%command% &anearhomes &6(<Radius>) &7List homes near you within a certain radius
+        &c-> &e/%command% &anearhomes &6(<radius>) &7List homes near you within a certain radius
         &c-> &e/%command% &aconverter (<converter-type>) &7Convert data from one place to another
+        &c-> &e/%command% &aexport &7Exports all homes to a single file
+        &c-> &e/%command% &aimport (<file>) &7Imports homes from a single file
       help-noperm: |-
         %prefix%&bUsages of &e/%command%&b:
         &c-> &e/%command% &a(help|?)
@@ -46,18 +48,23 @@ commands:
         &c-> &e/%command% &a(version|ver)
     info:
       output: |-
-        %prefix%&2Running &4%name% v%version% &2by &b%author%&2.
-        %prefix%&r- &bCurrent Version: &a%version%
-        %prefix%&r- &bRequire update: &a%requpdate%
-        %prefix%&r- &bStorage Type: &a%storage.type%
-        %prefix%&r- &bLanguage: &a%language%
-        %prefix%&r- &3Hooks:
-        %prefix%&r   &bPlaceholderAPI: &a%use.placeholderapi%
-        %prefix%&r   &bGriefPrevention: &a%use.griefprevention%
-        %prefix%&r   &bWorldGuard: &a%use.worldguard%
-        %prefix%&r   &bVault: &a%use.vault%
-      requpdate-yes: "&cYes &7(More info with &e/%command% version&7)"
-      requpdate-no: "&aNo"
+        %prefix%&bRunning &3%name% v%version% &bby &3%author%&b:
+        %prefix%&b- Server Info:
+        %prefix%&3   Software: &f%server.software%
+        %prefix%&3   Version: &f%server.version%
+        %prefix%&3   Require update: &f%requpdate%
+        %prefix%&3   Language: &f%language%
+        %prefix%&b- Storage:
+        %prefix%&3   Type: &f%storage.type%
+        %prefix%&3   Users: &f%storage.users%
+        %prefix%&3   Homes: &f%storage.homes%
+        %prefix%&b- Hooks:
+        %prefix%&3   PlaceholderAPI: &f%use.placeholderapi%
+        %prefix%&3   GriefPrevention: &f%use.griefprevention%
+        %prefix%&3   WorldGuard: &f%use.worldguard%
+        %prefix%&3   Vault: &f%use.vault%
+      requpdate-yes: '&cYes &7(Use &e/%command% version &7for more info)'
+      requpdate-no: '&aNo'
     version:
       output: "%prefix%&bCurrent version: &a%version%"
       update:
@@ -101,6 +108,13 @@ commands:
         &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aAll data converted!"
       error: "%prefix%&cSomething went wrong converting the data, please check your server console."
+    export:
+      output: "%prefix%&aAll homes exported to &e%file%&a!"
+      error: "%prefix%&cSomething went wrong exporting the data, please check your server console."
+    import:
+      usage: "&c-> &e/%command% import &a(<file>)"
+      output: "%prefix%&aAll homes imported from &e%file%&a!"
+      error: "%prefix%&cSomething went wrong importing the data, please check your server console."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &aset to your position."

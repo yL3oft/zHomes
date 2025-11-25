@@ -110,6 +110,9 @@ commands:
     # Sub command - Converter
     converter:
       permission: "zhomes.command.main.converter" # Only OP by default
+    # Sub command - Import | Export
+    importexport:
+      permission: "zhomes.command.main.importexport" # Only OP by default
   sethome:
     command: sethome
     description: "Sethome"

@@ -3,6 +3,7 @@ package me.yleoft.zHomes.commands;
 import com.zhomes.api.event.player.RenameHomeEvent;
 import com.zhomes.api.event.player.ExecuteHomeCommandEvent;
 import com.zhomes.api.event.player.PreExecuteHomeCommandEvent;
+import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
@@ -114,7 +115,7 @@ public class HomeCommand extends HomesUtils implements CommandExecutor {
         String player = homeS[0];
         home = homeS[1];
 
-        OfflinePlayer t = Bukkit.getOfflinePlayer(player);
+        OfflinePlayer t = PlayerUtils.getOfflinePlayer(player);
         if (t == null) {
             return;
         }

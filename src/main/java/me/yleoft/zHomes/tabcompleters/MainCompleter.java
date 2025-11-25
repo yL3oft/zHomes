@@ -1,8 +1,11 @@
 package me.yleoft.zHomes.tabcompleters;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.ConfigUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -31,6 +34,10 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                 commands.add("nearhomes");
             if (p.hasPermission(CmdMainConverterPermission()))
                 commands.add("converter");
+            if (p.hasPermission(CmdMainImportexportPermission())) {
+                commands.add("export");
+                commands.add("import");
+            }
             StringUtil.copyPartialMatches(args[0], commands, completions);
         } else if (args.length == 2) {
             switch (args[0]) {
@@ -68,6 +75,24 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                         commands.add("ultimatehomes");
                         commands.add("xhomes");
                         commands.add("zhome");
+                    }
+                    break;
+                }
+                case "import": {
+                    if (p.hasPermission(CmdMainImportexportPermission())) {
+                        File[] files = Main.getInstance().getDataFolder().listFiles();
+                        if (files != null) {
+                            for (File file : files) {
+                                if (file.isFile()) {
+                                    String name = file.getName();
+                                    if(!name.endsWith(".json.gz")) continue;
+                                    int dotIndex = name.lastIndexOf('.');
+                                    if (dotIndex > 0) {
+                                        commands.add(name.substring(0, dotIndex));
+                                    }
+                                }
+                            }
+                        }
                     }
                     break;
                 }

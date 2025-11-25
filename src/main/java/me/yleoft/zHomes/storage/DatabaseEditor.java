@@ -1,18 +1,30 @@
 package me.yleoft.zHomes.storage;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import me.yleoft.zAPI.utils.ActionbarUtils;
 import me.yleoft.zAPI.utils.LocationUtils;
 import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zHomes.Main;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 public class DatabaseEditor extends DatabaseConnection {
 
@@ -138,6 +150,34 @@ public class DatabaseEditor extends DatabaseConnection {
         return result;
     }
 
+    public long getTotalHomes() {
+        long count = 0;
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) AS total FROM " + databaseTable());
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getLong("total");
+            }
+        } catch (SQLException e) {
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error getting total homes", e);
+        }
+        return count;
+    }
+
+    public long getTotalUsers() {
+        long count = 0;
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT COUNT(DISTINCT UUID) AS total FROM " + databaseTable());
+             ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                count = rs.getLong("total");
+            }
+        } catch (SQLException e) {
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error getting total users", e);
+        }
+        return count;
+    }
+
     public boolean isInTable(OfflinePlayer p, String home) {
         try {
             String uuid = p.getUniqueId().toString();
@@ -145,6 +185,160 @@ public class DatabaseEditor extends DatabaseConnection {
                 return true;
         } catch (Exception ignored) {}
         return false;
+    }
+
+    private static class ExportEntry {
+        String uuid;
+        String home;
+        String location;
+
+        ExportEntry() {}
+
+        ExportEntry(String uuid, String home, String location) {
+            this.uuid = uuid;
+            this.home = home;
+            this.location = location;
+        }
+    }
+
+    public File exportDatabase(Player p) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
+        String filename = "zhomes-" + dtf.format(LocalDateTime.now()) + ".json.gz";
+        File outFile = new File(Main.getInstance().getDataFolder(), filename);
+
+        List<ExportEntry> entries = new ArrayList<>();
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement("SELECT UUID, HOME, LOCATION FROM " + databaseTable());
+             ResultSet rs = ps.executeQuery()) {
+
+            int count = 0;
+            while (rs.next()) {
+                entries.add(new ExportEntry(rs.getString("UUID"), rs.getString("HOME"), rs.getString("LOCATION")));
+                count++;
+                if (p != null && (count % 50 == 0)) {
+                    // periodic progress update to player every 50 rows
+                    String message = "Exporting data... [" + count + " records]";
+                    ActionbarUtils.send(p, message);
+                }
+            }
+
+            // Write JSON.gz
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            try (GZIPOutputStream gos = new GZIPOutputStream(Files.newOutputStream(outFile.toPath()));
+                 Writer writer = new OutputStreamWriter(gos, StandardCharsets.UTF_8)) {
+                gson.toJson(entries, writer);
+                writer.flush();
+            }
+
+            if (p != null) {
+                String message = "Export complete! " + entries.size() + " records exported.";
+                ActionbarUtils.send(p, message);
+                try {
+                    p.playSound(p.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                }catch (Exception ignored) {}
+            }
+            Main.getInstance().getLogger().info("Exported " + entries.size() + " records to " + outFile.getAbsolutePath());
+            return outFile;
+        } catch (Exception e) {
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error exporting database to " + outFile.getAbsolutePath(), e);
+            if (p != null) {
+                p.sendMessage("§cFailed to export database: " + e.getMessage());
+            }
+            return null;
+        }
+    }
+
+    public int importDatabase(File gzJsonFile, Player p) {
+        if (gzJsonFile == null || !gzJsonFile.exists()) {
+            Main.getInstance().getLogger().severe("Import file does not exist: " + (gzJsonFile == null ? "null" : gzJsonFile.getAbsolutePath()));
+            return -1;
+        }
+
+        List<ExportEntry> entries;
+        try (GZIPInputStream gis = new GZIPInputStream(Files.newInputStream(gzJsonFile.toPath()));
+             Reader reader = new InputStreamReader(gis, StandardCharsets.UTF_8)) {
+            Gson gson = new Gson();
+            entries = gson.fromJson(reader, new TypeToken<List<ExportEntry>>() {}.getType());
+            if (entries == null) entries = Collections.emptyList();
+        } catch (Exception e) {
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error reading import file: " + gzJsonFile.getAbsolutePath(), e);
+            if (p != null) p.sendMessage("§cFailed to read import file: " + e.getMessage());
+            return -1;
+        }
+
+        if (entries.isEmpty()) {
+            Main.getInstance().getLogger().info("Import file contained no entries: " + gzJsonFile.getAbsolutePath());
+            if (p != null) p.sendMessage("§eImport file contained no entries.");
+            return 0;
+        }
+
+        database_type type = Main.type;
+        String insertQuery;
+        switch (type) {
+            case H2:
+                insertQuery = "MERGE INTO " + databaseTable() + " KEY(UUID, HOME) VALUES (?, ?, ?)";
+                break;
+            case SQLITE:
+                insertQuery = "INSERT OR REPLACE INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?)";
+                break;
+            case EXTERNAL:
+            default:
+                // MySQL/MariaDB
+                insertQuery = "INSERT INTO " + databaseTable() + " (UUID, HOME, LOCATION) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION)";
+                break;
+        }
+
+        int imported = 0;
+        final int BATCH_SIZE = 500;
+        try (Connection con = getConnection();
+             PreparedStatement pstmt = con.prepareStatement(insertQuery)) {
+            con.setAutoCommit(false);
+            int batchCount = 0;
+            for (int i = 0; i < entries.size(); i++) {
+                ExportEntry e = entries.get(i);
+                pstmt.setString(1, e.uuid);
+                pstmt.setString(2, e.home);
+                pstmt.setString(3, e.location);
+                pstmt.addBatch();
+                batchCount++;
+
+                if (batchCount >= BATCH_SIZE) {
+                    pstmt.executeBatch();
+                    con.commit();
+                    pstmt.clearBatch();
+                    imported += batchCount;
+                    batchCount = 0;
+                    updateImportProgressToPlayer(p, imported, entries.size());
+                }
+            }
+            if (batchCount > 0) {
+                pstmt.executeBatch();
+                con.commit();
+                imported += batchCount;
+            }
+            con.setAutoCommit(true);
+
+            if (p != null) {
+                String message = "Import complete! " + imported + " records imported.";
+                ActionbarUtils.send(p, message);
+                try {
+                    p.playSound(p.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                }catch (Exception ignored) {}
+            }
+            Main.getInstance().getLogger().info("Imported " + imported + " records from " + gzJsonFile.getAbsolutePath());
+            return imported;
+        } catch (SQLException e) {
+            Main.getInstance().getLogger().log(Level.SEVERE, "Error importing database from " + gzJsonFile.getAbsolutePath(), e);
+            if (p != null) p.sendMessage("§cFailed to import database: " + e.getMessage());
+            return -1;
+        }
+    }
+
+    private void updateImportProgressToPlayer(Player p, int count, int total) {
+        if (p != null) {
+            String message = "§aImporting data... §8[§7" + count + " / " + total + "§8]";
+            ActionbarUtils.send(p, message);
+        }
     }
 
 }

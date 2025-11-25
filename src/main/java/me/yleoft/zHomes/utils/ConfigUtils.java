@@ -117,6 +117,9 @@ public class ConfigUtils {
     public String CmdMainConverterPermission() {
         return main.getConfig().getString(this.cmdPath + "main.converter.permission");
     }
+    public String CmdMainImportexportPermission() {
+        return main.getConfig().getString(this.cmdPath + "main.importexport.permission");
+    }
     //</editor-fold>
     //<editor-fold desc="Sethome Command">
     public String CmdSethomeCommand() {

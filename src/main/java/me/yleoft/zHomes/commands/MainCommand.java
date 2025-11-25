@@ -15,6 +15,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+
 import static me.yleoft.zHomes.Main.checker;
 import static me.yleoft.zHomes.Main.needsUpdate;
 import static me.yleoft.zHomes.utils.LanguageUtils.loadzAPIMessages;
@@ -172,6 +174,31 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                 }
                 //</editor-fold>
                 lang.sendMsg(s, lang6.getOutput(Main.hu.getNearHomes(p.getLocation(), radius), radius));
+                return false;
+            }
+            case "export": {
+                if (p != null && !p.hasPermission(CmdMainImportexportPermission())) {
+                    lang.sendMsg(s, cmdm.getNoPermission());
+                    return false;
+                }
+                Main.dbe.exportDatabase(p);
+                return false;
+            }
+            case "import": {
+                if (p != null && !p.hasPermission(CmdMainImportexportPermission())) {
+                    lang.sendMsg(s, cmdm.getNoPermission());
+                    return false;
+                }
+                if(args.length != 2) {
+                    return false;
+                }
+                String fileName = args[1];
+                File file = new File(Main.getInstance().getDataFolder(), fileName+".json.gz");
+                if(fileName.endsWith("json.gz")) file = new File(Main.getInstance().getDataFolder(), fileName);
+                if(!file.exists()) {
+                    return false;
+                }
+                Main.dbe.importDatabase(file, p);
                 return false;
             }
         }

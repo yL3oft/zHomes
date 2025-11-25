@@ -374,9 +374,13 @@ public class LanguageUtils extends ConfigUtils {
                         .replace("%name%", LanguageUtils.main.getDescription().getName())
                         .replace("%version%", LanguageUtils.main.getDescription().getVersion())
                         .replace("%author%", String.join(", ", LanguageUtils.main.getDescription().getAuthors()))
+                        .replace("%server.software%", Bukkit.getServer().getName())
+                        .replace("%server.version%", Bukkit.getServer().getVersion() + " - " + Bukkit.getBukkitVersion())
                         .replace("%requpdate%", (needsUpdate ? this.cfg.getString(formPath(cmds, getCmd(), "requpdate-yes")) : this.cfg.getString(formPath(cmds, getCmd(), "requpdate-no"))))
                         .replace("%command%", Main.cfgu.CmdMainCommand())
                         .replace("%storage.type%", Main.db.databaseType())
+                        .replace("%storage.users%", String.valueOf(Main.dbe.getTotalUsers()))
+                        .replace("%storage.homes%", String.valueOf(Main.dbe.getTotalHomes()))
                         .replace("%language%", langType())
                         .replace("%use.placeholderapi%", (Main.usePlaceholderAPI ? "&aYes" : "&cNo"))
                         .replace("%use.griefprevention%", (Main.useGriefPrevention ? "&aYes" : "&cNo"))
@@ -479,7 +483,7 @@ public class LanguageUtils extends ConfigUtils {
             private String getHomeString(OfflinePlayer p, String home) {
                 String path = formPath(cmds, getCmd(), "home-string");
                 return this.cfg.getString(path)
-                        .replace("%owner%", Objects.requireNonNull(p.getName()))
+                        .replace("%owner%", (p == null || p.getName() == null) ? "----" : p.getName())
                         .replace("%home%", home);
             }
         }

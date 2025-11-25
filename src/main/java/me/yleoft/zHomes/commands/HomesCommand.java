@@ -3,6 +3,7 @@ package me.yleoft.zHomes.commands;
 import com.zhomes.api.event.player.ExecuteHomesCommandEvent;
 import me.yleoft.zAPI.inventory.CustomInventory;
 import me.yleoft.zAPI.managers.FileManager;
+import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zAPI.utils.StringUtils;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
@@ -57,7 +58,7 @@ public class HomesCommand extends HomesUtils implements CommandExecutor {
             }
             String player = args[0];
             if (p.hasPermission(CmdHomesOthersPermission())) {
-                OfflinePlayer t = Bukkit.getOfflinePlayer(player);
+                OfflinePlayer t = PlayerUtils.getOfflinePlayer(player);
                 if (t == null) {
                     lang.sendMsg(p, cmdm.getCantFindPlayer());
                     return false;

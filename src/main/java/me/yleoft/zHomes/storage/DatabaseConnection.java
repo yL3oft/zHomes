@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.*;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,21 +11,18 @@ import java.util.logging.Logger;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import me.yleoft.zAPI.folia.FoliaRunnable;
+import me.yleoft.zAPI.utils.ActionbarUtils;
 import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zAPI.utils.SchedulerUtils;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.ConfigUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -241,7 +237,7 @@ public class DatabaseConnection extends ConfigUtils {
                                             count++;
                                             if (p != null) {
                                                 String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                                ActionbarUtils.send(p, message);
                                             }
                                             continue;
                                         }
@@ -270,12 +266,12 @@ public class DatabaseConnection extends ConfigUtils {
                                         count++;
                                         if (p != null) {
                                             String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                            ActionbarUtils.send(p, message);
                                         }
                                     }
                                     if (p != null) {
                                         String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                        ActionbarUtils.send(p, message);
                                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                                     }
                                     System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from Essentials.");
@@ -322,7 +318,7 @@ public class DatabaseConnection extends ConfigUtils {
                                             count++;
                                             if (p != null) {
                                                 String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                                ActionbarUtils.send(p, message);
                                             }
                                             continue;
                                         }
@@ -351,12 +347,12 @@ public class DatabaseConnection extends ConfigUtils {
                                         count++;
                                         if (p != null) {
                                             String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                            ActionbarUtils.send(p, message);
                                         }
                                     }
                                     if (p != null) {
                                         String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                        ActionbarUtils.send(p, message);
                                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                                     }
                                     System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from SetHome.");
@@ -403,7 +399,7 @@ public class DatabaseConnection extends ConfigUtils {
                                             count++;
                                             if (p != null) {
                                                 String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                                ActionbarUtils.send(p, message);
                                             }
                                             continue;
                                         }
@@ -432,12 +428,12 @@ public class DatabaseConnection extends ConfigUtils {
                                         count++;
                                         if (p != null) {
                                             String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                            ActionbarUtils.send(p, message);
                                         }
                                     }
                                     if (p != null) {
                                         String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                        ActionbarUtils.send(p, message);
                                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                                     }
                                     System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from UltimateHomes.");
@@ -478,7 +474,7 @@ public class DatabaseConnection extends ConfigUtils {
                                             count++;
                                             if (p != null) {
                                                 String message = ChatColor.translateAlternateColorCodes('&', "&aConvertion failed, skipping user... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                                ActionbarUtils.send(p, message);
                                             }
                                             continue;
                                         }
@@ -508,13 +504,13 @@ public class DatabaseConnection extends ConfigUtils {
                                         count++;
                                         if (p != null) {
                                             String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                            ActionbarUtils.send(p, message);
                                         }
                                     }
                                     pstmt.executeBatch();
                                     if (p != null) {
                                         String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                        ActionbarUtils.send(p, message);
                                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                                     }
                                     System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from XHomes.");
@@ -561,7 +557,7 @@ public class DatabaseConnection extends ConfigUtils {
                                             count++;
                                             if (p != null) {
                                                 String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                                ActionbarUtils.send(p, message);
                                             }
                                             continue;
                                         }
@@ -588,12 +584,12 @@ public class DatabaseConnection extends ConfigUtils {
                                         count++;
                                         if (p != null) {
                                             String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                            ActionbarUtils.send(p, message);
                                         }
                                     }
                                     if (p != null) {
                                         String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + " users/" + totalUsers + " users&8]");
-                                        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                                        ActionbarUtils.send(p, message);
                                         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
                                     }
                                     System.out.println("Migration completed! " + count + " users and " + countH + " homes transferred from Essentials.");
@@ -718,14 +714,16 @@ public class DatabaseConnection extends ConfigUtils {
     private void updateProgress(Player p, int count, int totalRows) {
         if (p != null) {
             String message = ChatColor.translateAlternateColorCodes('&', "&aConverting Data... &8[&7" + count + "/" + totalRows + "&8]");
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+            ActionbarUtils.send(p, message);
         }
     }
     private void completeMigration(Player p, int count, int totalRows) {
         if (p != null) {
             String message = ChatColor.translateAlternateColorCodes('&', "&aConverted Data! &8[&7" + count + "/" + totalRows + "&8]");
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
-            p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+            ActionbarUtils.send(p, message);
+            try {
+                p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+            }catch (Exception ignored) {}
         }
         System.out.println("\nMigration completed! " + count + " records transferred.");
     }

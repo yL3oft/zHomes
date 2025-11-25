@@ -2,6 +2,7 @@ package me.yleoft.zHomes.commands;
 
 import com.zhomes.api.event.player.ExecuteDelhomeCommandEvent;
 import com.zhomes.api.event.player.PreExecuteDelhomeCommandEvent;
+import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
 import org.bukkit.Bukkit;
@@ -76,7 +77,7 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
         String player = homeS[0];
         home = homeS[1];
 
-        OfflinePlayer t = Bukkit.getOfflinePlayer(player);
+        OfflinePlayer t = PlayerUtils.getOfflinePlayer(player);
         if (t == null) {
             lang.sendMsg(p, cmdm.getCantFindPlayer());
             return;
