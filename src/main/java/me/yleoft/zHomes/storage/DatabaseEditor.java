@@ -41,7 +41,7 @@ public class DatabaseEditor extends DatabaseConnection {
         database_type type = Main.type;
         try (Connection con = getConnection()) {
             if (isInTable(p, home)) {
-                try (PreparedStatement ps = con.prepareStatement("UPDATE " + databaseTable() + " SET LOCATION=? WHERE UUID=? AND HOME=?")) {
+                try (PreparedStatement ps = con.prepareStatement("UPDATE " + databaseTable() + " SET LOCATION=? WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
                     String uuid = p.getUniqueId().toString();
                     ps.setString(1, location);
                     ps.setString(2, uuid);
@@ -76,7 +76,7 @@ public class DatabaseEditor extends DatabaseConnection {
 
     public void deleteHome(OfflinePlayer p, String home) {
         try (Connection con = getConnection();
-            PreparedStatement ps2 = con.prepareStatement("DELETE FROM " + databaseTable() + " WHERE UUID=? AND HOME=?")) {
+            PreparedStatement ps2 = con.prepareStatement("DELETE FROM " + databaseTable() + " WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
             String uuid = p.getUniqueId().toString();
             ps2.setString(1, uuid);
             ps2.setString(2, home);
@@ -88,18 +88,16 @@ public class DatabaseEditor extends DatabaseConnection {
 
     public String getHome(OfflinePlayer p, String home) {
         try (Connection con = getConnection()) {
-            if (isInTable(p, home)) {
-                try (PreparedStatement ps = con.prepareStatement("SELECT LOCATION from " + databaseTable() + " WHERE UUID=? AND HOME=?")) {
-                    String uuid = p.getUniqueId().toString();
-                    ps.setString(1, uuid);
-                    ps.setString(2, home);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            String returned = rs.getString("LOCATION");
-                            rs.close();
-                            ps.close();
-                            return returned;
-                        }
+            try (PreparedStatement ps = con.prepareStatement("SELECT LOCATION from " + databaseTable() + " WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
+                String uuid = p.getUniqueId().toString();
+                ps.setString(1, uuid);
+                ps.setString(2, home);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String returned = rs.getString("LOCATION");
+                        rs.close();
+                        ps.close();
+                        return returned;
                     }
                 }
             }
@@ -181,7 +179,7 @@ public class DatabaseEditor extends DatabaseConnection {
     public boolean isInTable(OfflinePlayer p, String home) {
         try {
             String uuid = p.getUniqueId().toString();
-            if (existsTableColumnValueDouble(databaseTable(), "UUID", uuid, "HOME", home))
+            if (existsTableColumnValueDoubleLower(databaseTable(), "UUID", uuid, "HOME", home))
                 return true;
         } catch (Exception ignored) {}
         return false;

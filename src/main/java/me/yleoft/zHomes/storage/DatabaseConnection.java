@@ -728,24 +728,9 @@ public class DatabaseConnection extends ConfigUtils {
         System.out.println("\nMigration completed! " + count + " records transferred.");
     }
 
-    public boolean existsTableColumnValue(String table, String columnName, String value) {
+    public boolean existsTableColumnValueDoubleLower(String table, String columnName, String value, String columnName2, String value2) {
         try (Connection con = getConnection();
-             PreparedStatement ps = con.prepareStatement("SELECT * FROM " + table + " WHERE " + columnName + "=?")) {
-            ps.setString(1, value);
-            try (ResultSet results = ps.executeQuery()) {
-                if (results.next()) {
-                    return true;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean existsTableColumnValueDouble(String table, String columnName, String value, String columnName2, String value2) {
-        try (Connection con = getConnection();
-             PreparedStatement ps = con.prepareStatement("SELECT * FROM " + table + " WHERE " + columnName + "=? AND " + columnName2 + "=?")) {
+             PreparedStatement ps = con.prepareStatement("SELECT * FROM " + table + " WHERE " + columnName + "=? AND LOWER(" + columnName2 + ")=LOWER(?)")) {
             ps.setString(1, value);
             ps.setString(2, value2);
             try (ResultSet results = ps.executeQuery()) {
