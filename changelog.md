@@ -4,7 +4,6 @@
 - Improved information from `/zhomes info` command
 - Fix converter for older versions
 - Added a way to export/import data via `/zhomes export` and `/zhomes import <data>`
-- Fix support for Geyser-Standalone
 - Fix events loading more than one time in `/zhomes reload`
 - Added a new section to the config.yml to restrict homes in certain worlds: `restricted-worlds`
 - Added new internal placeholder for `/homes`: `%amount%` - Shows the amount of homes the player has

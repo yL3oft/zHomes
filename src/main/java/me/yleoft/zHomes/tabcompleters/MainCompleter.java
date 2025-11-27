@@ -86,7 +86,7 @@ public class MainCompleter extends ConfigUtils implements TabCompleter {
                                 if (file.isFile()) {
                                     String name = file.getName();
                                     if(!name.endsWith(".json.gz")) continue;
-                                    int dotIndex = name.lastIndexOf('.');
+                                    int dotIndex = name.lastIndexOf(".json.gz");
                                     if (dotIndex > 0) {
                                         commands.add(name.substring(0, dotIndex));
                                     }

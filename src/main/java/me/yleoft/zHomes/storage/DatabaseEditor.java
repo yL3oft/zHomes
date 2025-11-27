@@ -23,6 +23,7 @@ import me.yleoft.zAPI.utils.PlayerUtils;
 import me.yleoft.zHomes.Main;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -199,7 +200,7 @@ public class DatabaseEditor extends DatabaseConnection {
         }
     }
 
-    public File exportDatabase(Player p) {
+    public File exportDatabase(Player p)    {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm");
         String filename = "zhomes-" + dtf.format(LocalDateTime.now()) + ".json.gz";
         File outFile = new File(Main.getInstance().getDataFolder(), filename);
@@ -232,7 +233,7 @@ public class DatabaseEditor extends DatabaseConnection {
                 String message = "Export complete! " + entries.size() + " records exported.";
                 ActionbarUtils.send(p, message);
                 try {
-                    p.playSound(p.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                    p.playSound(p.getLocation(), Objects.requireNonNull(getEntityLevelUP()), 100.0F, 1.0F);
                 }catch (Exception ignored) {}
             }
             Main.getInstance().getLogger().info("Exported " + entries.size() + " records to " + outFile.getAbsolutePath());
@@ -243,6 +244,18 @@ public class DatabaseEditor extends DatabaseConnection {
                 p.sendMessage("§cFailed to export database: " + e.getMessage());
             }
             return null;
+        }
+    }
+
+    public static Sound getEntityLevelUP() {
+        try {
+            return Sound.valueOf("ENTITY_PLAYER_LEVELUP");
+        } catch (Throwable ignored1) {
+            try {
+                return Sound.valueOf("LEVEL_UP");
+            } catch (Throwable ignored2) {
+                return null;
+            }
         }
     }
 
@@ -320,7 +333,7 @@ public class DatabaseEditor extends DatabaseConnection {
                 String message = "Import complete! " + imported + " records imported.";
                 ActionbarUtils.send(p, message);
                 try {
-                    p.playSound(p.getLocation(), org.bukkit.Sound.ENTITY_PLAYER_LEVELUP, 100.0F, 1.0F);
+                    p.playSound(p.getLocation(), Objects.requireNonNull(getEntityLevelUP()), 100.0F, 1.0F);
                 }catch (Exception ignored) {}
             }
             Main.getInstance().getLogger().info("Imported " + imported + " records from " + gzJsonFile.getAbsolutePath());
