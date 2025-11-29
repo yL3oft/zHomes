@@ -633,8 +633,13 @@ public class LanguageUtils extends ConfigUtils {
             return this.cfg.getString(path);
         }
 
-        public String getWorldRestricted() {
-            String path = formPath(cmds, "world-restricted");
+        public String getWorldRestrictedSethome() {
+            String path = formPath(cmds, "world-restricted-sethome");
+            return this.cfg.getString(path);
+        }
+
+        public String getWorldRestrictedHome() {
+            String path = formPath(cmds, "world-restricted-home");
             return this.cfg.getString(path);
         }
     }

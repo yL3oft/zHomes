@@ -27,7 +27,8 @@ commands:
   cant-use-2dot: "%prefix%&cVocê não pode usar &e':' &cneste comando."
   cant-find-player: "%prefix%&cEste jogador não foi encontrado."
   unable-to-find-safe-location: "%prefix%&cNão foi possível encontrar uma localização segura para teleportar."
-  world-restricted: "%prefix%&cVocê não pode usar homes neste mundo."
+  world-restricted-sethome: "%prefix%&cVocê não pode definir homes neste mundo."
+  world-restricted-home: "%prefix%&cVocê não pode teleportar para homes naquele mundo.."
 
   # Aqui embaixo vai achar mensagens específicas de alguns comandos.
   main:

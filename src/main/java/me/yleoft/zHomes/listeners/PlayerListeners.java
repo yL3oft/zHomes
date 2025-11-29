@@ -117,7 +117,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
         if(!isAllowedInWorld(p)) {
             e.setCancelled(true);
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            cmdm.sendMsg(p, cmdm.getWorldRestricted());
+            cmdm.sendMsg(p, cmdm.getWorldRestrictedSethome());
         }
     }
 
@@ -128,7 +128,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
         if(!isAllowedInWorld(Main.hu.getHomeLoc(p, e.getHome()).getWorld())) {
             e.setCancelled(true);
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            cmdm.sendMsg(p, cmdm.getWorldRestricted());
+            cmdm.sendMsg(p, cmdm.getWorldRestrictedHome());
         }
     }
 
