@@ -167,10 +167,19 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                     lang.sendMsg(s, lang6.getUsage());
                     return false;
                 }
-                double radius = Double.parseDouble(args[1]);
-                if(radius <= 0) {
+                double radius;
+                try {
+                    radius = Double.parseDouble(args[1]);
+                    if (radius <= 0) {
+                        lang.sendMsg(s, lang6.getUsage());
+                        return false;
+                    }
+                }catch (Exception e) {
                     lang.sendMsg(s, lang6.getUsage());
                     return false;
+                }
+                if(radius > CmdMainNearhomesLimit()) {
+                    radius = CmdMainNearhomesLimit();
                 }
                 //</editor-fold>
                 lang.sendMsg(s, lang6.getOutput(Main.hu.getNearHomes(p.getLocation(), radius), radius));

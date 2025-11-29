@@ -118,6 +118,9 @@ commands:
     # Sub command - Nearhomes
     nearhomes:
       permission: "zhomes.command.main.nearhomes" # Only OP by default
+      # Max limit of the radius to search for homes
+      # Use -1 to have no limit (Not recommended)
+      limit: 500.0
     # Sub command - Converter
     converter:
       permission: "zhomes.command.main.converter" # Only OP by default

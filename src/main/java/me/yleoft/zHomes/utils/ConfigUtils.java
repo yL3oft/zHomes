@@ -126,6 +126,13 @@ public class ConfigUtils {
     public String CmdMainNearhomesPermission() {
         return main.getConfig().getString(this.cmdPath + "main.nearhomes.permission");
     }
+    public double CmdMainNearhomesLimit() {
+        double returned = 500D;
+        try {
+            returned = main.getConfig().getDouble(this.cmdPath + "main.nearhomes.limit");
+        } catch (Exception ignored) {}
+        return returned;
+    }
     public String CmdMainConverterPermission() {
         return main.getConfig().getString(this.cmdPath + "main.converter.permission");
     }
