@@ -3,6 +3,7 @@ package me.yleoft.zHomes.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import me.yleoft.zAPI.folia.FoliaRunnable;
 import me.yleoft.zAPI.utils.ActionbarUtils;
@@ -21,7 +22,7 @@ public class HomesUtils extends DatabaseEditor {
 
     Main main = Main.getInstance();
 
-    public static final HashMap<UUID, FoliaRunnable> warmups = new HashMap<>();
+    public static final ConcurrentHashMap<UUID, FoliaRunnable> warmups = new ConcurrentHashMap<>();
 
     public boolean hasHome(OfflinePlayer p, String home) {
         return isInTable(p, home);
@@ -142,8 +143,11 @@ public class HomesUtils extends DatabaseEditor {
 
     public void startWarmup(Player p, LanguageUtils.TeleportWarmupMSG lang, LanguageUtils.Home lang2, String home, Runnable task) {
         UUID uuid = p.getUniqueId();
-        if (warmups.containsKey(uuid)) {
-            warmups.get(uuid).cancel();
+        FoliaRunnable previous = warmups.remove(uuid);
+        if (previous != null) {
+            try {
+                previous.cancel();
+            } catch (Throwable ignored) {}
         }
 
         FoliaRunnable runnable = new FoliaRunnable() {

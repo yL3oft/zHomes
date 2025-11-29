@@ -1,11 +1,13 @@
 package me.yleoft.zHomes.listeners;
 
 import com.zhomes.api.event.player.*;
+import me.yleoft.zAPI.folia.FoliaRunnable;
 import me.yleoft.zAPI.utils.ActionbarUtils;
 import me.yleoft.zAPI.utils.SchedulerUtils;
 import me.yleoft.zHomes.Main;
 import me.yleoft.zHomes.utils.HomesUtils;
 import me.yleoft.zHomes.utils.LanguageUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,8 +15,9 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,6 +26,32 @@ import static me.yleoft.zHomes.Main.needsUpdate;
 public class PlayerListeners extends HomesUtils implements Listener {
 
     private final ConcurrentHashMap<UUID, Long> lastAnnounced = new ConcurrentHashMap<>();
+
+    public PlayerListeners() {
+        FoliaRunnable runnable = new FoliaRunnable() {
+            @Override
+            public void run() {
+                long cutoff = System.currentTimeMillis() - (1000L * 60L * 30L); // 30 minutes
+                lastAnnounced.entrySet().removeIf(entry -> entry.getValue() < cutoff);
+
+                for (Map.Entry<UUID, FoliaRunnable> entry : HomesUtils.warmups.entrySet()) {
+                    UUID uuid = entry.getKey();
+                    FoliaRunnable runnable = entry.getValue();
+                    Player player = Bukkit.getPlayer(uuid);
+                    if (player == null || !player.isOnline()) {
+                        if (runnable != null) {
+                            try {
+                                runnable.cancel();
+                            } catch (Throwable ignored) {}
+                        }
+                        HomesUtils.warmups.remove(uuid);
+                    }
+                }
+            }
+        };
+        SchedulerUtils.runTaskTimer(null, runnable, 20L * 60L * 10L, 20L * 60L * 10L);
+    }
+
 
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
@@ -47,6 +76,17 @@ public class PlayerListeners extends HomesUtils implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerQuitEvent(PlayerQuitEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        FoliaRunnable runnable = HomesUtils.warmups.remove(uuid);
+        if (runnable != null) {
+            try {
+                runnable.cancel();
+            } catch (Throwable ignored) {}
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
@@ -60,7 +100,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
             if (from.getBlockX() != to.getBlockX()
                     || from.getBlockY() != to.getBlockY()
                     || from.getBlockZ() != to.getBlockZ()) {
-                BukkitRunnable runnable = HomesUtils.warmups.remove(uuid);
+                FoliaRunnable runnable = HomesUtils.warmups.remove(uuid);
                 if (runnable != null) {
                     runnable.cancel();
                     lang.sendMsg(p, lang.getCancelled());
