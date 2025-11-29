@@ -72,6 +72,7 @@ public class DelhomeCommand extends HomesUtils implements CommandExecutor {
         if (event.isCancelled())
             return;
         String ofchome = event.getHome();
+        if (ofchome == null || ofchome.isEmpty()) return;
         String[] homeS = ofchome.split(":");
         if(homeS.length < 2) return;
         String player = homeS[0];

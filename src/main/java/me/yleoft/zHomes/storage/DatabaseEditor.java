@@ -95,10 +95,7 @@ public class DatabaseEditor extends DatabaseConnection {
                 ps.setString(2, home);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        String returned = rs.getString("LOCATION");
-                        rs.close();
-                        ps.close();
-                        return returned;
+                        return rs.getString("LOCATION");
                     }
                 }
             }

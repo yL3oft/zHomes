@@ -230,6 +230,9 @@ public class MainCommand extends ConfigUtils implements CommandExecutor {
                 break;
             case "config":
                 Main.getInstance().reloadConfig();
+                if (Main.cfgu != null && Main.cfgu.cfguExtras != null) {
+                    Main.cfgu.cfguExtras = null;
+                }
                 Main.cfgu = new ConfigUtils();
                 break;
             case "languages":

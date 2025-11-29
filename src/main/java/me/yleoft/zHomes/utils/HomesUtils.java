@@ -156,8 +156,8 @@ public class HomesUtils extends DatabaseEditor {
             @Override
             public void run() {
                 if (!p.isOnline()) {
-                    cancel();
                     warmups.remove(uuid);
+                    cancel();
                     return;
                 }
                 if (counter >= 1) {

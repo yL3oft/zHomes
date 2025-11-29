@@ -5,6 +5,7 @@ import com.sk89q.worldguard.protection.flags.StateFlag;
 import com.zaxxer.hikari.HikariDataSource;
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.yleoft.zAPI.Metrics;
+import me.yleoft.zAPI.folia.FoliaRunnable;
 import me.yleoft.zAPI.managers.*;
 import me.yleoft.zAPI.utils.FileUtils;
 import me.yleoft.zAPI.zAPI;
@@ -31,10 +32,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Driver;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 import static java.util.Objects.requireNonNull;
@@ -285,6 +283,12 @@ public final class Main extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        for (Map.Entry<UUID, FoliaRunnable> entry : HomesUtils.warmups.entrySet()) {
+            try {
+                if (entry.getValue() != null) entry.getValue().cancel();
+            } catch (Throwable ignored) {}
+        }
+        HomesUtils.warmups.clear();
         if (!zAPI.isFolia()) {
             Bukkit.getScheduler().cancelTasks(this);
         }
