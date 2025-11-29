@@ -58,8 +58,10 @@ public class PlaceholderAPIHandler extends me.yleoft.zAPI.handlers.PlaceholderAP
         if(params.startsWith("home")) {
             if(p == null || split.length < 2 || !StringUtils.isInteger(split[1])) return "";
             int id = Integer.parseInt(split[1]);
+            // Validação crítica para prevenir ArrayIndexOutOfBoundsException
+            if(id <= 0) return "";
             List<String> homes = hu.getHomes(p);
-            if(id > homes.size()) return "";
+            if(id > homes.size() || homes.isEmpty()) return "";
             String home = homes.get(id-1);
             if(home == null) return "";
             if(split.length >= 3) {

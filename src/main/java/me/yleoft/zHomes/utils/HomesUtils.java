@@ -33,20 +33,21 @@ public class HomesUtils extends DatabaseEditor {
     }
 
     public boolean inMaxLimit(Player p) {
-        if(needsLimit() && !p.hasPermission(PermissionBypassLimit())) {
+        if (needsLimit() && !p.hasPermission(PermissionBypassLimit())) {
             return getLimit(p) >= getMaxLimit(p);
         }
         return false;
     }
 
     public boolean isAllowedInWorld(Player p) {
-        if(!useRestrictedWorlds() || p.hasPermission(PermissionBypassRestrictedWorlds())) return true;
+        if (!useRestrictedWorlds() || p.hasPermission(PermissionBypassRestrictedWorlds()))
+            return true;
         World world = p.getWorld();
         List<String> restrictedWorlds = restrictedWorldsList();
         String mode = restrictedWorldsMode();
-        if(mode.equalsIgnoreCase("blacklist")) {
+        if (mode.equalsIgnoreCase("blacklist")) {
             return !restrictedWorlds.contains(world.getName());
-        }else {
+        } else {
             return restrictedWorlds.contains(world.getName());
         }
     }
@@ -75,7 +76,7 @@ public class HomesUtils extends DatabaseEditor {
 
     public boolean canDimensionalTeleport(OfflinePlayer p) {
         if (p.isOnline()) {
-            Player pl = (Player)p;
+            Player pl = (Player) p;
             if (pl.hasPermission(PermissionBypassDT()))
                 return true;
         }
@@ -85,7 +86,8 @@ public class HomesUtils extends DatabaseEditor {
     public void teleportPlayer(Player p, OfflinePlayer t, String home) {
         Location loc = getHomeLoc(t, home);
         boolean isDimensionalTeleport = inSameWorld(getHomeWorld(t, home), p);
-        TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport, p.getUniqueId()==t.getUniqueId(), t);
+        TeleportToHomeEvent event = new TeleportToHomeEvent(p, home, p.getLocation(), loc, isDimensionalTeleport,
+                p.getUniqueId() == t.getUniqueId(), t);
         Bukkit.getPluginManager().callEvent(event);
         if (event.isCancelled())
             return;
@@ -97,8 +99,10 @@ public class HomesUtils extends DatabaseEditor {
         SchedulerUtils.runTask(loc, new FoliaRunnable() {
             @Override
             public void run() {
-                Location tpLoc = (enableSafeTeleport() && !p.hasPermission(PermissionBypassST())) ? findNearestSafeLocation(loc, 4, 50) : loc;
-                if(tpLoc == null) {
+                Location tpLoc = (enableSafeTeleport() && !p.hasPermission(PermissionBypassST()))
+                        ? findNearestSafeLocation(loc, 4, 50)
+                        : loc;
+                if (tpLoc == null) {
                     LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
                     cmdm.sendMsg(p, cmdm.getUnableToFindSafeLocation());
                     return;
@@ -111,22 +115,31 @@ public class HomesUtils extends DatabaseEditor {
                             Method teleportAsyncMethod = Player.class.getMethod("teleportAsync", Location.class);
                             teleportAsyncMethod.invoke(p, tpLoc);
                             SchedulerUtils.runTask(tpLoc, () -> {
-                                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                                if (sound != null && playSound())
+                                    p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
                             });
                         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-                            throw new RuntimeException("Unable to teleport player to home", e);
+                            // Tratamento seguro para prevenir crash - fallback para teleport síncrono
+                            Main.getInstance().getLogger().severe("Unable to teleport player to home asynchronously, trying sync: " + e.getMessage());
+                            try {
+                                p.teleport(tpLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
+                                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                            } catch (Exception fallbackError) {
+                                Main.getInstance().getLogger().severe("Critical: Unable to teleport player: " + fallbackError.getMessage());
+                            }
                         }
-                    }else {
+                    } else {
                         SchedulerUtils.runTaskLater(tpLoc, () -> {
                             p.teleport(tpLoc, PlayerTeleportEvent.TeleportCause.PLUGIN);
                             SchedulerUtils.runTask(tpLoc, () -> {
-                                if (sound != null && playSound()) p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
+                                if (sound != null && playSound())
+                                    p.playSound(p.getLocation(), sound, 1.0F, 1.0F);
                             });
                         }, 1L);
                     }
                     lang.sendMsg(p, lang.getOutput(homeString));
                 };
-                if(doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
+                if (doWarmup() && !p.hasPermission(PermissionBypassWarmup()) && warmupTime() > 0) {
                     LanguageUtils.TeleportWarmupMSG langWarmup = new LanguageUtils.TeleportWarmupMSG();
                     lang.sendMsg(p, langWarmup.getWarmup(warmupTime()));
                     startWarmup(p, langWarmup, lang, homeString, task);
@@ -136,14 +149,20 @@ public class HomesUtils extends DatabaseEditor {
             }
         });
     }
+
     public void teleportPlayer(Player p, String home) {
         teleportPlayer(p, p, home);
     }
 
-    public void startWarmup(Player p, LanguageUtils.TeleportWarmupMSG lang, LanguageUtils.Home lang2, String home, Runnable task) {
+    public void startWarmup(Player p, LanguageUtils.TeleportWarmupMSG lang, LanguageUtils.Home lang2, String home,
+            Runnable task) {
         UUID uuid = p.getUniqueId();
+        // Cancelar e limpar qualquer warmup anterior do mesmo jogador
         if (warmups.containsKey(uuid)) {
-            warmups.get(uuid).cancel();
+            FoliaRunnable oldRunnable = warmups.remove(uuid);
+            if (oldRunnable != null) {
+                oldRunnable.cancel();
+            }
         }
 
         FoliaRunnable runnable = new FoliaRunnable() {
@@ -151,9 +170,11 @@ public class HomesUtils extends DatabaseEditor {
 
             @Override
             public void run() {
+                // Verificação adicional de segurança: remover do HashMap se jogador não está
+                // online
                 if (!p.isOnline()) {
-                    cancel();
                     warmups.remove(uuid);
+                    cancel();
                     return;
                 }
                 if (counter >= 1) {
@@ -192,7 +213,7 @@ public class HomesUtils extends DatabaseEditor {
         StringBuilder returned = new StringBuilder();
         try {
             List<String> homes = getHomes(p);
-            if(!homes.isEmpty()) {
+            if (!homes.isEmpty()) {
                 for (String home : homes) {
                     if (returned.length() == 0) {
                         returned = new StringBuilder(home);
@@ -200,10 +221,10 @@ public class HomesUtils extends DatabaseEditor {
                     }
                     returned.append(", ").append(home);
                 }
-            }else {
+            } else {
                 returned = new StringBuilder("None");
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             returned = new StringBuilder("None");
         }
 
@@ -216,7 +237,7 @@ public class HomesUtils extends DatabaseEditor {
 
     public List<String> homesWDD(OfflinePlayer p) {
         List<String> list = new ArrayList<>();
-        getHomes(p).forEach(home -> list.add(p.getName()+":"+home));
+        getHomes(p).forEach(home -> list.add(p.getName() + ":" + home));
         return list;
     }
 

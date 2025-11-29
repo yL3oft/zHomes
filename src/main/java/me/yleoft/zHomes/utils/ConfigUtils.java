@@ -78,7 +78,13 @@ public class ConfigUtils {
     }
     public int getMaxLimit(OfflinePlayer p) {
         int l = -1;
-        for (String str : requireNonNull(main.getConfig().getConfigurationSection(lim.split("\\.")[0])).getKeys(false)) {
+        // Verificação segura para prevenir NullPointerException
+        org.bukkit.configuration.ConfigurationSection section = main.getConfig().getConfigurationSection(lim.split("\\.")[0]);
+        if (section == null) {
+            main.getLogger().warning("Limits section not found in config.yml, using default");
+            return main.getConfig().getInt(lim+"default", 1);
+        }
+        for (String str : section.getKeys(false)) {
             if (str.equals("enabled") || str.equals("default")) continue;
             try {
                 int i = Integer.parseInt(str);

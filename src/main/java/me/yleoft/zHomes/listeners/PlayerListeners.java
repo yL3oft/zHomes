@@ -13,6 +13,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.UUID;
@@ -47,6 +48,22 @@ public class PlayerListeners extends HomesUtils implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        UUID uuid = e.getPlayer().getUniqueId();
+        
+        // Limpar warmup pendente para prevenir memory leak
+        if (HomesUtils.warmups.containsKey(uuid)) {
+            BukkitRunnable runnable = HomesUtils.warmups.remove(uuid);
+            if (runnable != null) {
+                runnable.cancel();
+            }
+        }
+        
+        // Limpar cache de anúncio de atualização (não essencial, mas bom para manutenção)
+        lastAnnounced.remove(uuid);
+    }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
@@ -60,6 +77,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
             if (from.getBlockX() != to.getBlockX()
                     || from.getBlockY() != to.getBlockY()
                     || from.getBlockZ() != to.getBlockZ()) {
+                // Remover do HashMap antes de cancelar para garantir limpeza
                 BukkitRunnable runnable = HomesUtils.warmups.remove(uuid);
                 if (runnable != null) {
                     runnable.cancel();

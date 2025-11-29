@@ -89,7 +89,14 @@ public class DatabaseConnection extends ConfigUtils {
                         break;
                 }
 
+                // Configurações de pool para prevenir memory leaks e otimizar performance
                 config.setMaximumPoolSize(databasePoolsize());
+                config.setMinimumIdle(Math.max(1, databasePoolsize() / 2));
+                config.setConnectionTimeout(30000); // 30 segundos
+                config.setIdleTimeout(600000); // 10 minutos
+                config.setMaxLifetime(1800000); // 30 minutos
+                config.setLeakDetectionThreshold(60000); // 60 segundos - detecta leaks
+                
                 Main.dataSource = new HikariDataSource(config);
                 long end = System.currentTimeMillis();
                 Main.getInstance().getLogger().info("HikariCP startup took " + (end - start) + "ms");
@@ -487,19 +494,26 @@ public class DatabaseConnection extends ConfigUtils {
                                             if (homeRaw == null) continue;
                                             String[] homeS = homeRaw.split(",");
                                             if (homeS.length != 11) continue;
-                                            String worldName = homeS[0];
-                                            double x = Double.parseDouble(homeS[1]+"."+homeS[2]);
-                                            double y = Double.parseDouble(homeS[3]+"."+homeS[4]);
-                                            double z = Double.parseDouble(homeS[5]+"."+homeS[6]);
-                                            float yaw = Float.parseFloat(homeS[7]+"."+homeS[8]);
-                                            float pitch = Float.parseFloat(homeS[9]+"."+homeS[10]);
-                                            String location = serialize(worldName, x, y, z, yaw, pitch);
+                                            
+                                            // Try-catch para prevenir crash com dados corrompidos
+                                            try {
+                                                String worldName = homeS[0];
+                                                double x = Double.parseDouble(homeS[1]+"."+homeS[2]);
+                                                double y = Double.parseDouble(homeS[3]+"."+homeS[4]);
+                                                double z = Double.parseDouble(homeS[5]+"."+homeS[6]);
+                                                float yaw = Float.parseFloat(homeS[7]+"."+homeS[8]);
+                                                float pitch = Float.parseFloat(homeS[9]+"."+homeS[10]);
+                                                String location = serialize(worldName, x, y, z, yaw, pitch);
 
-                                            pstmt.setString(1, uuid);
-                                            pstmt.setString(2, homeName);
-                                            pstmt.setString(3, location);
-                                            pstmt.addBatch();
-                                            countH++;
+                                                pstmt.setString(1, uuid);
+                                                pstmt.setString(2, homeName);
+                                                pstmt.setString(3, location);
+                                                pstmt.addBatch();
+                                                countH++;
+                                            } catch (NumberFormatException e) {
+                                                Main.getInstance().getLogger().warning("Skipping corrupted home '" + homeName + "' for player " + player + ": " + e.getMessage());
+                                                continue;
+                                            }
                                         }
                                         count++;
                                         if (p != null) {
