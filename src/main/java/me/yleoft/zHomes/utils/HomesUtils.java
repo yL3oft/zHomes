@@ -42,7 +42,10 @@ public class HomesUtils extends DatabaseEditor {
 
     public boolean isAllowedInWorld(Player p) {
         if(!useRestrictedWorlds() || p.hasPermission(PermissionBypassRestrictedWorlds())) return true;
-        World world = p.getWorld();
+        return isAllowedInWorld(p.getWorld());
+    }
+
+    public boolean isAllowedInWorld(World world) {
         List<String> restrictedWorlds = restrictedWorldsList();
         String mode = restrictedWorldsMode();
         if(mode.equalsIgnoreCase("blacklist")) {

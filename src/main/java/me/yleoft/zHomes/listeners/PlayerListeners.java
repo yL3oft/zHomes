@@ -122,32 +122,10 @@ public class PlayerListeners extends HomesUtils implements Listener {
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerExecuteDelhomeCommand(PreExecuteDelhomeCommandEvent e) {
+    public void onPlayerExecuteHomeCommand(ExecuteHomeCommandEvent e) {
         Player p = e.getPlayer();
 
-        if(!isAllowedInWorld(p)) {
-            e.setCancelled(true);
-            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            cmdm.sendMsg(p, cmdm.getWorldRestricted());
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerExecuteHomeCommand(PreExecuteHomeCommandEvent e) {
-        Player p = e.getPlayer();
-
-        if(!isAllowedInWorld(p)) {
-            e.setCancelled(true);
-            LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
-            cmdm.sendMsg(p, cmdm.getWorldRestricted());
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerExecuteHomesCommand(ExecuteHomesCommandEvent e) {
-        Player p = e.getPlayer();
-
-        if(!isAllowedInWorld(p)) {
+        if(!isAllowedInWorld(Main.hu.getHomeLoc(p, e.getHome()).getWorld())) {
             e.setCancelled(true);
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
             cmdm.sendMsg(p, cmdm.getWorldRestricted());
