@@ -1,0 +1,64 @@
+name: Discord Webhook
+
+on:
+  workflow_run:
+    workflows: ["Release Version"]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  send_webhook:
+    if: ${{ github.repository_owner == 'yL3oft' }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Read changelog (remove "Full Changelog" footer)
+        id: changelog
+        run: |
+          # stop printing when a line containing "Full Changelog" is found
+          content=$(awk '/Full Changelog/{exit} {print}' changelog.md)
+          # Trim trailing blank lines
+          content="$(printf '%s\n' "$content" | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' || true)"
+          # Save to step output (preserve newlines)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$content" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Send changelog to Discord (curl)
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DC_WEBHOOK }}
+        run: |
+          if [ -z "$DISCORD_WEBHOOK" ]; then
+            echo "ERROR: DC_WEBHOOK secret is not set"
+            exit 1
+          fi
+
+          # The changelog content is provided by the previous step output (expanded by Actions)
+          CHG="${{ steps.changelog.outputs.content }}"
+
+          if [ -z "$CHG" ]; then
+            echo "No changelog content to send; skipping Discord webhook."
+            exit 0
+          fi
+
+          # Build a safe JSON payload by piping the changelog into python3 -c to avoid heredoc/indentation issues.
+          PAYLOAD=$(printf "%s" "$CHG" | python3 -c 'import sys, json; s=sys.stdin.read(); payload={"content":"```md\n"+s.rstrip("\n")+"\n```"}; print(json.dumps(payload))')
+
+          # POST to the Discord webhook; capture body and HTTP status code
+          resp=$(curl -sS -H "Content-Type: application/json" -d "$PAYLOAD" "$DISCORD_WEBHOOK" -w "\n%{http_code}")
+          body=$(printf "%s" "$resp" | sed '$d')
+          code=$(printf "%s" "$resp" | tail -n1)
+
+          echo "Discord HTTP status: $code"
+          if [ "$code" -ge 400 ]; then
+            echo "Discord returned error:"
+            echo "$body"
+            exit 1
+          fi
+
+          echo "Changelog posted to Discord successfully."
