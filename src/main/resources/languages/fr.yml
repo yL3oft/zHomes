@@ -27,7 +27,8 @@ commands:
   cant-use-2dot: "%prefix%&cVous ne pouvez pas utiliser &e':' &cdans cette commande."
   cant-find-player: "%prefix%&cCe joueur est introuvable."
   unable-to-find-safe-location: "%prefix%&cImpossible de trouver un emplacement sûr pour vous téléporter."
-  world-restricted: "%prefix%&cVous ne pouvez pas utiliser les homes dans ce monde."
+  world-restricted-sethome: "%prefix%&cVous ne pouvez pas définir de homes dans ce monde."
+  world-restricted-home: "%prefix%&cVous ne pouvez pas vous téléporter vers des homes dans ce monde."
 
   # Ci-dessous, vous trouverez des messages spécifiques aux commandes
   main:
@@ -87,7 +88,7 @@ commands:
     nearhomes:
       usage: "&c-> &e/%command% nearhomes &a[<Radius>]"
       output: "%prefix%&7Homes proches dans un rayon de &e%radius% &7blocs : &f%homes%"
-      output-not-found: "%prefix%&cAucun home trouvé dans un rayon de &e%radius% &cblocs."
+      output-not-found: "%prefix%&cAucun home trouvé dans un rayon de &e%radius% &cbloques."
       home-string: "&e%home% &7(%owner%)"
     converter:
       usage: |-
@@ -135,4 +136,4 @@ commands:
     output: "%prefix%&7Vos homes (%amount%): &f%homes%"
     invalid-page: "%prefix%&cNuméro de page invalide ! Utilisez un nombre supérieur à 0."
     others:
-      output: "%prefix%&7Homes de &e%player% (%amount%): &f%homes%"
+      output: "%prefix%&7Homes de &e%player%&7 (%amount%): &f%homes%"

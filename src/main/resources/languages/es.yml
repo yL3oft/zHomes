@@ -27,7 +27,8 @@ commands:
   cant-use-2dot: "%prefix%&cNo puedes usar &e':' &cen este comando."
   cant-find-player: "%prefix%&cNo se encontró al jugador."
   unable-to-find-safe-location: "%prefix%&cNo se pudo encontrar una ubicación segura para teletransportarte."
-  world-restricted: "%prefix%&cNo puedes usar homes en este mundo."
+  world-restricted-sethome: "%prefix%&cNo puedes establecer homes en este mundo."
+  world-restricted-home: "%prefix%&cNo puedes teletransportarte a homes en ese mundo."
 
   # Abajo encontrarás mensajes específicos para los comandos
   main:
@@ -128,7 +129,7 @@ commands:
     output: "%prefix%&aTeletransportado a &e%home%&a..."
     cant-dimensional-teleport: "&c¡Tu teletransporte fue cancelado! La teleportación dimensional está desactivada."
     rename:
-      usage: "&c-> &e/%command% &arenombrar (Home) (NuevoNombre)"
+      usage: "&c-> &e/%command% renombrar (Home) (NuevoNombre)"
       output: "%prefix%&aHome &e%home% &arenombrado a &e%newname%&a."
       same-name: "%prefix%&cNo puedes renombrar un home al mismo nombre."
   homes:

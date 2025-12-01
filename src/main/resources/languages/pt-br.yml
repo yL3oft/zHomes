@@ -28,7 +28,7 @@ commands:
   cant-find-player: "%prefix%&cEste jogador não foi encontrado."
   unable-to-find-safe-location: "%prefix%&cNão foi possível encontrar uma localização segura para teleportar."
   world-restricted-sethome: "%prefix%&cVocê não pode definir homes neste mundo."
-  world-restricted-home: "%prefix%&cVocê não pode teleportar para homes naquele mundo.."
+  world-restricted-home: "%prefix%&cVocê não pode teleportar para homes nesse mundo."
 
   # Aqui embaixo vai achar mensagens específicas de alguns comandos.
   main:
@@ -109,14 +109,14 @@ commands:
         &c-> &e/%command% &aconverter xhomes
         &c-> &e/%command% &aconverter zhome
       output: "%prefix%&aTodos os dados foram convertidos!"
-      error: "%prefix%&cAlgo deu errado ao converter os dados. Verifique o console do servidor."
+      error: "%prefix%&cAlgo deu errado ao converter os dados. Verifique a console do servidor."
     export:
       output: "%prefix%&aTodos os homes foram exportados para &e%file%&a!"
-      error: "%prefix%&cAlgo deu errado ao exportar os dados. Verifique o console do servidor."
+      error: "%prefix%&cAlgo deu errado ao exportar os dados. Verifique a console do servidor."
     import:
       usage: "&c-> &e/%command% import &a(<file>)"
       output: "%prefix%&aTodos os homes foram importados de &e%file%&a!"
-      error: "%prefix%&cAlgo deu errado ao importar os dados. Verifique o console do servidor."
+      error: "%prefix%&cAlgo deu errado ao importar os dados. Verifique a console do servidor."
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &aset to your position."

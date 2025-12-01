@@ -27,7 +27,8 @@ commands:
   cant-use-2dot: "%prefix%&cNon puoi usare &e':' &cin questo comando."
   cant-find-player: "%prefix%&cGiocatore non trovato."
   unable-to-find-safe-location: "%prefix%&cImpossibile trovare una posizione sicura per teletrasportarti."
-  world-restricted: "%prefix%&cNon puoi usare gli homes in questo mondo."
+  world-restricted-sethome: "%prefix%&cNon puoi impostare homes in questo mondo."
+  world-restricted-home: "%prefix%&cNon puoi teletrasportarti verso homes in questo mondo."
 
   # Di seguito i messaggi specifici dei comandi
   main:
@@ -39,7 +40,7 @@ commands:
         &c-> &e/%command% &a(reload|rl) &6[all, commands, config, languages]
         &c-> &e/%command% &a(version|ver) &6[update]
         &c-> &e/%command% &anearhomes &6(<radius>) &7Elenca gli homes vicini entro un raggio
-        &c-> &e/%command% &aconverter (<converter-type>) &7Converte i dati tra diversi archivi
+        &c-> &e/%command% &aconverter (<converter-type>) &7Converte i dati da un archivio a un altro
         &c-> &e/%command% &aexport &7Esporta tutti gli homes in un file
         &c-> &e/%command% &aimport (<file>) &7Importa homes da un file
       help-noperm: |-
@@ -128,8 +129,8 @@ commands:
     output: "%prefix%&aTeletrasportato a &e%home%&a..."
     cant-dimensional-teleport: "&cTeletrasporto annullato! Il teletrasporto dimensionale è disabilitato."
     rename:
-      usage: "&c-> &e/%command% &arename (Home) (NewName)"
-      output: "%prefix%&aHome &e%home% &aridenominato in &e%newname%&a."
+      usage: "&c-> &e/%command% rename (Home) (NewName)"
+      output: "%prefix%&aHome &e%home% &arenamed to &e%newname%&a."
       same-name: "%prefix%&cNon puoi rinominare un home allo stesso nome."
   homes:
     output: "%prefix%&7I tuoi homes (%amount%): &f%homes%"

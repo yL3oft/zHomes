@@ -27,7 +27,8 @@ commands:
   cant-use-2dot: "%prefix%&cDu kannst &e':' &cnicht in diesem Befehl verwenden."
   cant-find-player: "%prefix%&cSpieler wurde nicht gefunden."
   unable-to-find-safe-location: "%prefix%&cEs konnte kein sicherer Ort zum Teleportieren gefunden werden."
-  world-restricted: "%prefix%&cDu kannst in dieser Welt keine Homes benutzen."
+  world-restricted-sethome: "%prefix%&cDu kannst in dieser Welt keine Homes setzen."
+  world-restricted-home: "%prefix%&cDu kannst in dieser Welt nicht zu Homes teleportieren."
 
   # Unten findest du spezifische Nachrichten für die Befehle
   main:
@@ -132,7 +133,7 @@ commands:
       output: "%prefix%&aHome &e%home% &awurde in &e%newname% &aumbenannt."
       same-name: "%prefix%&cDu kannst ein Zuhause nicht in denselben Namen umbenennen."
   homes:
-    output: "%prefix%&7Deine Homes: &f%homes%"
+    output: "%prefix%&7Deine Homes (%amount%): &f%homes%"
     invalid-page: "%prefix%&cUngültige Seitennummer! Bitte verwende eine Zahl größer als 0."
     others:
       output: "%prefix%&7Homes von &e%player%&7 (%amount%): &f%homes%"

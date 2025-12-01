@@ -27,7 +27,8 @@ commands:
   cant-use-2dot: "%prefix%&cJe kunt &e':' &cniet gebruiken in dit commando."
   cant-find-player: "%prefix%&cSpeler niet gevonden."
   unable-to-find-safe-location: "%prefix%&cKan geen veilige locatie vinden om naar te teleporteren."
-  world-restricted: "%prefix%&cJe kunt in deze wereld geen homes gebruiken."
+  world-restricted-sethome: "%prefix%&cJe kunt in deze wereld geen homes instellen."
+  world-restricted-home: "%prefix%&cJe kunt in die wereld niet naar homes teleporteren."
 
   # Hieronder vind je specifieke berichten voor de commando's
   main:

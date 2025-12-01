@@ -27,7 +27,8 @@ commands:
   cant-use-2dot: "%prefix%&cNie możesz używać &e':' &cw tej komendzie."
   cant-find-player: "%prefix%&cNie znaleziono gracza."
   unable-to-find-safe-location: "%prefix%&cNie można znaleźć bezpiecznej lokacji do teleportacji."
-  world-restricted: "%prefix%&cNie możesz używać home'ów w tym świecie."
+  world-restricted-sethome: "%prefix%&cNie możesz ustawić home'ów w tym świecie."
+  world-restricted-home: "%prefix%&cNie możesz teleportować się do home'ów w tym świecie."
 
   # Poniżej znajdziesz wiadomości specyficzne dla komend
   main:
@@ -119,7 +120,7 @@ commands:
   sethome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&aHome &e%home% &azapisany w twojej lokalizacji."
-    limit-reached: "&cOsiągnąłeś limit home'ów &e(%limit% home'ów)&c!"
+    limit-reached: "&cOsiągnąłeś limit home'ów &e(%limit% homes)&c!"
   delhome:
     usage: "&c-> &e/%command% &a(Home)"
     output: "%prefix%&cHome &e%home% &ausunięty."
