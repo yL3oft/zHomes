@@ -10,44 +10,77 @@ on:
 jobs:
   send_webhook:
     if: ${{ github.repository_owner == 'yL3oft' }}
-
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Get project version
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout | tr -d '\r\n')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Read changelog (remove "Full Changelog" footer)
         id: changelog
         run: |
           # stop printing when a line containing "Full Changelog" is found
           content=$(awk '/Full Changelog/{exit} {print}' changelog.md)
-          # Trim trailing blank lines
-          content="$(printf '%s\n' "$content" | sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' || true)"
+          # Normalize trailing whitespace/newlines (ensure at most one trailing newline)
+          content=$(printf "%s\n" "$content" | perl -0777 -pe 's/\s+\z/\n/')
           # Save to step output (preserve newlines)
           echo "content<<EOF" >> $GITHUB_OUTPUT
           echo "$content" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Send changelog to Discord (curl)
+      - name: Send changelog to Discord (embed)
         env:
           DISCORD_WEBHOOK: ${{ secrets.DC_WEBHOOK }}
+          FOOTER_ICON: https://cdn.discordapp.com/avatars/1399201853668986960/ef21e3db28edacdf86026d7208044fb7.webp?size=64
+          MENTION: '||<@&1369713143160246396>||'
         run: |
           if [ -z "$DISCORD_WEBHOOK" ]; then
             echo "ERROR: DC_WEBHOOK secret is not set"
             exit 1
           fi
 
-          # The changelog content is provided by the previous step output (expanded by Actions)
           CHG="${{ steps.changelog.outputs.content }}"
+          VERSION="${{ steps.get_version.outputs.version }}"
 
           if [ -z "$CHG" ]; then
             echo "No changelog content to send; skipping Discord webhook."
             exit 0
           fi
 
-          # Build a safe JSON payload by piping the changelog into python3 -c to avoid heredoc/indentation issues.
-          PAYLOAD=$(printf "%s" "$CHG" | python3 -c 'import sys, json; s=sys.stdin.read(); payload={"content":"```md\n"+s.rstrip("\n")+"\n```"}; print(json.dumps(payload))')
+          # Prepare variables
+          DATE_HUMAN=$(date +"%d/%m/%Y %H:%M")
+          DATE_ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          RELEASE_URL="https://github.com/yL3oft/zHomes/releases/tag/${VERSION}"
+
+          # Build JSON payload with jq to avoid Python heredoc/indentation issues.
+          # jq will safely escape strings (including newlines) for us.
+          PAYLOAD=$(jq -n \
+            --arg mention "$MENTION" \
+            --arg version "$VERSION" \
+            --arg release "$RELEASE_URL" \
+            --arg desc "$CHG" \
+            --arg footer_icon "$FOOTER_ICON" \
+            --arg date_human "$DATE_HUMAN" \
+            --arg date_iso "$DATE_ISO" \
+            '{
+              content: $mention,
+              embeds: [
+                {
+                  title: ("zHomes " + $version),
+                  url: $release,
+                  description: ("```md\n" + $desc + "\n```"),
+                  color: 65280,
+                  footer: { text: ("Update Announcer - " + $date_human), icon_url: $footer_icon },
+                  timestamp: $date_iso
+                }
+              ]
+            }')
 
           # POST to the Discord webhook; capture body and HTTP status code
           resp=$(curl -sS -H "Content-Type: application/json" -d "$PAYLOAD" "$DISCORD_WEBHOOK" -w "\n%{http_code}")
@@ -61,4 +94,4 @@ jobs:
             exit 1
           fi
 
-          echo "Changelog posted to Discord successfully."
+          echo "Changelog embed posted to Discord successfully."
