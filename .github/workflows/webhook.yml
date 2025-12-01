@@ -54,19 +54,16 @@ jobs:
           fi
 
           # Prepare variables
-          DATE_HUMAN=$(date +"%d/%m/%Y %H:%M")
           DATE_ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           RELEASE_URL="https://github.com/yL3oft/zHomes/releases/tag/${VERSION}"
 
-          # Build JSON payload with jq to avoid Python heredoc/indentation issues.
-          # jq will safely escape strings (including newlines) for us.
+          # Build JSON payload with jq (jq safely escapes strings and handles newlines).
           PAYLOAD=$(jq -n \
             --arg mention "$MENTION" \
             --arg version "$VERSION" \
             --arg release "$RELEASE_URL" \
             --arg desc "$CHG" \
             --arg footer_icon "$FOOTER_ICON" \
-            --arg date_human "$DATE_HUMAN" \
             --arg date_iso "$DATE_ISO" \
             '{
               content: $mention,
@@ -76,7 +73,7 @@ jobs:
                   url: $release,
                   description: ("```md\n" + $desc + "\n```"),
                   color: 65280,
-                  footer: { text: ("Update Announcer - " + $date_human), icon_url: $footer_icon },
+                  footer: { text: "Update Announcer", icon_url: $footer_icon },
                   timestamp: $date_iso
                 }
               ]
