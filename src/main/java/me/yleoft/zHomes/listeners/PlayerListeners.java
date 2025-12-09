@@ -125,7 +125,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
     public void onPlayerExecuteHomeCommand(ExecuteHomeCommandEvent e) {
         Player p = e.getPlayer();
 
-        if(!isAllowedInWorld(p) && !isAllowedInWorld(Main.hu.getHomeLoc(p, e.getHome()).getWorld())) {
+        if(!isAllowedInWorld(p, Main.hu.getHomeLoc(p, e.getHome()).getWorld())) {
             e.setCancelled(true);
             LanguageUtils.CommandsMSG cmdm = new LanguageUtils.CommandsMSG();
             cmdm.sendMsg(p, cmdm.getWorldRestrictedHome());
