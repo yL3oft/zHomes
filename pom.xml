@@ -87,7 +87,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.2</version>
+                <version>3.12.0</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
@@ -98,8 +98,12 @@
                 </executions>
                 <configuration>
                     <failOnError>false</failOnError>
+                    <doclint>none</doclint>
                     <encoding>UTF-8</encoding>
-                    <source>1.8</source>
+                    <charset>UTF-8</charset>
+                    <windowtitle>${project.name} Javadoc</windowtitle>
+                    <doctitle><![CDATA[<h1>${project.name} ${project.version}</h1>]]></doctitle>
+                    <source>17</source>
                     <header>
                         <![CDATA[
             <a href="../index.html" style="text-decoration:none;font-size:14px;">⬅ Back to Home</a>
