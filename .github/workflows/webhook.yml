@@ -45,10 +45,12 @@ jobs:
             exit 1
           fi
 
-          CHG="${{ steps.changelog.outputs.content }}"
           VERSION="${{ steps.get_version.outputs.version }}"
 
-          if [ -z "$CHG" ]; then
+          # Store changelog in a temp file to avoid shell interpretation issues with special characters
+          printf '%s' '${{ steps.changelog.outputs.content }}' > /tmp/changelog.txt
+          
+          if [ ! -s /tmp/changelog.txt ]; then
             echo "No changelog content to send; skipping Discord webhook."
             exit 0
           fi
@@ -62,7 +64,7 @@ jobs:
             --arg mention "$MENTION" \
             --arg version "$VERSION" \
             --arg release "$RELEASE_URL" \
-            --arg desc "$CHG" \
+            --rawfile desc /tmp/changelog.txt \
             --arg footer_icon "$FOOTER_ICON" \
             --arg date_iso "$DATE_ISO" \
             --arg title "zHomes " \
