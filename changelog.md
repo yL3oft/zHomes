@@ -8,7 +8,7 @@
 - Refactored codebase for better readability and maintainability.
 - Removed support for Minecraft versions below 1.18.2.
 - Migrated from old coloring system (ChatColor) to more modern text components using MiniMessage for better text formatting and color handling.
-- New subcommand added to /zhomes: `/zhomes parse <player> <string>` - Parses a string for a specific player's placeholders with the plugin placeholder system.
+- New subcommand added to /zhomes: `/zhomes parse (player) (string)` - Parses a string for a specific player's placeholders with the plugin placeholder system.
 - A lot of new features to menus and GUI handling, including better pagination and item management:
 - Improved database connections and query handling for better performance.
 - Rework on dependency management & automatic download system.
