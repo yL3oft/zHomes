@@ -39,21 +39,21 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DC_WEBHOOK }}
           FOOTER_ICON: https://cdn.discordapp.com/avatars/1399201853668986960/ef21e3db28edacdf86026d7208044fb7.webp?size=64
           MENTION: '||<@&1369713143160246396>||'
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
+          VERSION: ${{ steps.get_version.outputs.version }}
         run: |
           if [ -z "$DISCORD_WEBHOOK" ]; then
             echo "ERROR: DC_WEBHOOK secret is not set"
             exit 1
           fi
 
-          VERSION="${{ steps.get_version.outputs.version }}"
-
-          # Store changelog in a temp file to avoid shell interpretation issues with special characters
-          printf '%s' '${{ steps.changelog.outputs.content }}' > /tmp/changelog.txt
-          
-          if [ ! -s /tmp/changelog.txt ]; then
+          if [ -z "$CHANGELOG" ]; then
             echo "No changelog content to send; skipping Discord webhook."
             exit 0
           fi
+
+          # Store changelog in a temp file to avoid shell interpretation issues with special characters
+          printf '%s' "$CHANGELOG" > /tmp/changelog.txt
 
           # Prepare variables
           DATE_ISO=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
