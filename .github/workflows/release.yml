@@ -1,0 +1,79 @@
+name: Release Version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Compile and Test with Maven
+        run: mvn clean install
+
+      - name: Get project version
+        id: get_version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Get final JAR name
+        id: get_jar
+        run: |
+          JAR_FILE=$(mvn help:evaluate -Dexpression=project.build.finalName -q -DforceStdout).jar
+          echo "jar=$JAR_FILE" >> $GITHUB_OUTPUT
+
+      - name: Read changelog
+        id: changelog
+        run: |
+          content=$(cat ./changelog.md)
+          # Save to step output
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$content" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: zHomes ${{ steps.get_version.outputs.version }}
+          body_path: changelog.md
+          files: target/${{ steps.get_jar.outputs.jar }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release
+        uses: HSGamer/action-mcreleaser@main
+        with:
+          files: target/${{ steps.get_jar.outputs.jar }}
+        env:
+          NAME: zHomes ${{ steps.get_version.outputs.version }}
+          VERSION: ${{ steps.get_version.outputs.version }}
+          DESCRIPTION: ${{ steps.changelog.outputs.content }}
+          GAME_VERSIONS: "1.18.2..latest"
+
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+          MODRINTH_PROJECT: veAp6a0M
+          MODRINTH_LOADERS: "paper purpur folia"
+
+          HANGAR_KEY: ${{ secrets.HANGAR_TOKEN }}
+          HANGAR_CHANNEL: Release
+          HANGAR_PROJECT: zhomes
+          HANGAR_PLATFORM: paper

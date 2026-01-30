@@ -1,0 +1,15 @@
+name: zHomes
+version: ${version}
+description: ${description}
+main: me.yleoft.zHomes.zHomes
+author: yLeoft
+website: ${url}
+api-version: "1.13"
+softdepend:
+  - GriefPrevention
+  - PlaceholderAPI
+  - WorldGuard
+  - Vault
+folia-supported: true
+commands: {}
+permissions: {}
