@@ -65,11 +65,12 @@ jobs:
             --arg desc "$CHG" \
             --arg footer_icon "$FOOTER_ICON" \
             --arg date_iso "$DATE_ISO" \
+            --arg title "zHomes " \
             '{
               content: $mention,
               embeds: [
                 {
-                  title: ("zHomes " + $version),
+                  title: ($title + $version),
                   url: $release,
                   description: ("```md\n" + $desc + "\n```"),
                   color: 65280,
