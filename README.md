@@ -87,11 +87,14 @@ Below are the permission nodes and their default intent as defined in the plugin
 
 Command permissions
 - zhomes.command.main — Main command (True by default)
-    - zhomes.command.main.help — Help subcommand (Only OP by default)
-    - zhomes.command.main.version — Version (True by default)
-        - zhomes.command.main.version.update — Version update (Only OP by default)
-    - zhomes.command.main.reload — Reload (Only OP by default)
-    - zhomes.command.main.converter — Converter (Only OP by default)
+    - zhomes.command.main.help — Help SubCommand (Only OP by default)
+    - zhomes.command.main.version — Version SubCommand (True by default)
+    - zhomes.command.main.info — Info SubCommand (Only OP by default)
+    - zhomes.command.main.reload — Reload SubCommand (Only OP by default)
+    - zhomes.command.main.nearhomes - Nearhomes SubCommand (Only OP by default)
+    - zhomes.command.main.parse — Parse SubCommand (Only OP by default)
+    - zhomes.command.main.converter — Converter SubCommand (Only OP by default)
+    - zhomes.command.main.importexport — Import & Export SubCommand (Only OP by default)
 - zhomes.command.sethome — `/sethome` (True by default)
 - zhomes.command.delhome — `/delhome` (True by default)
     - zhomes.command.delhome.others — `/delhome <player:home>` (Only OP by default)
@@ -120,7 +123,8 @@ zHomes contains an inline converter to import homes from well-known plugins. The
 ![Integrations](https://cdn.modrinth.com/data/cached_images/8364276160b1c02ff9531cda26955dce593eea92.png)
 
 Supported integrations:
-- PlaceholderAPI — message placeholders supported.
+- PlaceholderAPI — Message placeholders supported & custom [placeholders provided by zHomes](https://docs.yleoft.me/zhomes/hooks/placeholderapi).
+- MiniPlaceholders - MiniMessage placeholders supported for advanced message formatting & custom [placeholders provided by zHomes](https://docs.yleoft.me/zhomes/hooks/miniplaceholders).
 - Vault — for economy-based command-costs.
 - GriefPrevention — region checks integration.
 - WorldGuard — region and flag checks.
