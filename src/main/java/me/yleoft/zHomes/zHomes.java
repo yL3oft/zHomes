@@ -2,10 +2,12 @@ package me.yleoft.zHomes;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.yleoft.zAPI.configuration.Path;
+import me.yleoft.zAPI.hooks.HookMiniPlaceholders;
 import me.yleoft.zAPI.hooks.HookPlaceholderAPI;
 import me.yleoft.zAPI.libs.bstats.bukkit.Metrics;
 import me.yleoft.zAPI.libs.bstats.charts.SimplePie;
 import me.yleoft.zAPI.logging.Logger;
+import me.yleoft.zAPI.player.PlayerHandler;
 import me.yleoft.zAPI.utility.ExternalDependencyManager;
 import me.yleoft.zAPI.utility.PluginYAML;
 import me.yleoft.zAPI.zAPI;
@@ -66,6 +68,7 @@ public final class zHomes extends JavaPlugin {
     @Override
     public void onEnable() {
         zAPI.init(this, NBT.preloadApi());
+        LanguageUtils.loadInitiial();
         config = new ConfigYAML();
         pluginPrefix = transform(config.getString("prefix"));
         //<editor-fold desc="Logger and Update Checker">
@@ -96,6 +99,7 @@ public final class zHomes extends JavaPlugin {
         logger.info("<white>Loading plugin files...");
         logger.info("<yellow>> Checking language files...");
         LanguageUtils.loadLanguages();
+        config = new ConfigYAML();
         logger.info("<yellow>> Checking menu files...");
         menuHomes = new menuhomesYAML();
         logger.info("<green>All files ready.");
@@ -158,12 +162,15 @@ public final class zHomes extends JavaPlugin {
         //<editor-fold desc="Database">
         logger.info("<white>Initializing database connection...");
         DatabaseConnection.connect();
-        DatabaseEditor.createTable(DatabaseEditor.databaseTable(), "(UUID VARCHAR(36),HOME VARCHAR(100),LOCATION VARCHAR(255),PRIMARY KEY (UUID, HOME))");
+        DatabaseEditor.createTable(DatabaseEditor.databaseTable(), "(UUID VARCHAR(36),NAME VARCHAR(45),HOME VARCHAR(100),LOCATION VARCHAR(255),PRIMARY KEY (UUID, HOME))");
+        DatabaseEditor.addNameColumn();
+        PlayerHandler.setOfflineUUIDResolver(DatabaseEditor::getUUIDByName);
         logger.info("<green>Database connection has been established!");
         //</editor-fold>
         //<editor-fold desc="Hooks">
         logger.info("<white>Enabling hooks...");
         HookPlaceholderAPI.message = "<yellow>PlaceholderAPI hooked successfully!";
+        HookMiniPlaceholders.message = "<yellow>MiniPlaceholders hooked successfully!";
         me.yleoft.zAPI.hooks.HookRegistry.load();
         zAPI.setPlaceholdersHandler(HookRegistry.PLUGIN_PAPI);
         logger.info("<green>All hooks have been enabled!");
@@ -311,7 +318,7 @@ public final class zHomes extends JavaPlugin {
     }
 
     public static LanguageBuilder getLanguageYAML() {
-        return LanguageUtils.currentLanguageYAML;
+        return LanguageUtils.getCurrentLanguageYAML();
     }
 
     @Override

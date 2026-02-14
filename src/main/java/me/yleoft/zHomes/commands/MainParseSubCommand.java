@@ -9,10 +9,12 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MainParseSubCommand implements SubCommand {
 
@@ -39,19 +41,27 @@ public class MainParseSubCommand implements SubCommand {
     @Override
     public void execute(@NotNull CommandSender sender, @NotNull String[] fullArgs, @NotNull String @NotNull [] args) {
         String targetName = args[0];
+        if(targetName.equalsIgnoreCase("--null") || targetName.equalsIgnoreCase("-null") || targetName.equalsIgnoreCase("null")) {
+            String parseString = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+            message(sender, zHomes.getLanguageYAML().getMainParseOutput(parseString));
+            return;
+        }
         OfflinePlayer target = PlayerHandler.getOfflinePlayer(targetName);
         if(target == null) {
             sender.sendMessage(zHomes.getLanguageYAML().getCantFindPlayer());
             return;
         }
         String parseString = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-        message(sender, zHomes.getLanguageYAML().getMainParseOutput(parseString));
+        message(sender, zHomes.getLanguageYAML().getMainParseOutput(target, parseString));
     }
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String[] fullArgs, @NotNull String[] args) {
         if(args.length == 1) {
-            return Arrays.stream(Bukkit.getOfflinePlayers()).map(player -> player.getName() != null ? player.getName() : "").toList();
+            return Stream.concat(
+                    Arrays.stream(Bukkit.getOfflinePlayers()).map(player -> player.getName() != null ? player.getName() : ""),
+                    Stream.of("--null")
+            ).toList();
         }else {
             String currentArg = args[args.length - 1];
 

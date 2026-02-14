@@ -27,33 +27,27 @@ public class ConfigYAML extends YAMLBuilder {
                 # |            ░███      ░██     ░██ ░██    ░██ ░██   ░██   ░██ ░██               ░██            | #
                 # |           ░█████████ ░██     ░██  ░███████  ░██   ░██   ░██  ░███████   ░███████             | #
                 # |                                                                                              | #
-                # |                                   Plugin links & support                                     | #
+                %h1
                 # |                                                                                              | #
                 # |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
                 # |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
                 # |   • Bug reports: https://github.com/yL3oft/zHomes/issues                                     | #
                 # |                                                                                              | #
-                # |   zHomes (c) yL3oft — released under the MIT License.                                        | #
+                %h2
                 # |                                                                                              | #
                 # +----------------------------------------------------------------------------------------------+ #
                 ####################################################################################################
-                """);
+                """
+                .replace("%h1", zHomes.getLanguageYAML().getConfigCommentHeader1())
+                .replace("%h2", zHomes.getLanguageYAML().getConfigCommentHeader2()));
 
         addDefault("prefix", "<dark_gray>[<red>zHomes<dark_gray>]");
 
         // -------------------------
         // Database
         // -------------------------
-        commentSection("database", "Edit your database settings below");
-        comment(false, """
-                Here you can define how to store the plugin data.
-                OPTIONS:
-                - H2 (Preferred over SQLite)
-                - SQLite
-                - MariaDB (Preferred over MySQL)
-                - MySQL
-                DEFAULT: H2
-                """);
+        commentSection("database", zHomes.getLanguageYAML().getConfigCommentDatabase());
+        comment(false, zHomes.getLanguageYAML().getConfigCommentDatabaseType());
         addDefault(formPath("database", "type"), "H2");
         addDefault(formPath("database", "host"), "localhost");
         addDefault(formPath("database", "port"), 3306);
@@ -62,75 +56,66 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("database", "password"), "pass");
         addDefault(formPath("database", "options", "useSSL"), false);
         addDefault(formPath("database", "options", "allowPublicKeyRetrieval"), false);
-        comment(false, "# -------------------- #",
-                "# WARNING: DO NOT CHANGE ANYTHING BELOW IF YOU DON'T KNOW WHAT YOU'RE DOING");
+        comment(true, zHomes.getLanguageYAML().getConfigCommentPoolSize());
         addDefault(formPath("database", "pool-size"), 10);
         addDefault(formPath("database", "table-prefix"), "zhomes");
 
         // -------------------------
         // General
         // -------------------------
-        comment(false, "Here you can define the language of the plugin, all languages can be found, edited and created on languages' directory.",
-                "CURRENTLY AVAILABLE LANGUAGES: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralLanguage());
         addDefault(formPath("general", "language"), "en");
-        comment(false, "Enable or disable automatic updates for the plugin.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralAutoUpdate());
         addDefault(formPath("general", "auto-update"), false);
-        comment(false, "Toggle whether the plugin should announce available updates in the console and to players with the appropriate permission.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralAnnounceUpdate());
         addDefault(formPath("general", "announce-update"), true);
-        comment(false, "Enable or disable metrics collection to help improve the plugin.",
-                "All data collected is anonymous and used solely for statistical purposes.",
-                "!WARNING: Requires server restart to take effect!");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralMetrics());
         addDefault(formPath("general", "metrics"), true);
-        comment(false, "Enable or disable debug mode for more detailed logging output.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralDebugMode());
         addDefault(formPath("general", "debug-mode"), false);
 
         // -------------------------
         // Teleport options
         // -------------------------
-        commentSection("teleport-options", "Settings related to teleportation behavior");
-        comment(false, "Enable or disable safe teleportation to prevent players from being teleported into dangerous locations.");
+        commentSection("teleport-options", zHomes.getLanguageYAML().getConfigCommentTeleportOptions());
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsEnableSafeTeleport());
         addDefault(formPath("teleport-options", "enable-safe-teleport"), true);
-        comment(false, "Enable or disable dimensional teleportation, allowing players to teleport between different worlds or dimensions.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsDimensionalTeleportation());
         addDefault(formPath("teleport-options", "dimensional-teleportation"), true);
-        comment(false, "Play a sound effect when a player is teleported.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsPlaySound());
         addDefault(formPath("teleport-options", "play-sound"), true);
 
-        comment(false, "Enable or disable the restriction of teleportation to certain worlds.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsRestrictedWorldsEnable());
         addDefault(formPath("teleport-options", "restricted-worlds", "enable"), false);
-        comment(false, """
-                Define the mode for restricted worlds.
-                OPTIONS:
-                - blacklist: Players cannot teleport to worlds listed below.
-                - whitelist: Players can only teleport to worlds listed below.
-                """);
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsRestrictedWorldsMode());
         addDefault(formPath("teleport-options", "restricted-worlds", "mode"), "blacklist");
-        comment(false, "List of worlds affected by the restricted worlds setting.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsRestrictedWorldsWorlds());
         addDefault(formPath("teleport-options", "restricted-worlds", "worlds"), List.of("world_nether", "world_the_end"));
 
-        comment(false, "Enable or disable teleportation warmup period.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsWarmupEnable());
         addDefault(formPath("teleport-options", "warmup", "enable"), true);
-        comment(false, "Define the warmup time in seconds before teleportation occurs.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsWarmupTime());
         addDefault(formPath("teleport-options", "warmup", "time"), 5);
-        comment(false, "Cancel the teleportation if the player moves during the warmup period.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsWarmupCancelOnMove());
         addDefault(formPath("teleport-options", "warmup", "cancel-on-move"), true);
-        comment(false, "Show warmup countdown on the action bar.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentTeleportOptionsWarmupShowOnActionbar());
         addDefault(formPath("teleport-options", "warmup", "show-on-actionbar"), true);
 
         // -------------------------
         // Limits
         // -------------------------
-        comment(false, "Enable or disable home limits for players.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentLimitsEnabled());
         addDefault(formPath("limits", "enabled"), false);
-        comment(false, "Default number of homes a player can set.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentLimitsDefault());
         addDefault(formPath("limits", "default"), 10);
-        comment("Limit examples based on player groups.");
+        comment(zHomes.getLanguageYAML().getConfigCommentLimitsExamples());
         setValue(formPath("limits", "15"), List.of("group.vip", "group.mvp"));
         setValue(formPath("limits", "999"), List.of("group.admin"));
 
         // -------------------------
         // Commands
         // -------------------------
-        commentSection("commands", "!WARNING: Mostly everything below needs a restart to apply.");
+        commentSection("commands", zHomes.getLanguageYAML().getConfigCommentCommands());
 
         addDefault(formPath("commands", "main", "command"), "zhomes");
         addDefault(formPath("commands", "main", "description"), "The main command for the plugin");
@@ -152,7 +137,7 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("commands", "sethome", "permission"), "zhomes.command.sethome");
         addDefault(formPath("commands", "sethome", "aliases"), List.of("seth"));
         addDefault(formPath("commands", "sethome", "cooldown"), 0D);
-        comment(false, "command-cost requires Vault to work.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentCommandsCommandCost());
         addDefault(formPath("commands", "sethome", "command-cost"), 0);
         addDefault(formPath("commands", "sethome", "others", "permission"), "zhomes.command.sethome.others");
 
@@ -161,7 +146,7 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("commands", "delhome", "permission"), "zhomes.command.delhome");
         addDefault(formPath("commands", "delhome", "aliases"), List.of("deletehome", "delh"));
         addDefault(formPath("commands", "delhome", "cooldown"), 0D);
-        comment(false, "command-cost requires Vault to work.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentCommandsCommandCost());
         addDefault(formPath("commands", "delhome", "command-cost"), 0);
         addDefault(formPath("commands", "delhome", "others", "permission"), "zhomes.command.delhome.others");
 
@@ -170,13 +155,9 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("commands", "homes", "permission"), "zhomes.command.homes");
         addDefault(formPath("commands", "homes", "aliases"), List.of("myhomes"));
         addDefault(formPath("commands", "homes", "cooldown"), 0D);
-        comment(false, "command-cost requires Vault to work.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentCommandsCommandCost());
         addDefault(formPath("commands", "homes", "command-cost"), 0);
-        comment(false, "Define how the homes will be displayed to the player.",
-                "OPTIONS:",
-                "- list: Displays homes in a simple list format.",
-                "- menu: Opens a graphical menu to select homes."
-        );
+        comment(false, zHomes.getLanguageYAML().getConfigCommentCommandsHomesTypes());
         addDefault(formPath("commands", "homes", "type"), "menu");
         addDefault(formPath("commands", "homes", "others", "permission"), "zhomes.command.homes.others");
 
@@ -185,30 +166,31 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("commands", "home", "permission"), "zhomes.command.home");
         addDefault(formPath("commands", "home", "aliases"), List.of());
         addDefault(formPath("commands", "home", "cooldown"), 3D);
-        comment(false, "command-cost requires Vault to work.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentCommandsCommandCost());
         addDefault(formPath("commands", "home", "command-cost"), 0);
         addDefault(formPath("commands", "home", "others", "permission"), "zhomes.command.home.others");
         addDefault(formPath("commands", "home", "rename", "permission"), "zhomes.command.home.rename");
-        comment(false, "command-cost requires Vault to work.");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentCommandsCommandCost());
         addDefault(formPath("commands", "home", "rename", "command-cost"), 0);
 
         // -------------------------
         // Permissions
         // -------------------------
-        commentSection("permissions", "Permission nodes used by the plugin");
+        commentSection("permissions", zHomes.getLanguageYAML().getConfigCommentPermissions());
 
-        comment(false, "Permission to bypass home limits");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassLimit());
         addDefault(formPath("permissions", "bypass", "limit"), "zhomes.bypass.limit");
-        comment(false, "Permission to bypass dimensional teleportation restrictions");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassDimensionalTeleportation());
         addDefault(formPath("permissions", "bypass", "dimensional-teleportation"), "zhomes.bypass.dimensionalteleportation");
-        comment(false, "Permission to bypass safe teleportation checks");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassSafeTeleportation());
         addDefault(formPath("permissions", "bypass", "safe-teleportation"), "zhomes.bypass.safeteleport");
-        comment(false, "Permission to bypass restricted worlds checks");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassRestrictedWorlds());
         addDefault(formPath("permissions", "bypass", "restricted-worlds"), "zhomes.bypass.restrictedworlds");
-        comment(false, "Permission to bypass teleportation warmup");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassWarmup());
         addDefault(formPath("permissions", "bypass", "warmup"), "zhomes.bypass.warmup");
-        comment(false, "Permission to bypass command costs");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassCommandCosts());
         addDefault(formPath("permissions", "bypass", "command-cost"), "%command_permission%.bypass.command-cost");
+        comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassCommandCooldowns());
         addDefault(formPath("permissions", "bypass", "command-cooldown"), "%command_permission%.bypass.command-cooldown");
 
         build();

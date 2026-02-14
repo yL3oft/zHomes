@@ -1,17 +1,85 @@
 package me.yleoft.zHomes.configuration.languages;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class plYAML extends LanguageBuilder {
 
     public plYAML() {
         super("pl");
     }
 
-    public void buildLang() {
-        header("""
+    @Override
+    protected Map<String, String> translations() {
+        Map<String, String> t = new HashMap<>();
+
+        // config comments
+        t.put(formPath("config", "comment", "header1"), "# |                                   Linki wtyczki & wsparcie                                   | #");
+        t.put(formPath("config", "comment", "header2"), "# |   zHomes (c) yL3oft — wydany na licencji MIT.                                                | #");
+        t.put(formPath("config", "comment", "database"), "Edytuj ustawienia bazy danych poniżej");
+        t.put(formPath("config", "comment", "database", "type"), """
+        Tutaj możesz określić, jak przechowywać dane wtyczki.
+        OPCJE:
+        - H2 (Preferowane nad SQLite)
+        - SQLite
+        - MariaDB (Preferowane nad MySQL)
+        - MySQL
+        DOMYŚLNIE: H2
+        """);
+        t.put(formPath("config", "comment", "pool-size"), "# OSTRZEŻENIE: NIE ZMIENIAJ NIC PONIŻEJ, JEŚLI NIE WIESZ CO ROBISZ");
+        t.put(formPath("config", "comment", "general", "language"), """
+        Tutaj możesz ustawić język wtyczki. Wszystkie języki można znaleźć, edytować i tworzyć w katalogu języków.
+        DOSTĘPNE JĘZYKI: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
+        """);
+        t.put(formPath("config", "comment", "general", "auto-update"), "Włącz lub wyłącz automatyczne aktualizacje wtyczki.");
+        t.put(formPath("config", "comment", "general", "announce-update"), "Przełącz, czy wtyczka powinna ogłaszać dostępne aktualizacje w konsoli i graczom z odpowiednim uprawnieniem.");
+        t.put(formPath("config", "comment", "general", "metrics"), """
+        Włącz lub wyłącz zbieranie danych statystycznych w celu ulepszenia wtyczki.
+        Wszystkie zbierane dane są anonimowe i używane wyłącznie do celów statystycznych.
+        !OSTRZEŻENIE: Wymaga restartu serwera, aby wejść w życie!
+        """);
+        t.put(formPath("config", "comment", "general", "debug-mode"), "Włącz lub wyłącz tryb debugowania dla bardziej szczegółowego rejestrowania.");
+        t.put(formPath("config", "comment", "teleport-options"), "Ustawienia związane z zachowaniem teleportacji");
+        t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Włącz lub wyłącz bezpieczną teleportację, aby zapobiec teleportowaniu graczy w niebezpieczne miejsca.");
+        t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Włącz lub wyłącz teleportację wymiarową, umożliwiając graczom teleportowanie między różnymi światami lub wymiarami.");
+        t.put(formPath("config", "comment", "teleport-options", "play-sound"), "Odtwórz efekt dźwiękowy po teleportacji gracza.");
+        t.put(formPath("config", "comment", "teleport-options", "restricted-worlds", "enable"), "Włącz lub wyłącz ograniczenie teleportacji do określonych światów.");
+        t.put(formPath("config", "comment", "teleport-options", "restricted-worlds", "mode"), """
+        Określ tryb dla ograniczonych światów.
+        OPCJE:
+        - blacklist: Gracze nie mogą teleportować się do światów wymienionych poniżej.
+        - whitelist: Gracze mogą teleportować się tylko do światów wymienionych poniżej.
+        """);
+        t.put(formPath("config", "comment", "teleport-options", "restricted-worlds", "worlds"), "Lista światów objętych ustawieniem ograniczonych światów.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "enable"), "Włącz lub wyłącz okres rozgrzewki przed teleportacją.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "time"), "Określ czas rozgrzewki w sekundach przed teleportacją.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "cancel-on-move"), "Anuluj teleportację, jeśli gracz poruszy się podczas okresu rozgrzewki.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "show-on-actionbar"), "Wyświetlaj odliczanie rozgrzewki na pasku akcji.");
+        t.put(formPath("config", "comment", "limits", "enabled"), "Włącz lub wyłącz limity domów dla graczy.");
+        t.put(formPath("config", "comment", "limits", "default"), "Domyślna liczba domów, jaką może ustawić gracz.");
+        t.put(formPath("config", "comment", "limits", "examples"), "Przykłady limitów oparte na grupach graczy.");
+        t.put(formPath("config", "comment", "commands"), "!OSTRZEŻENIE: Większość poniższych ustawień wymaga restartu do zastosowania.");
+        t.put(formPath("config", "comment", "commands", "command-cost"), "command-cost wymaga Vault do działania.");
+        t.put(formPath("config", "comment", "commands", "homes", "types"), """
+        Określ, jak domy będą wyświetlane graczowi.
+        OPCJE:
+        - text: Wyświetla domy w prostym formacie listy.
+        - menu: Otwiera graficzne menu do wyboru domów.
+        """);
+        t.put(formPath("config", "comment", "permissions"), "Węzły uprawnień używane przez wtyczkę");
+        t.put(formPath("config", "comment", "permissions", "bypass", "limit"), "Uprawnienie do pomijania limitów domów");
+        t.put(formPath("config", "comment", "permissions", "bypass", "dimensional-teleportation"), "Uprawnienie do pomijania ograniczeń teleportacji wymiarowej");
+        t.put(formPath("config", "comment", "permissions", "bypass", "safe-teleportation"), "Uprawnienie do pomijania sprawdzania bezpiecznej teleportacji");
+        t.put(formPath("config", "comment", "permissions", "bypass", "restricted-worlds"), "Uprawnienie do pomijania sprawdzania ograniczonych światów");
+        t.put(formPath("config", "comment", "permissions", "bypass", "warmup"), "Uprawnienie do pomijania rozgrzewki teleportacji");
+        t.put(formPath("config", "comment", "permissions", "bypass", "command-costs"), "Uprawnienie do pomijania kosztów poleceń");
+        t.put(formPath("config", "comment", "permissions", "bypass", "command-cooldowns"), "Uprawnienie do pomijania czasów odnowienia poleceń");
+
+        t.put("header", """
                 ####################################################################################################
                 # +----------------------------------------------------------------------------------------------+ #
                 # |                                                                                              | #
-                # |                                  zHomes – Plik Językowy                                      | #
+                # |                                  zHomes — Plik Językowy                                      | #
                 # |                                                                                              | #
                 # |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
                 # |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
@@ -21,137 +89,150 @@ public class plYAML extends LanguageBuilder {
                 ####################################################################################################
                 """);
 
-        commentSection("hooks", "Tutaj możesz zarządzać wiadomościami hooków.");
-        addDefault(formPath("hooks", "griefprevention", "cant-set-homes"),
-                "%prefix% <red>Nie możesz ustawiać domów w tym obszarze.");
+        // comments
+        t.put(formPath("comments", "hooks"),
+                "Tutaj możesz zarządzać wiadomościami hooków.");
+        t.put(formPath("comments", "teleport-warmup"),
+                "Wiadomości związane z rozgrzewką teleportu.");
+        t.put(formPath("comments", "commands"),
+                "Wiadomości związane z komendami.");
+        t.put(formPath("comments", "commands", "no-permission"),
+                "Tutaj znajdziesz wiadomości, które mogą być używane w wielu komendach.");
+        t.put(formPath("comments", "commands", "main"),
+                "Poniżej znajdziesz wiadomości specyficzne dla komend.");
 
-        addDefault(formPath("hooks", "worldguard", "cant-use-homes"),
-                "%prefix% <red>Nie możesz używać domów tutaj.");
-        addDefault(formPath("hooks", "worldguard", "cant-set-homes"),
-                "%prefix% <red>Nie możesz ustawić domu tutaj.");
+        // hooks
+        t.put(formPath("hooks", "griefprevention", "cant-set-homes"),
+                "%prefix% <red>Nie możesz ustawiać home w tym obszarze.");
+        t.put(formPath("hooks", "worldguard", "cant-use-homes"),
+                "%prefix% <red>Nie możesz używać home tutaj.");
+        t.put(formPath("hooks", "worldguard", "cant-set-homes"),
+                "%prefix% <red>Nie możesz ustawić home tutaj.");
+        t.put(formPath("hooks", "vault", "cant-afford-command"),
+                "%prefix% <red>Potrzebujesz <gold>$%cost% <red>aby wykonać tę komendę.");
 
-        addDefault(formPath("hooks", "vault", "cant-afford-command"),
-                "%prefix% <red>Potrzebujesz <gold>$%cost% <red>aby wykonać to polecenie.");
-
-        commentSection("teleport-warmup", "Wiadomości związane z czasem przygotowania teleportacji.");
-        addDefault(formPath("teleport-warmup", "warmup"),
+        // teleport-warmup
+        t.put(formPath("teleport-warmup", "warmup"),
                 "%prefix% <green>Teleportacja za %time% sekund... Nie ruszaj się!");
-        addDefault(formPath("teleport-warmup", "warmup-actionbar"),
+        t.put(formPath("teleport-warmup", "warmup-actionbar"),
                 "<green>Teleportacja za %time% sekund...");
-        addDefault(formPath("teleport-warmup", "cancelled"),
-                "%prefix% <red>Poruszyłeś się! Teleportacja anulowana.");
-        addDefault(formPath("teleport-warmup", "cancelled-actionbar"),
-                "<red>Poruszyłeś się! Teleportacja anulowana.");
+        t.put(formPath("teleport-warmup", "cancelled"),
+                "%prefix% <red>Ruszyłeś się! Teleportacja anulowana.");
+        t.put(formPath("teleport-warmup", "cancelled-actionbar"),
+                "<red>Ruszyłeś się! Teleportacja anulowana.");
 
-        commentSection("commands", "Wiadomości związane z poleceniami.");
-        comment(false, "Tutaj znajdziesz wiadomości, które mogą być używane w wielu poleceniach.");
-        addDefault(formPath("commands", "no-permission"),
-                "%prefix% <red>Nie masz uprawnień do wykonania tego polecenia.");
-        addDefault(formPath("commands", "only-players"),
-                "%prefix% <red>Tylko gracze mogą wykonać to polecenie.");
-        addDefault(formPath("commands", "in-cooldown"),
-                "%prefix% <red>Musisz poczekać %time% sekund przed ponownym użyciem tego polecenia.");
-        addDefault(formPath("commands", "home-already-exist"),
-                "%prefix% <red>Masz już dom o tej nazwie.");
-        addDefault(formPath("commands", "home-doesnt-exist"),
-                "%prefix% <red>Nie masz żadnego domu o tej nazwie.");
-        addDefault(formPath("commands", "home-doesnt-exist-others"),
-                "%prefix% <yellow>%player% <red>nie ma żadnego domu o tej nazwie.");
-        addDefault(formPath("commands", "cant-use-2dot"),
-                "%prefix% <red>Nie możesz używać <yellow>':' <red>w tym poleceniu.");
-        addDefault(formPath("commands", "cant-find-player"),
+        // commands - general
+        t.put(formPath("commands", "no-permission"),
+                "%prefix% <red>Nie masz uprawnień do wykonania tej komendy.");
+        t.put(formPath("commands", "only-players"),
+                "%prefix% <red>Tylko gracze mogą wykonywać tę komendę.");
+        t.put(formPath("commands", "in-cooldown"),
+                "%prefix% <red>Musisz poczekać %time% sekund przed ponownym użyciem tej komendy.");
+        t.put(formPath("commands", "home-already-exist"),
+                "%prefix% <red>Masz już home o tej nazwie.");
+        t.put(formPath("commands", "home-doesnt-exist"),
+                "%prefix% <red>Nie masz żadnej home o tej nazwie.");
+        t.put(formPath("commands", "home-doesnt-exist-others"),
+                "%prefix% <yellow>%player% <red>nie ma żadnej home o tej nazwie.");
+        t.put(formPath("commands", "cant-use-2dot"),
+                "%prefix% <red>Nie możesz używać <yellow>':' <red>w tej komendzie.");
+        t.put(formPath("commands", "cant-find-player"),
                 "%prefix% <red>Ten gracz nie został znaleziony.");
-        addDefault(formPath("commands", "unable-to-find-safe-location"),
-                "%prefix% <red>Nie można znaleźć bezpiecznej lokalizacji do teleportacji.");
-        addDefault(formPath("commands", "world-restricted-sethome"),
-                "%prefix% <red>Nie możesz ustawiać domów w tym świecie.");
-        addDefault(formPath("commands", "world-restricted-home"),
-                "%prefix% <red>Nie możesz teleportować się do domów w tym świecie.");
-
-        commentSection(formPath("commands", "main"), "Poniżej znajdziesz specyficzne wiadomości dla poleceń.");
+        t.put(formPath("commands", "unable-to-find-safe-location"),
+                "%prefix% <red>Nie można znaleźć bezpiecznego miejsca do teleportacji.");
+        t.put(formPath("commands", "world-restricted-sethome"),
+                "%prefix% <red>Nie możesz ustawiać home w tym świecie.");
+        t.put(formPath("commands", "world-restricted-home"),
+                "%prefix% <red>Nie możesz teleportować się do home w tym świecie.");
 
         // commands.main.help
-        addDefault(formPath("commands", "main", "help", "help-perm"), """
-                %prefix% <aqua>Użycie <yellow>/%command%<aqua>:
-                <red>-> <yellow>/%command% <green>help <gray>Pokazuje dokładnie tę wiadomość pomocy
-                <red>-> <yellow>/%command% <green>info <gray>Pokazuje informacje o wtyczce
+        t.put(formPath("commands", "main", "help", "help-perm"), """
+                %prefix% <aqua>Użycia komendy <yellow>/%command%<aqua>:
+                <red>-> <yellow>/%command% <green>help <gray>Pokazuje tę wiadomość pomocy
+                <red>-> <yellow>/%command% <green>info <gray>Pokazuje informacje o pluginie
                 <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
                 <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
-                <red>-> <yellow>/%command% <green>nearhomes <gold>(<promień>) <gray>Wyświetla domy w pobliżu w określonym promieniu
-                <red>-> <yellow>/%command% <green>parse <gold>(Gracz) (Tekst) <gray>Parsuje tekst z placeholderami dla określonego gracza
-                <red>-> <yellow>/%command% <green>converter (<typ-konwertera>) <gray>Konwertuje dane z jednego miejsca do drugiego
-                <red>-> <yellow>/%command% <green>export <gray>Eksportuje wszystkie domy do jednego pliku
-                <red>-> <yellow>/%command% <green>import (<plik>) <gray>Importuje domy z jednego pliku
+                <red>-> <yellow>/%command% <green>nearhomes <gold>(Promień) <gray>Wypisuje home w pobliżu w określonym promieniu
+                <red>-> <yellow>/%command% <green>parse <gold>(Gracz) (Tekst) <gray>Przetwarza tekst z placeholderami dla konkretnego gracza
+                <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Konwertuje dane z jednego miejsca do drugiego
+                <red>-> <yellow>/%command% <green>export <gray>Eksportuje wszystkie home do jednego pliku
+                <red>-> <yellow>/%command% <green>import (<file>) <gray>Importuje home z jednego pliku
                 """);
-        addDefault(formPath("commands", "main", "help", "help-noperm"), """
-                %prefix% <aqua>Użycie <yellow>/%command%<aqua>:
-                <red>-> <yellow>/%command% <green>(help|?) <gray>Pokazuje dokładnie tę wiadomość pomocy
-                <red>-> <yellow>/%command% <green>(version|ver) <gray>Pokazuje wersję wtyczki
+        t.put(formPath("commands", "main", "help", "help-noperm"), """
+                %prefix% <aqua>Użycia komendy <yellow>/%command%<aqua>:
+                <red>-> <yellow>/%command% <green>(help|?) <gray>Pokazuje tę wiadomość pomocy
+                <red>-> <yellow>/%command% <green>(version|ver) <gray>Pokazuje wersję pluginu
                 """);
 
         // commands.main.info
-        addDefault(formPath("commands", "main", "info", "output"), """
+        t.put(formPath("commands", "main", "info", "output"), """
                 %prefix% <aqua>Uruchomiono <dark_aqua>%name% v%version% <aqua>przez <dark_aqua>%author%<aqua>:
-                %prefix% <aqua>- Informacje o serwerze:
-                %prefix% <dark_aqua>   Oprogramowanie: <white>%server.software%
+                %prefix% <aqua>- Info serwera:
+                %prefix% <dark_aqua>   Software: <white>%server.software%
                 %prefix% <dark_aqua>   Wersja: <white>%server.version%
-                %prefix% <dark_aqua>   Wymaga aktualizacji: <white>%requpdate%
+                %prefix% <dark_aqua>   Wymagana aktualizacja: <white>%requpdate%
                 %prefix% <dark_aqua>   Język: <white>%language%
                 %prefix% <aqua>- Przechowywanie:
                 %prefix% <dark_aqua>   Typ: <white>%storage.type%
                 %prefix% <dark_aqua>   Użytkownicy: <white>%storage.users%
-                %prefix% <dark_aqua>   Domy: <white>%storage.homes%
-                %prefix% <aqua>- Hooki:
+                %prefix% <dark_aqua>   Homes: <white>%storage.homes%
+                %prefix% <aqua>- Hooks:
                 %prefix% <dark_aqua>   PlaceholderAPI: <white>%use.placeholderapi%
+                %prefix% <dark_aqua>   MiniPlaceholders: <white>%use.miniplaceholders%
                 %prefix% <dark_aqua>   GriefPrevention: <white>%use.griefprevention%
                 %prefix% <dark_aqua>   WorldGuard: <white>%use.worldguard%
                 %prefix% <dark_aqua>   Vault: <white>%use.vault%
                 """);
-        addDefault(formPath("commands", "main", "info", "requpdate-yes"),
+        t.put(formPath("commands", "main", "info", "requpdate-yes"),
                 "<red>Tak <gray>(Użyj <yellow>/%command% version <gray>aby uzyskać więcej informacji)");
-        addDefault(formPath("commands", "main", "info", "requpdate-no"),
+        t.put(formPath("commands", "main", "info", "requpdate-no"),
                 "<green>Nie");
 
         // commands.main.version
-        addDefault(formPath("commands", "main", "version", "output"),
+        t.put(formPath("commands", "main", "version", "output"),
                 "%prefix% <aqua>Aktualna wersja: <green>%version%");
-        addDefault(formPath("commands", "main", "version", "update", "output"),
-                "%prefix% <green>zHomes zaktualizowano do najnowszej wersji <yellow>(%update%)<green>, zrestartuj serwer, aby zastosować zmiany.");
-        addDefault(formPath("commands", "main", "version", "update", "no-update"),
+        t.put(formPath("commands", "main", "version", "update", "output"),
+                "%prefix% <green>zHomes zaktualizowane do najnowszej wersji <yellow>(%update%)<green>, zrestartuj serwer aby zastosować zmiany.");
+        t.put(formPath("commands", "main", "version", "update", "no-update"),
                 "%prefix% <green>Używasz już najnowszej wersji zHomes.");
 
         // commands.main.reload
-        addDefault(formPath("commands", "main", "reload", "usage"), """
-                %prefix% <aqua>Użycie <yellow>/%command% <green>(reload|rl)<aqua>:
+        t.put(formPath("commands", "main", "reload", "usage"), """
+                %prefix% <aqua>Użycia komendy <yellow>/%command% <green>(reload|rl)<aqua>:
                 <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
                 """);
-        addDefault(formPath("commands", "main", "reload", "output"),
-                "%prefix% <green>Przeładowano wtyczkę w <aqua>%time%ms<green>.");
-        addDefault(formPath("commands", "main", "reload", "commands", "output"),
-                "%prefix% <green>Przeładowano wszystkie polecenia wtyczki w <aqua>%time%ms<green>.");
-        addDefault(formPath("commands", "main", "reload", "config", "output"),
-                "%prefix% <green>Przeładowano plik konfiguracyjny wtyczki w <aqua>%time%ms<green>.");
-        addDefault(formPath("commands", "main", "reload", "languages", "output"), "%prefix% <green>Przeładowano języki wtyczki w <aqua>%time%ms<green>.");
+        t.put(formPath("commands", "main", "reload", "output"),
+                "%prefix% <green>Plugin przeładowany w <aqua>%time%ms<green>.");
+        t.put(formPath("commands", "main", "reload", "commands", "output"),
+                "%prefix% <green>Wszystkie komendy pluginu przeładowane w <aqua>%time%ms<green>.");
+        t.put(formPath("commands", "main", "reload", "config", "output"),
+                "%prefix% <green>Plik konfiguracyjny pluginu przeładowany w <aqua>%time%ms<green>.");
+        t.put(formPath("commands", "main", "reload", "languages", "output"),
+                "%prefix% <green>Języki pluginu przeładowane w <aqua>%time%ms<green>.");
 
         // commands.main.nearhomes
-        addDefault(formPath("commands", "main", "nearhomes", "usage"),
+        t.put(formPath("commands", "main", "nearhomes", "usage"),
                 "<red>-> <yellow>/%command% nearhomes <green>[<Promień>]");
-        addDefault(formPath("commands", "main", "nearhomes", "output"),
-                "%prefix% <gray>Domy w pobliżu w odległości <yellow>%radius% <gray>bloków: <white>%homes%");
-        addDefault(formPath("commands", "main", "nearhomes", "output-not-found"),
-                "%prefix% <red>Nie znaleziono domów w odległości <yellow>%radius% <red>bloków.");
-        addDefault(formPath("commands", "main", "nearhomes", "home-string"),
-                "<yellow>%home% <gray>(%owner%)");
+        t.put(formPath("commands", "main", "nearhomes", "output"),
+                "%prefix% <gray>Home w pobliżu w promieniu <yellow>%radius% <gray>bloków: <white>%homes%");
+        t.put(formPath("commands", "main", "nearhomes", "output-not-found"),
+                "%prefix% <red>Nie znaleziono home w promieniu <yellow>%radius% <red>bloków.");
+        t.put(formPath("commands", "main", "nearhomes", "home-string"),
+                "<yellow><hover:show_text:'<green>Kliknij aby się teleportować.'><click:run_command:'/%homecommand% %owner%:%home%'>%home%</click></hover> <gray><hover:show_text:'<green>Kliknij aby filtrować po graczu.'><click:run_command:'/%maincommand% nearhomes %radius% -user %owner%'>(%owner%)</click></hover>");
+        t.put(formPath("commands", "main", "nearhomes", "filtered-player", "output"),
+                "%prefix% <gray>Home gracza <yellow>%player% <gray>w pobliżu w promieniu <yellow>%radius% <gray>bloków: <white>%homes%");
+        t.put(formPath("commands", "main", "nearhomes", "filtered-player", "home-string"),
+                "<yellow><hover:show_text:'<green>Kliknij aby się teleportować.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>");
 
         // commands.main.parse
-        addDefault(formPath("commands", "main", "parse", "usage"),
+        t.put(formPath("commands", "main", "parse", "usage"),
                 "<red>-> <yellow>/%command% parse <gold>(Gracz) (Tekst)");
-        addDefault(formPath("commands", "main", "parse", "output"),
-                "%prefix% <gray>Sparsowany tekst: <white>%parsed%");
+        t.put(formPath("commands", "main", "parse", "output"),
+                "%prefix% <gray>Przetworzony tekst: <white>%parsed%");
 
         // commands.main.converter
-        addDefault(formPath("commands", "main", "converter", "usage"), """
-                %prefix% <aqua>Użycie <yellow>/%command% <green>converter<aqua>:
+        t.put(formPath("commands", "main", "converter", "usage"), """
+                %prefix% <aqua>Użycia komendy <yellow>/%command% <green>converter<aqua>:
                 <red>-> <yellow>/%command% <green>converter sqlitetoh2
                 <red>-> <yellow>/%command% <green>converter sqlitetomysql
                 <red>-> <yellow>/%command% <green>converter sqlitetomariadb
@@ -168,68 +249,66 @@ public class plYAML extends LanguageBuilder {
                 <red>-> <yellow>/%command% <green>converter xhomes
                 <red>-> <yellow>/%command% <green>converter zhome
                 """);
-        addDefault(formPath("commands", "main", "converter", "output"),
-                "%prefix% <green>Wszystkie dane zostały skonwertowane!");
-        addDefault(formPath("commands", "main", "converter", "error"),
-                "%prefix% <red>Coś poszło nie tak podczas konwersji danych, sprawdź konsolę serwera.");
+        t.put(formPath("commands", "main", "converter", "output"),
+                "%prefix% <green>Wszystkie dane skonwertowane!");
+        t.put(formPath("commands", "main", "converter", "error"),
+                "%prefix% <red>Coś poszło nie tak podczas konwersji, sprawdź konsolę serwera.");
 
         // commands.main.export
-        addDefault(formPath("commands", "main", "export", "output"),
-                "%prefix% <green>Wszystkie domy zostały wyeksportowane do <yellow>%file%<green>!");
-        addDefault(formPath("commands", "main", "export", "error"),
-                "%prefix% <red>Coś poszło nie tak podczas eksportowania danych, sprawdź konsolę serwera.");
+        t.put(formPath("commands", "main", "export", "output"),
+                "%prefix% <green>Wszystkie home wyeksportowane do <yellow>%file%<green>!");
+        t.put(formPath("commands", "main", "export", "error"),
+                "%prefix% <red>Coś poszło nie tak podczas eksportu, sprawdź konsolę serwera.");
 
         // commands.main.import
-        addDefault(formPath("commands", "main", "import", "usage"),
+        t.put(formPath("commands", "main", "import", "usage"),
                 "<red>-> <yellow>/%command% import <green>(<plik>)");
-        addDefault(formPath("commands", "main", "import", "output"),
-                "%prefix% <green>Wszystkie domy zostały zaimportowane z <yellow>%file%<green>!");
-        addDefault(formPath("commands", "main", "import", "file-not-found"),
+        t.put(formPath("commands", "main", "import", "output"),
+                "%prefix% <green>Wszystkie home zaimportowane z <yellow>%file%<green>!");
+        t.put(formPath("commands", "main", "import", "file-not-found"),
                 "%prefix% <red>Plik <yellow>%file% <red>nie został znaleziony.");
-        addDefault(formPath("commands", "main", "import", "error"),
-                "%prefix% <red>Coś poszło nie tak podczas importowania danych, sprawdź konsolę serwera.");
+        t.put(formPath("commands", "main", "import", "error"),
+                "%prefix% <red>Coś poszło nie tak podczas importu, sprawdź konsolę serwera.");
 
         // commands.sethome
-        addDefault(formPath("commands", "sethome", "usage"),
-                "<red>-> <yellow>/%command% <green>(Dom)");
-        addDefault(formPath("commands", "sethome", "output"),
-                "%prefix% <green>Dom <yellow>%home% <green>ustawiony w twojej pozycji.");
-        addDefault(formPath("commands", "sethome", "limit-reached"),
-                "<red>Nie możesz ustawić więcej domów, ponieważ osiągnąłeś limit <yellow>(%limit% domów)<red>!");
+        t.put(formPath("commands", "sethome", "output"),
+                "%prefix% <green>Home <yellow>%home% <green>ustawiona w twojej pozycji.");
+        t.put(formPath("commands", "sethome", "limit-reached"),
+                "<red>Nie możesz ustawiać więcej home, ponieważ osiągnąłeś swój limit <yellow>(%limit% homes)<red>!");
 
         // commands.delhome
-        addDefault(formPath("commands", "delhome", "usage"),
-                "<red>-> <yellow>/%command% <green>(Dom)");
-        addDefault(formPath("commands", "delhome", "output"),
-                "%prefix% <red>Dom <yellow>%home% <red>usunięty.");
+        t.put(formPath("commands", "delhome", "output"),
+                "%prefix% <red>Home <yellow>%home% <red>usunięta.");
 
         // commands.home
-        addDefault(formPath("commands", "home", "usage"),
-                "<red>-> <yellow>/%command% <green>(Dom)");
-        addDefault(formPath("commands", "home", "output"),
+        t.put(formPath("commands", "home", "output"),
                 "%prefix% <green>Przeteleportowano do <yellow>%home%<green>...");
-        addDefault(formPath("commands", "home", "cant-dimensional-teleport"),
+        t.put(formPath("commands", "home", "cant-dimensional-teleport"),
                 "<red>Twoja teleportacja została anulowana! Teleportacja wymiarowa jest wyłączona.");
 
         // commands.home.rename
-        addDefault(formPath("commands", "home", "rename", "usage"),
-                "<red>-> <yellow>/%command% <green>rename (Dom) (NowaNazwa)");
-        addDefault(formPath("commands", "home", "rename", "output"),
-                "%prefix% <green>Dom <yellow>%home% <green>przemianowany na <yellow>%newname%<green>.");
-        addDefault(formPath("commands", "home", "rename", "same-name"),
-                "%prefix% <red>Nie możesz przemianować domu na tę samą nazwę.");
+        t.put(formPath("commands", "home", "rename", "usage"),
+                "<red>-> <yellow>/%command% <green>rename (Home) (NowaNazwa)");
+        t.put(formPath("commands", "home", "rename", "output"),
+                "%prefix% <green>Home <yellow>%home% <green>przemianowana na <yellow>%newname%<green>.");
+        t.put(formPath("commands", "home", "rename", "same-name"),
+                "%prefix% <red>Nie możesz przemianować home na taką samą nazwę.");
 
         // commands.homes
-        addDefault(formPath("commands", "homes", "output"),
-                "%prefix% <gray>Twoje domy (%amount%): <white>%homes%");
-        addDefault(formPath("commands", "homes", "invalid-page"),
+        t.put(formPath("commands", "homes", "output"),
+                "%prefix% <gray>Twoje home (%amount%): <white>%homes%");
+        t.put(formPath("commands", "homes", "home-string"),
+                "<reset><hover:show_text:'<green>Kliknij aby się teleportować.'><click:run_command:'/%homecommand% %home%'>%home%</click></hover>");
+        t.put(formPath("commands", "homes", "invalid-page"),
                 "%prefix% <red>Nieprawidłowy numer strony! Użyj liczby większej niż 0.");
 
         // commands.homes.others
-        addDefault(formPath("commands", "homes", "others", "output"),
-                "%prefix% <gray>Domy gracza <yellow>%player% <gray>(%amount%): <white>%homes%");
+        t.put(formPath("commands", "homes", "others", "output"),
+                "%prefix% <gray>Home gracza <yellow>%player% <gray>(%amount%): <white>%homes%");
+        t.put(formPath("commands", "homes", "others", "home-string"),
+                "<reset><hover:show_text:'<green>Kliknij aby się teleportować.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>");
 
-        build();
+        return t;
     }
 
 }

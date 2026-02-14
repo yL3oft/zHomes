@@ -91,7 +91,8 @@ public class MainReloadSubCommand implements SubCommand {
                 zHomes.getInstance().getLoggerInstance().setDebugMode(debugMode);
                 break;
             case "languages":
-                LanguageUtils.loadCurrentLanguage();
+                LanguageUtils.loadLanguages();
+                zHomes.getInstance().reloadConfig();
                 break;
         }
         return System.currentTimeMillis() - now;

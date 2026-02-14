@@ -21,7 +21,7 @@ public abstract class LanguageUtils {
     public static ruYAML ruYAML;
     public static zhcnYAML zhcnYAML;
 
-    public static LanguageBuilder currentLanguageYAML;
+    private static LanguageBuilder currentLanguageYAML;
 
     public static void loadLanguages() {
         deYAML = new deYAML();
@@ -35,6 +35,11 @@ public abstract class LanguageUtils {
         ruYAML = new ruYAML();
         zhcnYAML = new zhcnYAML();
         loadCurrentLanguage();
+    }
+
+    public static void loadInitiial() {
+        enYAML = new enYAML();
+        currentLanguageYAML = enYAML;
     }
 
     public static void loadCurrentLanguage() {
@@ -78,5 +83,9 @@ public abstract class LanguageUtils {
                 ruYAML,
                 zhcnYAML
         );
+    }
+
+    public static LanguageBuilder getCurrentLanguageYAML() {
+        return currentLanguageYAML;
     }
 }

@@ -2,11 +2,11 @@ package me.yleoft.zHomes.commands;
 
 import com.zhomes.api.event.player.ExecuteHomesCommandEvent;
 import me.yleoft.zAPI.command.Command;
+import me.yleoft.zAPI.command.Parameter;
 import me.yleoft.zAPI.configuration.Path;
 import me.yleoft.zAPI.inventory.InventoryBuilder;
 import me.yleoft.zAPI.player.PlayerHandler;
 import me.yleoft.zAPI.utility.TextFormatter;
-import me.yleoft.zHomes.configuration.menus.menuhomesYAML;
 import me.yleoft.zHomes.hooks.HookRegistry;
 import me.yleoft.zHomes.utility.HomesUtils;
 import me.yleoft.zHomes.zHomes;
@@ -20,9 +20,38 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-import static java.util.Objects.requireNonNull;
-
 public class HomesCommand extends HomesUtils implements Command {
+
+    private final Parameter typeParameter = new Parameter() {
+        @Override
+        public @NotNull String name() {
+            return "type";
+        }
+
+        @Override
+        public @NotNull List<String> aliases() {
+            return List.of("t", "displaytype", "dt");
+        }
+
+        @Override
+        public int minArgs() {
+            return 1;
+        }
+
+        @Override
+        public int maxArgs() {
+            return 1;
+        }
+
+        @Override
+        public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String[] fullArgs, @NotNull String[] parameterArgs) {
+            return List.of("menu", "text");
+        }
+    };
+
+    public HomesCommand() {
+        addParameter(typeParameter);
+    }
 
     @Override
     public @NotNull String name() {
@@ -73,6 +102,11 @@ public class HomesCommand extends HomesUtils implements Command {
             return;
         }
 
+        String displaytype = zHomes.getConfigYAML().getHomesDisplayType();
+        String[] displayArgs = getParameter(sender, typeParameter);
+        if (displayArgs != null && displayArgs.length > 0) {
+            displaytype = displayArgs[0];
+        }
         if (args.length >= 1) {
             if(TextFormatter.isInteger(args[0])) {
                 int page = Integer.parseInt(args[0]);
@@ -80,7 +114,7 @@ public class HomesCommand extends HomesUtils implements Command {
                     message(player, zHomes.getLanguageYAML().getHomesInvalidPage());
                     return;
                 }
-                code(player, player, page);
+                code(player, player, displaytype, page);
                 return;
             }
             String target = args[0];
@@ -97,19 +131,22 @@ public class HomesCommand extends HomesUtils implements Command {
                             message(player, zHomes.getLanguageYAML().getHomesInvalidPage());
                             return;
                         }
-                        code(player, t, page);
+                        code(player, t, displaytype, page);
                         return;
                     }
                 }
-                code(player, t);
+                code(player, t, displaytype);
                 return;
             }
         }
-        code(player, player);
+        code(player, player, displaytype);
     }
 
     @Override
     public @NotNull List<String> tabComplete(@NotNull CommandSender sender, @NotNull String[] fullArgs, @NotNull String[] args) {
+        if(fullArgs.length >= 2 && fullArgs.length <= 3) {
+            return List.of("-type");
+        }
         List<String> completions = new ArrayList<>();
         if (sender.hasPermission(zHomes.getConfigYAML().getHomesOthersPermission())) {
             Bukkit.getOnlinePlayers().forEach(online -> completions.add(online.getName()));
@@ -119,7 +156,7 @@ public class HomesCommand extends HomesUtils implements Command {
 
     public void code(String type, Player p, OfflinePlayer t, int page) {
         if (HookRegistry.VAULT.canAfford(p, zHomes.getConfigYAML().getHomesCommandPermission(), zHomes.getConfigYAML().getHomesCommandCost())) {
-            switch (type) {
+            switch (type.toLowerCase()) {
                 case "menu":
                     try {
                         p.openInventory(getInventory(p, t, page));
@@ -142,8 +179,11 @@ public class HomesCommand extends HomesUtils implements Command {
             }
         }
     }
-    public void code(Player p, OfflinePlayer t, int page) {
-        code(zHomes.getConfigYAML().getHomesDisplayType(), p, t, page);
+    public void code(Player p, OfflinePlayer t, String displaytype, int page) {
+        code(displaytype, p, t, page);
+    }
+    public void code(Player p, OfflinePlayer t, String displaytype) {
+        code(displaytype, p, t, 1);
     }
     public void code(Player p, OfflinePlayer t) {
         code(zHomes.getConfigYAML().getHomesDisplayType(), p, t, 1);

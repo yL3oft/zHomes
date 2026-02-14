@@ -4,6 +4,7 @@ import com.zhomes.api.event.player.*;
 import me.yleoft.zAPI.libs.folialib.wrapper.task.WrappedTask;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.configuration.languages.LanguageBuilder;
+import me.yleoft.zHomes.storage.DatabaseEditor;
 import me.yleoft.zHomes.utility.HomesUtils;
 import me.yleoft.zHomes.utility.UpdateUtils;
 import me.yleoft.zHomes.zHomes;
@@ -50,6 +51,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
     @EventHandler
     public void onPlayerJoinEvent(PlayerJoinEvent e) {
         Player p = e.getPlayer();
+        DatabaseEditor.updatePlayerName(p);
         UUID uuid = p.getUniqueId();
         if(lastAnnounced.containsKey(uuid)) {
             long lastTime = lastAnnounced.get(uuid);

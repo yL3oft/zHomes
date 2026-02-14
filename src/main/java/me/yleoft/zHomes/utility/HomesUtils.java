@@ -214,12 +214,13 @@ public class HomesUtils extends DatabaseEditor {
         return null;
     }
 
-    public static String homes(OfflinePlayer p) {
+    public static String homes(OfflinePlayer p, boolean other) {
         StringBuilder returned = new StringBuilder();
         try {
             List<String> homes = getHomes(p);
             if(!homes.isEmpty()) {
                 for (String home : homes) {
+                    home = other ? zHomes.getLanguageYAML().getHomesHomeStringOthers(home, p.getName()) : zHomes.getLanguageYAML().getHomesHomeString(home);
                     if (returned.isEmpty()) {
                         returned = new StringBuilder(home);
                         continue;
@@ -234,6 +235,9 @@ public class HomesUtils extends DatabaseEditor {
         }
 
         return returned.toString();
+    }
+    public static String homes(OfflinePlayer p) {
+        return homes(p, false);
     }
 
     public static List<String> homesW(OfflinePlayer p) {

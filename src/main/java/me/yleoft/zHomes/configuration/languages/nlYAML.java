@@ -1,17 +1,85 @@
 package me.yleoft.zHomes.configuration.languages;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class nlYAML extends LanguageBuilder {
 
     public nlYAML() {
         super("nl");
     }
 
-    public void buildLang() {
-        header("""
+    @Override
+    protected Map<String, String> translations() {
+        Map<String, String> t = new HashMap<>();
+
+        // config comments
+        t.put(formPath("config", "comment", "header1"), "# |                                 Plugin-links & ondersteuning                                 | #");
+        t.put(formPath("config", "comment", "header2"), "# |   zHomes (c) yL3oft — uitgebracht onder de MIT-Licentie.                                     | #");
+        t.put(formPath("config", "comment", "database"), "Bewerk uw database-instellingen hieronder");
+        t.put(formPath("config", "comment", "database", "type"), """
+        Hier kunt u bepalen hoe de plugin-gegevens worden opgeslagen.
+        OPTIES:
+        - H2 (Voorkeur boven SQLite)
+        - SQLite
+        - MariaDB (Voorkeur boven MySQL)
+        - MySQL
+        STANDAARD: H2
+        """);
+        t.put(formPath("config", "comment", "pool-size"), "# WAARSCHUWING: VERANDER HIERONDER NIETS ALS U NIET WEET WAT U DOET");
+        t.put(formPath("config", "comment", "general", "language"), """
+        Hier kunt u de taal van de plugin instellen. Alle talen kunnen worden gevonden, bewerkt en aangemaakt in de talenmap.
+        BESCHIKBARE TALEN: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
+        """);
+        t.put(formPath("config", "comment", "general", "auto-update"), "Automatische updates voor de plugin in- of uitschakelen.");
+        t.put(formPath("config", "comment", "general", "announce-update"), "In- of uitschakelen of de plugin beschikbare updates in de console en aan spelers met de juiste toestemming aankondigt.");
+        t.put(formPath("config", "comment", "general", "metrics"), """
+        Metriekverzameling in- of uitschakelen om de plugin te verbeteren.
+        Alle verzamelde gegevens zijn anoniem en worden uitsluitend voor statistische doeleinden gebruikt.
+        !WAARSCHUWING: Vereist een serverherstart om van kracht te worden!
+        """);
+        t.put(formPath("config", "comment", "general", "debug-mode"), "Foutopsporingsmodus in- of uitschakelen voor meer gedetailleerde loguitvoer.");
+        t.put(formPath("config", "comment", "teleport-options"), "Instellingen met betrekking tot teleporteergedrag");
+        t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Veilig teleporteren in- of uitschakelen om te voorkomen dat spelers naar gevaarlijke locaties worden geteleporteerd.");
+        t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Dimensionaal teleporteren in- of uitschakelen, waardoor spelers tussen verschillende werelden of dimensies kunnen teleporteren.");
+        t.put(formPath("config", "comment", "teleport-options", "play-sound"), "Een geluidseffect afspelen wanneer een speler wordt geteleporteerd.");
+        t.put(formPath("config", "comment", "teleport-options", "restricted-worlds", "enable"), "De beperking van teleportatie naar bepaalde werelden in- of uitschakelen.");
+        t.put(formPath("config", "comment", "teleport-options", "restricted-worlds", "mode"), """
+        De modus voor beperkte werelden instellen.
+        OPTIES:
+        - blacklist: Spelers kunnen niet teleporteren naar de hieronder vermelde werelden.
+        - whitelist: Spelers kunnen alleen teleporteren naar de hieronder vermelde werelden.
+        """);
+        t.put(formPath("config", "comment", "teleport-options", "restricted-worlds", "worlds"), "Lijst van werelden die worden beïnvloed door de instelling voor beperkte werelden.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "enable"), "De opwarmperiode voor teleportatie in- of uitschakelen.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "time"), "De opwarmtijd in seconden vóór de teleportatie instellen.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "cancel-on-move"), "Teleportatie annuleren als de speler beweegt tijdens de opwarmperiode.");
+        t.put(formPath("config", "comment", "teleport-options", "warmup", "show-on-actionbar"), "Aftelling van de opwarmtijd weergeven in de actiebalk.");
+        t.put(formPath("config", "comment", "limits", "enabled"), "Home-limieten voor spelers in- of uitschakelen.");
+        t.put(formPath("config", "comment", "limits", "default"), "Standaard aantal homes dat een speler kan instellen.");
+        t.put(formPath("config", "comment", "limits", "examples"), "Limieten voorbeelden gebaseerd op spelergroepen.");
+        t.put(formPath("config", "comment", "commands"), "!WAARSCHUWING: Bijna alles hieronder vereist een herstart om te worden toegepast.");
+        t.put(formPath("config", "comment", "commands", "command-cost"), "command-cost vereist Vault om te werken.");
+        t.put(formPath("config", "comment", "commands", "homes", "types"), """
+        Bepalen hoe de homes aan de speler worden weergegeven.
+        OPTIES:
+        - text: Geeft homes weer in een eenvoudig lijstformaat.
+        - menu: Opent een grafisch menu om homes te selecteren.
+        """);
+        t.put(formPath("config", "comment", "permissions"), "Toestemmingsknooppunten gebruikt door de plugin");
+        t.put(formPath("config", "comment", "permissions", "bypass", "limit"), "Toestemming om home-limieten te omzeilen");
+        t.put(formPath("config", "comment", "permissions", "bypass", "dimensional-teleportation"), "Toestemming om dimensionale teleportatiebeperkingen te omzeilen");
+        t.put(formPath("config", "comment", "permissions", "bypass", "safe-teleportation"), "Toestemming om veilige teleportatie-controles te omzeilen");
+        t.put(formPath("config", "comment", "permissions", "bypass", "restricted-worlds"), "Toestemming om controles voor beperkte werelden te omzeilen");
+        t.put(formPath("config", "comment", "permissions", "bypass", "warmup"), "Toestemming om de opwarmtijd voor teleportatie te omzeilen");
+        t.put(formPath("config", "comment", "permissions", "bypass", "command-costs"), "Toestemming om opdrachten kosten te omzeilen");
+        t.put(formPath("config", "comment", "permissions", "bypass", "command-cooldowns"), "Toestemming om afkoeltijden van opdrachten te omzeilen");
+
+        t.put("header", """
                 ####################################################################################################
                 # +----------------------------------------------------------------------------------------------+ #
                 # |                                                                                              | #
-                # |                                  zHomes – Taalbestand                                        | #
+                # |                                    zHomes — Taalbestand                                      | #
                 # |                                                                                              | #
                 # |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
                 # |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
@@ -21,78 +89,85 @@ public class nlYAML extends LanguageBuilder {
                 ####################################################################################################
                 """);
 
-        commentSection("hooks", "Hier kun je hook-berichten beheren.");
-        addDefault(formPath("hooks", "griefprevention", "cant-set-homes"),
-                "%prefix% <red>Je kunt geen huizen instellen in dit gebied.");
+        // comments
+        t.put(formPath("comments", "hooks"),
+                "Hier kun je hook-berichten beheren.");
+        t.put(formPath("comments", "teleport-warmup"),
+                "Berichten gerelateerd aan teleport-opwarming.");
+        t.put(formPath("comments", "commands"),
+                "Berichten gerelateerd aan commando's.");
+        t.put(formPath("comments", "commands", "no-permission"),
+                "Hier vind je berichten die in meerdere commando's gebruikt kunnen worden.");
+        t.put(formPath("comments", "commands", "main"),
+                "Hieronder vind je berichten die specifiek zijn voor de commando's.");
 
-        addDefault(formPath("hooks", "worldguard", "cant-use-homes"),
-                "%prefix% <red>Je kunt hier geen huizen gebruiken.");
-        addDefault(formPath("hooks", "worldguard", "cant-set-homes"),
-                "%prefix% <red>Je kunt hier geen huis instellen.");
-
-        addDefault(formPath("hooks", "vault", "cant-afford-command"),
+        // hooks
+        t.put(formPath("hooks", "griefprevention", "cant-set-homes"),
+                "%prefix% <red>Je kunt geen homes instellen in dit gebied.");
+        t.put(formPath("hooks", "worldguard", "cant-use-homes"),
+                "%prefix% <red>Je kunt hier geen homes gebruiken.");
+        t.put(formPath("hooks", "worldguard", "cant-set-homes"),
+                "%prefix% <red>Je kunt hier geen home instellen.");
+        t.put(formPath("hooks", "vault", "cant-afford-command"),
                 "%prefix% <red>Je hebt <gold>$%cost% <red>nodig om dit commando uit te voeren.");
 
-        commentSection("teleport-warmup", "Berichten met betrekking tot de teleport-opwarmtijd.");
-        addDefault(formPath("teleport-warmup", "warmup"),
-                "%prefix% <green>Teleporteren over %time% seconden... Beweeg niet!");
-        addDefault(formPath("teleport-warmup", "warmup-actionbar"),
-                "<green>Teleporteren over %time% seconden...");
-        addDefault(formPath("teleport-warmup", "cancelled"),
-                "%prefix% <red>Je hebt bewogen! Teleportatie geannuleerd.");
-        addDefault(formPath("teleport-warmup", "cancelled-actionbar"),
-                "<red>Je hebt bewogen! Teleportatie geannuleerd.");
+        // teleport-warmup
+        t.put(formPath("teleport-warmup", "warmup"),
+                "%prefix% <green>Teleporteren in %time% seconden... Niet bewegen!");
+        t.put(formPath("teleport-warmup", "warmup-actionbar"),
+                "<green>Teleporteren in %time% seconden...");
+        t.put(formPath("teleport-warmup", "cancelled"),
+                "%prefix% <red>Je bewoog! Teleportatie geannuleerd.");
+        t.put(formPath("teleport-warmup", "cancelled-actionbar"),
+                "<red>Je bewoog! Teleportatie geannuleerd.");
 
-        commentSection("commands", "Berichten met betrekking tot commando's.");
-        comment(false, "Hier vind je berichten die in meerdere commando's kunnen worden gebruikt.");
-        addDefault(formPath("commands", "no-permission"),
+        // commands - general
+        t.put(formPath("commands", "no-permission"),
                 "%prefix% <red>Je hebt geen toestemming om dit commando uit te voeren.");
-        addDefault(formPath("commands", "only-players"),
+        t.put(formPath("commands", "only-players"),
                 "%prefix% <red>Alleen spelers kunnen dit commando uitvoeren.");
-        addDefault(formPath("commands", "in-cooldown"),
-                "%prefix% <red>Je moet %time% seconden wachten voordat je dit commando opnieuw kunt gebruiken.");
-        addDefault(formPath("commands", "home-already-exist"),
-                "%prefix% <red>Je hebt al een huis met deze naam.");
-        addDefault(formPath("commands", "home-doesnt-exist"),
-                "%prefix% <red>Je hebt geen huis met deze naam.");
-        addDefault(formPath("commands", "home-doesnt-exist-others"),
-                "%prefix% <yellow>%player% <red>heeft geen huis met deze naam.");
-        addDefault(formPath("commands", "cant-use-2dot"),
+        t.put(formPath("commands", "in-cooldown"),
+                "%prefix% <red>Je moet %time% seconden wachten voordat je dit commando opnieuw gebruikt.");
+        t.put(formPath("commands", "home-already-exist"),
+                "%prefix% <red>Je hebt al een home met deze naam.");
+        t.put(formPath("commands", "home-doesnt-exist"),
+                "%prefix% <red>Je hebt geen home met deze naam.");
+        t.put(formPath("commands", "home-doesnt-exist-others"),
+                "%prefix% <yellow>%player% <red>heeft geen home met deze naam.");
+        t.put(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>Je kunt <yellow>':' <red>niet gebruiken in dit commando.");
-        addDefault(formPath("commands", "cant-find-player"),
-                "%prefix% <red>Deze speler is niet gevonden.");
-        addDefault(formPath("commands", "unable-to-find-safe-location"),
-                "%prefix% <red>Kan geen veilige locatie vinden om je naartoe te teleporteren.");
-        addDefault(formPath("commands", "world-restricted-sethome"),
-                "%prefix% <red>Je kunt geen huizen instellen in deze wereld.");
-        addDefault(formPath("commands", "world-restricted-home"),
-                "%prefix% <red>Je kunt niet teleporteren naar huizen in die wereld.");
-
-        commentSection(formPath("commands", "main"), "Hieronder vind je specifieke berichten voor de commando's.");
+        t.put(formPath("commands", "cant-find-player"),
+                "%prefix% <red>Deze speler werd niet gevonden.");
+        t.put(formPath("commands", "unable-to-find-safe-location"),
+                "%prefix% <red>Er kon geen veilige locatie worden gevonden om je naartoe te teleporteren.");
+        t.put(formPath("commands", "world-restricted-sethome"),
+                "%prefix% <red>Je kunt geen homes instellen in deze wereld.");
+        t.put(formPath("commands", "world-restricted-home"),
+                "%prefix% <red>Je kunt niet teleporteren naar homes in die wereld.");
 
         // commands.main.help
-        addDefault(formPath("commands", "main", "help", "help-perm"), """
+        t.put(formPath("commands", "main", "help", "help-perm"), """
                 %prefix% <aqua>Gebruik van <yellow>/%command%<aqua>:
-                <red>-> <yellow>/%command% <green>help <gray>Toont dit exacte helpbericht
+                <red>-> <yellow>/%command% <green>help <gray>Toont dit hulpbericht
                 <red>-> <yellow>/%command% <green>info <gray>Toont plugin-informatie
                 <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
                 <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
-                <red>-> <yellow>/%command% <green>nearhomes <gold>(<straal>) <gray>Lijst huizen bij je in de buurt binnen een bepaalde straal
-                <red>-> <yellow>/%command% <green>parse <gold>(Speler) (Tekst) <gray>Parseert een tekst met placeholders voor een specifieke speler
-                <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Converteer gegevens van de ene plaats naar de andere
-                <red>-> <yellow>/%command% <green>export <gray>Exporteert alle huizen naar één bestand
-                <red>-> <yellow>/%command% <green>import (<bestand>) <gray>Importeert huizen uit één bestand
+                <red>-> <yellow>/%command% <green>nearhomes <gold>(Straal) <gray>Lijst homes in de buurt binnen een straal
+                <red>-> <yellow>/%command% <green>parse <gold>(Speler) (Tekst) <gray>Verwerkt een tekst met placeholders voor een specifieke speler
+                <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Converteert gegevens van de ene naar de andere plek
+                <red>-> <yellow>/%command% <green>export <gray>Exporteert alle homes naar één bestand
+                <red>-> <yellow>/%command% <green>import (<file>) <gray>Importeert homes vanuit één bestand
                 """);
-        addDefault(formPath("commands", "main", "help", "help-noperm"), """
+        t.put(formPath("commands", "main", "help", "help-noperm"), """
                 %prefix% <aqua>Gebruik van <yellow>/%command%<aqua>:
-                <red>-> <yellow>/%command% <green>(help|?) <gray>Toont dit exacte helpbericht
-                <red>-> <yellow>/%command% <green>(version|ver) <gray>Toont plugin-versie
+                <red>-> <yellow>/%command% <green>(help|?) <gray>Toont dit hulpbericht
+                <red>-> <yellow>/%command% <green>(version|ver) <gray>Toont de plugin-versie
                 """);
 
         // commands.main.info
-        addDefault(formPath("commands", "main", "info", "output"), """
-                %prefix% <aqua>Draait <dark_aqua>%name% v%version% <aqua>door <dark_aqua>%author%<aqua>:
-                %prefix% <aqua>- Server Info:
+        t.put(formPath("commands", "main", "info", "output"), """
+                %prefix% <aqua>Actief <dark_aqua>%name% v%version% <aqua>door <dark_aqua>%author%<aqua>:
+                %prefix% <aqua>- Server-info:
                 %prefix% <dark_aqua>   Software: <white>%server.software%
                 %prefix% <dark_aqua>   Versie: <white>%server.version%
                 %prefix% <dark_aqua>   Update vereist: <white>%requpdate%
@@ -100,57 +175,63 @@ public class nlYAML extends LanguageBuilder {
                 %prefix% <aqua>- Opslag:
                 %prefix% <dark_aqua>   Type: <white>%storage.type%
                 %prefix% <dark_aqua>   Gebruikers: <white>%storage.users%
-                %prefix% <dark_aqua>   Huizen: <white>%storage.homes%
+                %prefix% <dark_aqua>   Homes: <white>%storage.homes%
                 %prefix% <aqua>- Hooks:
                 %prefix% <dark_aqua>   PlaceholderAPI: <white>%use.placeholderapi%
+                %prefix% <dark_aqua>   MiniPlaceholders: <white>%use.miniplaceholders%
                 %prefix% <dark_aqua>   GriefPrevention: <white>%use.griefprevention%
                 %prefix% <dark_aqua>   WorldGuard: <white>%use.worldguard%
                 %prefix% <dark_aqua>   Vault: <white>%use.vault%
                 """);
-        addDefault(formPath("commands", "main", "info", "requpdate-yes"),
+        t.put(formPath("commands", "main", "info", "requpdate-yes"),
                 "<red>Ja <gray>(Gebruik <yellow>/%command% version <gray>voor meer informatie)");
-        addDefault(formPath("commands", "main", "info", "requpdate-no"),
+        t.put(formPath("commands", "main", "info", "requpdate-no"),
                 "<green>Nee");
 
         // commands.main.version
-        addDefault(formPath("commands", "main", "version", "output"),
+        t.put(formPath("commands", "main", "version", "output"),
                 "%prefix% <aqua>Huidige versie: <green>%version%");
-        addDefault(formPath("commands", "main", "version", "update", "output"),
+        t.put(formPath("commands", "main", "version", "update", "output"),
                 "%prefix% <green>zHomes bijgewerkt naar de nieuwste versie <yellow>(%update%)<green>, herstart je server om de wijzigingen toe te passen.");
-        addDefault(formPath("commands", "main", "version", "update", "no-update"),
+        t.put(formPath("commands", "main", "version", "update", "no-update"),
                 "%prefix% <green>Je gebruikt al de nieuwste versie van zHomes.");
 
         // commands.main.reload
-        addDefault(formPath("commands", "main", "reload", "usage"), """
+        t.put(formPath("commands", "main", "reload", "usage"), """
                 %prefix% <aqua>Gebruik van <yellow>/%command% <green>(reload|rl)<aqua>:
                 <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
                 """);
-        addDefault(formPath("commands", "main", "reload", "output"),
+        t.put(formPath("commands", "main", "reload", "output"),
                 "%prefix% <green>Plugin herladen in <aqua>%time%ms<green>.");
-        addDefault(formPath("commands", "main", "reload", "commands", "output"),
+        t.put(formPath("commands", "main", "reload", "commands", "output"),
                 "%prefix% <green>Alle plugin-commando's herladen in <aqua>%time%ms<green>.");
-        addDefault(formPath("commands", "main", "reload", "config", "output"),
+        t.put(formPath("commands", "main", "reload", "config", "output"),
                 "%prefix% <green>Plugin-configuratiebestand herladen in <aqua>%time%ms<green>.");
-        addDefault(formPath("commands", "main", "reload", "languages", "output"), "%prefix% <green>Plugin-talen herladen in <aqua>%time%ms<green>.");
+        t.put(formPath("commands", "main", "reload", "languages", "output"),
+                "%prefix% <green>Plugin-talen herladen in <aqua>%time%ms<green>.");
 
         // commands.main.nearhomes
-        addDefault(formPath("commands", "main", "nearhomes", "usage"),
+        t.put(formPath("commands", "main", "nearhomes", "usage"),
                 "<red>-> <yellow>/%command% nearhomes <green>[<Straal>]");
-        addDefault(formPath("commands", "main", "nearhomes", "output"),
-                "%prefix% <gray>Huizen bij je in de buurt binnen <yellow>%radius% <gray>blokken: <white>%homes%");
-        addDefault(formPath("commands", "main", "nearhomes", "output-not-found"),
-                "%prefix% <red>Geen huizen gevonden binnen <yellow>%radius% <red>blokken.");
-        addDefault(formPath("commands", "main", "nearhomes", "home-string"),
-                "<yellow>%home% <gray>(%owner%)");
+        t.put(formPath("commands", "main", "nearhomes", "output"),
+                "%prefix% <gray>Homes bij jou in de buurt binnen <yellow>%radius% <gray>blokken: <white>%homes%");
+        t.put(formPath("commands", "main", "nearhomes", "output-not-found"),
+                "%prefix% <red>Geen homes gevonden binnen <yellow>%radius% <red>blokken.");
+        t.put(formPath("commands", "main", "nearhomes", "home-string"),
+                "<yellow><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %owner%:%home%'>%home%</click></hover> <gray><hover:show_text:'<green>Klik om op speler te filteren.'><click:run_command:'/%maincommand% nearhomes %radius% -user %owner%'>(%owner%)</click></hover>");
+        t.put(formPath("commands", "main", "nearhomes", "filtered-player", "output"),
+                "%prefix% <gray>Homes van <yellow>%player% <gray>bij jou in de buurt binnen <yellow>%radius% <gray>blokken: <white>%homes%");
+        t.put(formPath("commands", "main", "nearhomes", "filtered-player", "home-string"),
+                "<yellow><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>");
 
         // commands.main.parse
-        addDefault(formPath("commands", "main", "parse", "usage"),
+        t.put(formPath("commands", "main", "parse", "usage"),
                 "<red>-> <yellow>/%command% parse <gold>(Speler) (Tekst)");
-        addDefault(formPath("commands", "main", "parse", "output"),
-                "%prefix% <gray>Geparseerde tekst: <white>%parsed%");
+        t.put(formPath("commands", "main", "parse", "output"),
+                "%prefix% <gray>Verwerkte tekst: <white>%parsed%");
 
         // commands.main.converter
-        addDefault(formPath("commands", "main", "converter", "usage"), """
+        t.put(formPath("commands", "main", "converter", "usage"), """
                 %prefix% <aqua>Gebruik van <yellow>/%command% <green>converter<aqua>:
                 <red>-> <yellow>/%command% <green>converter sqlitetoh2
                 <red>-> <yellow>/%command% <green>converter sqlitetomysql
@@ -168,68 +249,66 @@ public class nlYAML extends LanguageBuilder {
                 <red>-> <yellow>/%command% <green>converter xhomes
                 <red>-> <yellow>/%command% <green>converter zhome
                 """);
-        addDefault(formPath("commands", "main", "converter", "output"),
+        t.put(formPath("commands", "main", "converter", "output"),
                 "%prefix% <green>Alle gegevens geconverteerd!");
-        addDefault(formPath("commands", "main", "converter", "error"),
-                "%prefix% <red>Er ging iets mis bij het converteren van de gegevens, controleer je serverconsole.");
+        t.put(formPath("commands", "main", "converter", "error"),
+                "%prefix% <red>Er is iets misgegaan bij het converteren, controleer je serverconsole.");
 
         // commands.main.export
-        addDefault(formPath("commands", "main", "export", "output"),
-                "%prefix% <green>Alle huizen geëxporteerd naar <yellow>%file%<green>!");
-        addDefault(formPath("commands", "main", "export", "error"),
-                "%prefix% <red>Er ging iets mis bij het exporteren van de gegevens, controleer je serverconsole.");
+        t.put(formPath("commands", "main", "export", "output"),
+                "%prefix% <green>Alle homes geëxporteerd naar <yellow>%file%<green>!");
+        t.put(formPath("commands", "main", "export", "error"),
+                "%prefix% <red>Er is iets misgegaan bij het exporteren, controleer je serverconsole.");
 
         // commands.main.import
-        addDefault(formPath("commands", "main", "import", "usage"),
+        t.put(formPath("commands", "main", "import", "usage"),
                 "<red>-> <yellow>/%command% import <green>(<bestand>)");
-        addDefault(formPath("commands", "main", "import", "output"),
-                "%prefix% <green>Alle huizen geïmporteerd uit <yellow>%file%<green>!");
-        addDefault(formPath("commands", "main", "import", "file-not-found"),
-                "%prefix% <red>Het bestand <yellow>%file% <red>is niet gevonden.");
-        addDefault(formPath("commands", "main", "import", "error"),
-                "%prefix% <red>Er ging iets mis bij het importeren van de gegevens, controleer je serverconsole.");
+        t.put(formPath("commands", "main", "import", "output"),
+                "%prefix% <green>Alle homes geïmporteerd vanuit <yellow>%file%<green>!");
+        t.put(formPath("commands", "main", "import", "file-not-found"),
+                "%prefix% <red>Het bestand <yellow>%file% <red>werd niet gevonden.");
+        t.put(formPath("commands", "main", "import", "error"),
+                "%prefix% <red>Er is iets misgegaan bij het importeren, controleer je serverconsole.");
 
         // commands.sethome
-        addDefault(formPath("commands", "sethome", "usage"),
-                "<red>-> <yellow>/%command% <green>(Huis)");
-        addDefault(formPath("commands", "sethome", "output"),
-                "%prefix% <green>Huis <yellow>%home% <green>ingesteld op je positie.");
-        addDefault(formPath("commands", "sethome", "limit-reached"),
-                "<red>Je kunt geen huizen meer instellen omdat je je limiet hebt bereikt <yellow>(%limit% huizen)<red>!");
+        t.put(formPath("commands", "sethome", "output"),
+                "%prefix% <green>Home <yellow>%home% <green>ingesteld op je positie.");
+        t.put(formPath("commands", "sethome", "limit-reached"),
+                "<red>Je kunt geen homes meer instellen omdat je je limiet hebt bereikt <yellow>(%limit% homes)<red>!");
 
         // commands.delhome
-        addDefault(formPath("commands", "delhome", "usage"),
-                "<red>-> <yellow>/%command% <green>(Huis)");
-        addDefault(formPath("commands", "delhome", "output"),
-                "%prefix% <red>Huis <yellow>%home% <red>verwijderd.");
+        t.put(formPath("commands", "delhome", "output"),
+                "%prefix% <red>Home <yellow>%home% <red>verwijderd.");
 
         // commands.home
-        addDefault(formPath("commands", "home", "usage"),
-                "<red>-> <yellow>/%command% <green>(Huis)");
-        addDefault(formPath("commands", "home", "output"),
+        t.put(formPath("commands", "home", "output"),
                 "%prefix% <green>Geteleporteerd naar <yellow>%home%<green>...");
-        addDefault(formPath("commands", "home", "cant-dimensional-teleport"),
+        t.put(formPath("commands", "home", "cant-dimensional-teleport"),
                 "<red>Je teleportatie is geannuleerd! Dimensionale teleportatie is uitgeschakeld.");
 
         // commands.home.rename
-        addDefault(formPath("commands", "home", "rename", "usage"),
-                "<red>-> <yellow>/%command% <green>rename (Huis) (NieuweNaam)");
-        addDefault(formPath("commands", "home", "rename", "output"),
-                "%prefix% <green>Huis <yellow>%home% <green>hernoemd naar <yellow>%newname%<green>.");
-        addDefault(formPath("commands", "home", "rename", "same-name"),
-                "%prefix% <red>Je kunt een huis niet hernoemen naar dezelfde naam.");
+        t.put(formPath("commands", "home", "rename", "usage"),
+                "<red>-> <yellow>/%command% <green>rename (Home) (NieuweNaam)");
+        t.put(formPath("commands", "home", "rename", "output"),
+                "%prefix% <green>Home <yellow>%home% <green>hernoemd naar <yellow>%newname%<green>.");
+        t.put(formPath("commands", "home", "rename", "same-name"),
+                "%prefix% <red>Je kunt een home niet hernoemen naar dezelfde naam.");
 
         // commands.homes
-        addDefault(formPath("commands", "homes", "output"),
-                "%prefix% <gray>Je huizen (%amount%): <white>%homes%");
-        addDefault(formPath("commands", "homes", "invalid-page"),
-                "%prefix% <red>Ongeldig paginanummer! Gebruik een nummer hoger dan 0.");
+        t.put(formPath("commands", "homes", "output"),
+                "%prefix% <gray>Jouw homes (%amount%): <white>%homes%");
+        t.put(formPath("commands", "homes", "home-string"),
+                "<reset><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %home%'>%home%</click></hover>");
+        t.put(formPath("commands", "homes", "invalid-page"),
+                "%prefix% <red>Ongeldig paginanummer! Gebruik een getal hoger dan 0.");
 
         // commands.homes.others
-        addDefault(formPath("commands", "homes", "others", "output"),
-                "%prefix% <gray>Huizen van <yellow>%player% <gray>(%amount%): <white>%homes%");
+        t.put(formPath("commands", "homes", "others", "output"),
+                "%prefix% <gray>Homes van <yellow>%player% <gray>(%amount%): <white>%homes%");
+        t.put(formPath("commands", "homes", "others", "home-string"),
+                "<reset><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>");
 
-        build();
+        return t;
     }
 
 }

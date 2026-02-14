@@ -1,0 +1,24 @@
+name: zHomes
+version: ${version}
+description: ${description}
+main: me.yleoft.zHomes.zHomes
+author: yLeoft
+website: ${url}
+api-version: "1.19"
+dependencies:
+  server:
+    GriefPrevention:
+      load: BEFORE
+      required: false
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+    MiniPlaceholders:
+      load: BEFORE
+      required: false
+    WorldGuard:
+      load: BEFORE
+      required: false
+    Vault:
+      load: BEFORE
+      required: false
