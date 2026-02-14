@@ -31,7 +31,6 @@ public class nlYAML extends LanguageBuilder {
         Hier kunt u de taal van de plugin instellen. Alle talen kunnen worden gevonden, bewerkt en aangemaakt in de talenmap.
         BESCHIKBARE TALEN: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
         """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "Automatische updates voor de plugin in- of uitschakelen.");
         t.put(formPath("config", "comment", "general", "announce-update"), "In- of uitschakelen of de plugin beschikbare updates in de console en aan spelers met de juiste toestemming aankondigt.");
         t.put(formPath("config", "comment", "general", "metrics"), """
         Metriekverzameling in- of uitschakelen om de plugin te verbeteren.

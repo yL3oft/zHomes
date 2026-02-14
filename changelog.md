@@ -12,6 +12,7 @@
 - `config.yml` comments are now translated with the language file (If it's a custom language file, it will fallback to english)
 - Changed the way languages are loaded.
 - Updated the database to have 1 extra column: `NAME`, this column is used to store the name of the player, it helps with the offline player getter, allowing you to get the name of the player even if they are offline, and also helps with the performance of the plugin, as it reduces the number of queries to the database when getting the name of the player.
+- Auto update is no longer supported, due to the plugin now being a paper plugin.
 
 ## Language Changes
 - Added new 2 options for `/homes`:

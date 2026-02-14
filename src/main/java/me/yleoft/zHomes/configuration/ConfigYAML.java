@@ -8,6 +8,8 @@ import java.util.List;
 
 public class ConfigYAML extends YAMLBuilder {
 
+    private static final String currentVersion = "1.0.1";
+
     public ConfigYAML() {
         super(new File(zHomes.getInstance().getDataFolder(), "config.yml"));
         migrateLegacyColors(true);
@@ -41,6 +43,12 @@ public class ConfigYAML extends YAMLBuilder {
                 .replace("%h1", zHomes.getLanguageYAML().getConfigCommentHeader1())
                 .replace("%h2", zHomes.getLanguageYAML().getConfigCommentHeader2()));
 
+        if (versionOlder(currentVersion)) {
+            voidPath(formPath("general", "auto-update"));
+            voidPath(formPath("commands", "main", "version", "update"));
+            updateVersion(currentVersion);
+        }
+
         addDefault("prefix", "<dark_gray>[<red>zHomes<dark_gray>]");
 
         // -------------------------
@@ -65,8 +73,6 @@ public class ConfigYAML extends YAMLBuilder {
         // -------------------------
         comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralLanguage());
         addDefault(formPath("general", "language"), "en");
-        comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralAutoUpdate());
-        addDefault(formPath("general", "auto-update"), false);
         comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralAnnounceUpdate());
         addDefault(formPath("general", "announce-update"), true);
         comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralMetrics());
@@ -124,7 +130,6 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("commands", "main", "help", "permission"), "zhomes.command.main.help");
         addDefault(formPath("commands", "main", "info", "permission"), "zhomes.command.main.info");
         addDefault(formPath("commands", "main", "version", "permission"), "zhomes.command.main.version");
-        addDefault(formPath("commands", "main", "version", "update", "permission"), "zhomes.command.main.version.update");
         addDefault(formPath("commands", "main", "reload", "permission"), "zhomes.command.main.reload");
         addDefault(formPath("commands", "main", "nearhomes", "permission"), "zhomes.command.main.nearhomes");
         addDefault(formPath("commands", "main", "nearhomes", "limit"), 500.0);
@@ -193,6 +198,8 @@ public class ConfigYAML extends YAMLBuilder {
         comment(false, zHomes.getLanguageYAML().getConfigCommentPermissionsBypassCommandCooldowns());
         addDefault(formPath("permissions", "bypass", "command-cooldown"), "%command_permission%.bypass.command-cooldown");
 
+        footer("!!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!");
+
         build();
     }
 
@@ -239,9 +246,6 @@ public class ConfigYAML extends YAMLBuilder {
     //<editor-fold desc="General Settings">
     public String getLanguageCode() {
         return getString(formPath("general", "language"));
-    }
-    public boolean isAutoUpdateEnabled() {
-        return getBoolean(formPath("general", "auto-update"));
     }
     public boolean isAnnounceUpdateEnabled() {
         return getBoolean(formPath("general", "announce-update"));

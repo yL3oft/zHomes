@@ -31,7 +31,6 @@ public class ruYAML extends LanguageBuilder {
         Здесь вы можете задать язык плагина. Все языки можно найти, редактировать и создавать в директории языков.
         ДОСТУПНЫЕ ЯЗЫКИ: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
         """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "Включить или отключить автоматические обновления плагина.");
         t.put(formPath("config", "comment", "general", "announce-update"), "Включить или отключить объявление доступных обновлений в консоли и игрокам с соответствующим разрешением.");
         t.put(formPath("config", "comment", "general", "metrics"), """
         Включить или отключить сбор метрик для улучшения плагина.

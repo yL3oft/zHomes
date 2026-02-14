@@ -30,27 +30,15 @@ public class UpdateUtils {
                     %bc| %wc> A new version is available!                           %bc|
                     %bc| %wc> Your Version: <red>%v                          %bc|
                     %bc| %wc> Latest Version: <green>%nv                                 %bc|
+                    %bc| %wc> Update your plugin in:                                %bc|
+                    %bc| %wc> <aqua>%site     %bc|
                     """
                     .replace("%v", plugin.getPluginMeta().getVersion().contains("-SNAPSHOT") ?
                             plugin.getPluginMeta().getVersion() : plugin.getPluginMeta().getVersion()+"         ")
                     .replace("%nv", version)
-                    .replace("%bc", zHomes.bc).replace("%wc", zHomes.wc));
-            if(plugin.getConfig().getBoolean("auto-update")) {
-                plugin.getLoggerInstance().info("%bc| %wc> Auto update is enabled.. Downloading latest version.. %bc|"
-                        .replace("%bc", zHomes.bc).replace("%wc", zHomes.wc));
-                checker.update();
-                plugin.getLoggerInstance().info("""
-                        %bc| %wc> Latest version downloaded!                            %bc|
-                        %bc| %wc> The new version will be applied next restart!         %bc|
-                        """
-                        .replace("%bc", zHomes.bc).replace("%wc", zHomes.wc));
-            }else {
-                plugin.getLoggerInstance().info("""
-                        %bc| %wc> Update your plugin in:                                %bc|
-                        %bc| %wc> <aqua>%site     %bc|
-                        """
-                        .replace("%bc", zHomes.bc).replace("%wc", zHomes.wc).replace("%site", site));
-            }
+                    .replace("%bc", zHomes.bc)
+                    .replace("%wc", zHomes.wc)
+                    .replace("%site", site));
         }
     }
 

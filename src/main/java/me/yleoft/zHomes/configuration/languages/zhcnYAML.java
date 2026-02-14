@@ -31,7 +31,6 @@ public class zhcnYAML extends LanguageBuilder {
         在这里您可以定义插件的语言。所有语言均可在语言目录中找到、编辑和创建。
         当前可用语言：[de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
         """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "启用或禁用插件的自动更新。");
         t.put(formPath("config", "comment", "general", "announce-update"), "切换是否让插件在控制台和拥有相应权限的玩家中公告可用更新。");
         t.put(formPath("config", "comment", "general", "metrics"), """
         启用或禁用数据统计收集以帮助改进插件。

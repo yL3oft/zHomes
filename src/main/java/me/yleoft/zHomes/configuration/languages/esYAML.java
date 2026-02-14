@@ -31,7 +31,6 @@ public class esYAML extends LanguageBuilder {
         Aquí puedes definir el idioma del plugin. Todos los idiomas se pueden encontrar, editar y crear en el directorio de idiomas.
         IDIOMAS DISPONIBLES: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
         """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "Activar o desactivar las actualizaciones automáticas del plugin.");
         t.put(formPath("config", "comment", "general", "announce-update"), "Activar o desactivar si el plugin debe anunciar actualizaciones disponibles en la consola y a jugadores con el permiso adecuado.");
         t.put(formPath("config", "comment", "general", "metrics"), """
         Activar o desactivar la recopilación de métricas para ayudar a mejorar el plugin.

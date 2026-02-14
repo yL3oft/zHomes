@@ -20,6 +20,8 @@ import java.util.Map;
 
 public class LanguageBuilder extends YAMLBuilder {
 
+    private static final String currentVersion = "1.0.1";
+
     private final static File languageFolder = new File(zHomes.getInstance().getDataFolder(), "languages");
 
     protected Map<String, String> translations() {
@@ -41,7 +43,6 @@ public class LanguageBuilder extends YAMLBuilder {
                 Here you can define the language of the plugin, all languages can be found, edited and created on languages' directory.
                 CURRENTLY AVAILABLE LANGUAGES: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
                 """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "Enable or disable automatic updates for the plugin.");
         t.put(formPath("config", "comment", "general", "announce-update"), "Toggle whether the plugin should announce available updates in the console and to players with the appropriate permission.");
         t.put(formPath("config", "comment", "general", "metrics"), """
                 Enable or disable metrics collection to help improve the plugin.
@@ -108,6 +109,11 @@ public class LanguageBuilder extends YAMLBuilder {
                 ####################################################################################################
                 """));
 
+        if(versionOlder(currentVersion)) {
+            voidPath(formPath("commands", "main", "version", "update"));
+            updateVersion(currentVersion);
+        }
+
         commentSection("hooks", t(formPath("comments", "hooks"), "Here you can manage hook messages."));
         addDefault(formPath("hooks", "griefprevention", "cant-set-homes"), t(formPath("hooks", "griefprevention", "cant-set-homes"),
                 "%prefix% <red>You can't set homes in this area."));
@@ -163,7 +169,7 @@ public class LanguageBuilder extends YAMLBuilder {
                 <red>-> <yellow>/%command% <green>help <gray>Shows this exact help message
                 <red>-> <yellow>/%command% <green>info <gray>Shows plugin information
                 <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
-                <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
+                <red>-> <yellow>/%command% <green>(version|ver)
                 <red>-> <yellow>/%command% <green>nearhomes <gold>(<radius>) <gray>List homes near you within a certain radius
                 <red>-> <yellow>/%command% <green>parse <gold>(Player) (String) <gray>Parses a string with placeholders for a specific player
                 <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Convert data from one place to another
@@ -201,12 +207,10 @@ public class LanguageBuilder extends YAMLBuilder {
                 "<green>No"));
 
         // commands.main.version
-        addDefault(formPath("commands", "main", "version", "output"), t(formPath("commands", "main", "version", "output"),
-                "%prefix% <aqua>Current version: <green>%version%"));
-        addDefault(formPath("commands", "main", "version", "update", "output"), t(formPath("commands", "main", "version", "update", "output"),
-                "%prefix% <green>zHomes updated to the latest version <yellow>(%update%)<green>, please restart your server to apply the changes."));
-        addDefault(formPath("commands", "main", "version", "update", "no-update"), t(formPath("commands", "main", "version", "update", "no-update"),
-                "%prefix% <green>You are already using the latest version of zHomes."));
+        addDefault(formPath("commands", "main", "version", "output"), t(formPath("commands", "main", "version", "output"), """
+                %prefix% <aqua>Current version: <green>%version%
+                %prefix% <green>You are already using the latest version of zHomes.
+                """));
 
         // commands.main.reload
         addDefault(formPath("commands", "main", "reload", "usage"), t(formPath("commands", "main", "reload", "usage"), """
@@ -323,6 +327,8 @@ public class LanguageBuilder extends YAMLBuilder {
                 "%prefix% <yellow>%player%'s <gray>homes (%amount%): <white>%homes%"));
         addDefault(formPath("commands", "homes", "others", "home-string"), t(formPath("commands", "homes", "others", "home-string"), "<reset><hover:show_text:'<green>Click to teleport.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"));
 
+        footer("!!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!");
+
         build();
     }
 
@@ -344,9 +350,6 @@ public class LanguageBuilder extends YAMLBuilder {
     }
     public String getConfigCommentGeneralLanguage() {
         return translations().get(formPath("config", "comment", "general", "language"));
-    }
-    public String getConfigCommentGeneralAutoUpdate() {
-        return translations().get(formPath("config", "comment", "general", "auto-update"));
     }
     public String getConfigCommentGeneralAnnounceUpdate() {
         return translations().get(formPath("config", "comment", "general", "announce-update"));
@@ -537,13 +540,6 @@ public class LanguageBuilder extends YAMLBuilder {
     public String getMainVersionOutput() {
         return getString(zHomes.getConfigYAML().getMainCommand(), formPath("commands", "main", "version", "output"))
                 .replace("%version%", zHomes.getInstance().getPluginMeta().getVersion());
-    }
-    public String getMainVersionUpdateOutput() {
-        return getString(zHomes.getConfigYAML().getMainCommand(), formPath("commands", "main", "version", "update", "output"))
-                .replace("%update%", zHomes.updateUtils.updateVersion);
-    }
-    public String getMainVersionNoUpdate() {
-        return getString(zHomes.getConfigYAML().getMainCommand(), formPath("commands", "main", "version", "update", "no-update"));
     }
     public String getMainReloadUsage() {
         return getString(zHomes.getConfigYAML().getMainCommand(), formPath("commands", "main", "reload", "usage"));

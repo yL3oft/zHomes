@@ -31,7 +31,6 @@ public class ptbrYAML extends LanguageBuilder {
         Aqui você pode definir o idioma do plugin. Todos os idiomas podem ser encontrados, editados e criados no diretório de idiomas.
         IDIOMAS DISPONÍVEIS: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
         """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "Ativar ou desativar atualizações automáticas do plugin.");
         t.put(formPath("config", "comment", "general", "announce-update"), "Alternar se o plugin deve anunciar atualizações disponíveis no console e para jogadores com a permissão adequada.");
         t.put(formPath("config", "comment", "general", "metrics"), """
         Ativar ou desativar a coleta de métricas para ajudar a melhorar o plugin.

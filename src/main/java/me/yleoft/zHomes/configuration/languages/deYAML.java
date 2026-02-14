@@ -31,7 +31,6 @@ public class deYAML extends LanguageBuilder {
         Hier kannst du die Sprache des Plugins festlegen. Alle Sprachen können im Sprachen-Verzeichnis gefunden, bearbeitet und erstellt werden.
         VERFÜGBARE SPRACHEN: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
         """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "Automatische Updates für das Plugin aktivieren oder deaktivieren.");
         t.put(formPath("config", "comment", "general", "announce-update"), "Aktivieren oder deaktivieren, ob das Plugin verfügbare Updates in der Konsole und für Spieler mit der entsprechenden Berechtigung ankündigt.");
         t.put(formPath("config", "comment", "general", "metrics"), """
         Metriken-Erfassung aktivieren oder deaktivieren, um das Plugin zu verbessern.

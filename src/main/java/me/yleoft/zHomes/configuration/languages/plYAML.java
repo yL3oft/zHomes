@@ -31,7 +31,6 @@ public class plYAML extends LanguageBuilder {
         Tutaj możesz ustawić język wtyczki. Wszystkie języki można znaleźć, edytować i tworzyć w katalogu języków.
         DOSTĘPNE JĘZYKI: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
         """);
-        t.put(formPath("config", "comment", "general", "auto-update"), "Włącz lub wyłącz automatyczne aktualizacje wtyczki.");
         t.put(formPath("config", "comment", "general", "announce-update"), "Przełącz, czy wtyczka powinna ogłaszać dostępne aktualizacje w konsoli i graczom z odpowiednim uprawnieniem.");
         t.put(formPath("config", "comment", "general", "metrics"), """
         Włącz lub wyłącz zbieranie danych statystycznych w celu ulepszenia wtyczki.
