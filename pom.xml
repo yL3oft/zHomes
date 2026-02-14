@@ -6,9 +6,10 @@
 
     <groupId>me.yleoft</groupId>
     <artifactId>zHomes</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.1</version>
     <description>A powerful home management plugin for spigot/paper servers</description>
     <url>https://github.com/yL3oft/zHomes</url>
+
 
     <name>zHomes</name>
 

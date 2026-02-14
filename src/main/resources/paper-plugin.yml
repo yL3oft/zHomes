@@ -5,6 +5,7 @@ main: me.yleoft.zHomes.zHomes
 author: yLeoft
 website: ${url}
 api-version: "1.19"
+folia-supported: true
 dependencies:
   server:
     GriefPrevention:

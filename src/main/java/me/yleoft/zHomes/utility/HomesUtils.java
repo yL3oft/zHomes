@@ -127,7 +127,7 @@ public class HomesUtils extends DatabaseEditor {
             LanguageBuilder.sendMessage(p, zHomes.getLanguageYAML().getHomeCantDimensionalTeleport());
             return;
         }
-        zAPI.getScheduler().runAtEntity(p, task -> {
+        zAPI.getScheduler().runAtLocation(loc, task -> {
             Location tpLoc = (zHomes.getConfigYAML().isSafeTeleportEnabled() && !p.hasPermission(zHomes.getConfigYAML().getBypassSafeTeleportationPermission())) ? LocationHandler.findNearestSafeLocation(loc, 4, 50) : loc;
             if(tpLoc == null) {
                 LanguageBuilder.sendMessage(p, zHomes.getLanguageYAML().getUnableToFindSafeLocation());

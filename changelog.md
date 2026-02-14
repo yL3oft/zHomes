@@ -1,27 +1,23 @@
-# ALERT: This is a major release. Please read the changelog carefully before updating. Specially if you are updating from version 2.x.x.
-
 ## Dependency Changes
-- Updated [zAPI to 2.0.0](https://github.com/yL3oft/zAPI/releases/tag/2.0.0)
+- Updated [zAPI to 2.0.1](https://github.com/yL3oft/zAPI/releases/tag/2.0.1)
+- Updated to Paper API 1.21.11
 
 ## General Changes
-- The whole plugin has been migrated to use zAPI 2.0.0 as a base. This includes changes to how commands, events, and configurations are handled.
-- Refactored codebase for better readability and maintainability.
-- Removed support for Minecraft versions below 1.18.2.
-- Migrated from old coloring system (ChatColor) to more modern text components using MiniMessage for better text formatting and color handling.
-- New subcommand added to /zhomes: `/zhomes parse (player) (string)` - Parses a string for a specific player's placeholders with the plugin placeholder system.
-- A lot of new features to menus and GUI handling, including better pagination and item management:
-- Improved database connections and query handling for better performance.
-- Rework on dependency management & automatic download system.
-- Rework on how config.yml & languages are handled (This also includes migration to zAPI's new configuration system).
-- A lot of new options in config.yml and in languages (I really don't want to list them all here, go check yourself!)
-- Improved hook detection and management for better compatibility with other plugins.
-- Updated license year to 2026.
+- Plugin changed to paper plugin, it will no longer work on spigot or bukkit servers, if you are using spigot or bukkit, please update to paper for better performance and stability.
+- Fix folia compatibility for long distance traveling.
+- Removed support for Minecraft 1.18 and below. Minimum supported version is now Minecraft 1.19.
+- Added [MiniPlaceholders](https://modrinth.com/plugin/miniplaceholders) support, more info in the [wiki](https://docs.yleoft.me/zhomes/)
+- New parameter for command /homes: `type` - This parameter allows you to specify the type of homes output to text or menu, usage: `/homes -type <text|menu>`, if not specified, it will default to the one in config.yml.
+- `/zhomes parse` can now be parsed with MiniPlaceholders, allowing you to use placeholders from both MiniPlaceholders and PlaceholderAPI at the same time, without any issues. Also you can now parse without specifing the player.
+- `config.yml` comments are now translated with the language file (If it's a custom language file, it will fallback to english)
+- Changed the way languages are loaded.
+- Updated the database to have 1 extra column: `NAME`, this column is used to store the name of the player, it helps with the offline player getter, allowing you to get the name of the player even if they are offline, and also helps with the performance of the plugin, as it reduces the number of queries to the database when getting the name of the player.
 
-## What will happen if I update from 2.x.x?
-- The plugin is going to migrate colors from ChatColor to MiniMessage format. If you have custom colors in your config or language files, they will be converted automatically, but it's recommended to review them after the update.
-- The configuration file (config.yml) and language files have been restructured. It's recommended to back them up before updating, as some settings may have changed or been removed.
-- The plugin no longer supports Minecraft versions below 1.18.2. Ensure your server is running a compatible version
-- The menu system for homes has been 100% reworked, and because of that the file of the menu is renamed to "homes-menu.yml", that also means that your old menu file will be ignored. Make sure to back it up if you want to reuse some settings.
+## Language Changes
+- Added new 2 options for `/homes`:
+- - `home-string` - The string that will be used to display the home in the list of homes, it supports placeholders, you can use `%home%` to display the name of the home and also supports MiniPlaceholders placeholders.
+- - `others.home-string` - The string that will be used to display the home in the list of homes when the player is viewing other player's homes, it supports placeholders, you can use `%home%` to display the name of the home, and `%player%` to display the owner of the home and also supports MiniPlaceholders placeholders.
+- Since the plugin now accepts MiniMessage, `/zhomes nearhomes` & `/homes` default home-strings now have hover & click effects to teleport to the home. And `/zhomes nearhomes` has a click effect on the player name to filter the search to the player's homes.
 
 
-**Full Changelog**: https://github.com/yL3oft/zHomes/compare/2.2.2...3.0.0
+**Full Changelog**: https://github.com/yL3oft/zHomes/compare/3.0.0...3.0.1
