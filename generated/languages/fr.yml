@@ -1,0 +1,173 @@
+####################################################################################################
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                 zHomes — Fichier de Langue                                   | #
+# |                                                                                              | #
+# |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
+# |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
+# |   • GitHub:      https://github.com/yL3oft/zHomes                                            | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+####################################################################################################
+
+# Ici vous pouvez gérer les messages des hooks.
+hooks:
+  griefprevention:
+    cant-set-homes: "%prefix% <red>Vous ne pouvez pas définir des homes dans cette zone."
+  worldguard:
+    cant-use-homes: "%prefix% <red>Vous ne pouvez pas utiliser des homes ici."
+    cant-set-homes: "%prefix% <red>Vous ne pouvez pas définir une home ici."
+  vault:
+    cant-afford-command: "%prefix% <red>Vous avez besoin de <gold>$%cost% <red>pour exécuter cette commande."
+
+# Messages liés au délai de téléportation.
+teleport-warmup:
+  warmup: "%prefix% <green>Téléportation dans %time% secondes... Ne bougez pas !"
+  warmup-actionbar: "<green>Téléportation dans %time% secondes..."
+  cancelled: "%prefix% <red>Vous avez bougé ! Téléportation annulée."
+  cancelled-actionbar: "<red>Vous avez bougé ! Téléportation annulée."
+
+# Messages liés aux commandes.
+commands:
+  # Ici vous trouverez des messages utilisables dans plusieurs commandes.
+  no-permission: "%prefix% <red>Vous n'avez pas la permission d'exécuter cette commande."
+  only-players: "%prefix% <red>Seuls les joueurs peuvent exécuter cette commande."
+  in-cooldown: "%prefix% <red>Vous devez attendre %time% secondes avant de réutiliser cette commande."
+  home-already-exist: "%prefix% <red>Vous avez déjà une home avec ce nom."
+  home-doesnt-exist: "%prefix% <red>Vous n'avez aucune home avec ce nom."
+  home-doesnt-exist-others: "%prefix% <yellow>%player% <red>n'a aucune home avec ce nom."
+  cant-use-2dot: "%prefix% <red>Vous ne pouvez pas utiliser <yellow>':' <red>dans cette commande."
+  cant-find-player: "%prefix% <red>Ce joueur est introuvable."
+  unable-to-find-safe-location: "%prefix% <red>Impossible de trouver un emplacement sûr pour vous téléporter."
+  world-restricted-sethome: "%prefix% <red>Vous ne pouvez pas définir des homes dans ce monde."
+  world-restricted-home: "%prefix% <red>Vous ne pouvez pas vous téléporter vers des homes dans ce monde."
+
+  # Ci-dessous vous trouverez des messages spécifiques aux commandes.
+  main:
+    help:
+      help-perm: |-
+        %prefix% <aqua>Utilisations de <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>help <gray>Affiche ce message d'aide
+        <red>-> <yellow>/%command% <green>info <gray>Affiche les informations du plugin
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+        <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
+        <red>-> <yellow>/%command% <green>nearhomes <gold>(Rayon) <gray>Liste les homes proches dans un certain rayon
+        <red>-> <yellow>/%command% <green>parse <gold>(Joueur) (Texte) <gray>Analyse un texte avec des placeholders pour un joueur spécifique
+        <red>-> <yellow>/%command% <green>purge (<joueur>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Purge les maisons avec des filtres
+        <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Convertit des données d'un endroit à un autre
+        <red>-> <yellow>/%command% <green>export <gray>Exporte toutes les homes dans un fichier unique
+        <red>-> <yellow>/%command% <green>import (<file>) <gray>Importe des homes depuis un fichier unique
+      help-noperm: |-
+        %prefix% <aqua>Utilisations de <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>(help|?) <gray>Affiche ce message d'aide
+        <red>-> <yellow>/%command% <green>(version|ver) <gray>Affiche la version du plugin
+    info:
+      output: |-
+        %prefix% <aqua>Exécution de <dark_aqua>%name% v%version% <aqua>par <dark_aqua>%author%<aqua>:
+        %prefix% <aqua>- Info Serveur:
+        %prefix% <dark_aqua>   Software: <white>%server.software%
+        %prefix% <dark_aqua>   Version: <white>%server.version%
+        %prefix% <dark_aqua>   Mise à jour requise: <white>%requpdate%
+        %prefix% <dark_aqua>   Langue: <white>%language%
+        %prefix% <aqua>- Stockage:
+        %prefix% <dark_aqua>   Type: <white>%storage.type%
+        %prefix% <dark_aqua>   Utilisateurs: <white>%storage.users%
+        %prefix% <dark_aqua>   Homes: <white>%storage.homes%
+        %prefix% <aqua>- Hooks:
+        %prefix% <dark_aqua>   PlaceholderAPI: <white>%use.placeholderapi%
+        %prefix% <dark_aqua>   MiniPlaceholders: <white>%use.miniplaceholders%
+        %prefix% <dark_aqua>   GriefPrevention: <white>%use.griefprevention%
+        %prefix% <dark_aqua>   WorldGuard: <white>%use.worldguard%
+        %prefix% <dark_aqua>   Vault: <white>%use.vault%
+      requpdate-yes: "<red>Oui <gray>(Utilisez <yellow>/%command% version <gray>pour plus d'informations)"
+      requpdate-no: "<green>Non"
+    version:
+      output: "%prefix% <aqua>Version actuelle : <green>%version%"
+    reload:
+      usage: |-
+        %prefix% <aqua>Utilisations de <yellow>/%command% <green>(reload|rl)<aqua>:
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+      output: "%prefix% <green>Plugin rechargé en <aqua>%time%ms<green>."
+      commands:
+        output: "%prefix% <green>Toutes les commandes du plugin rechargées en <aqua>%time%ms<green>."
+      config:
+        output: "%prefix% <green>Fichier de configuration du plugin rechargé en <aqua>%time%ms<green>."
+      languages:
+        output: "%prefix% <green>Langues du plugin rechargées en <aqua>%time%ms<green>."
+    nearhomes:
+      usage: "<red>-> <yellow>/%command% nearhomes <green>[<Rayon>]"
+      output: "%prefix% <gray>Homes proches de vous dans un rayon de <yellow>%radius% <gray>blocs : <white>%homes%"
+      output-not-found: "%prefix% <red>Aucune home trouvée dans un rayon de <yellow>%radius% <red>blocs."
+      home-string: "<yellow><hover:show_text:'<green>Cliquer pour se téléporter.'><click:run_command:'/%homecommand% %owner%:%home%'>%home%</click></hover> <gray><hover:show_text:'<green>Cliquer pour filtrer par joueur.'><click:run_command:'/%maincommand% nearhomes %radius% -user %owner%'>(%owner%)</click></hover>"
+      filtered-player:
+        output: "%prefix% <gray>Homes de <yellow>%player% <gray>proches de vous dans un rayon de <yellow>%radius% <gray>blocs : <white>%homes%"
+        home-string: "<yellow><hover:show_text:'<green>Cliquer pour se téléporter.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+    parse:
+      usage: "<red>-> <yellow>/%command% parse <gold>(Joueur) (Texte)"
+      output: "%prefix% <gray>Texte analysé : <white>%parsed%"
+    purge:
+      usage: |-
+        %prefix% <aqua>Utilisations de <yellow>/%command% purge<aqua>:
+        <red>-> <yellow>/%command% purge <green>(<joueur>|*) <gray>Purge toutes les maisons d'un joueur ou de tous
+        <red>-> <yellow>/%command% purge <green>(<joueur>|*) <gold>-world <green>(monde) <gray>Purge les maisons dans un monde spécifique
+        <red>-> <yellow>/%command% purge <green>(<joueur>|*) <gold>-startwith <green>(préfixe) <gray>Purge les maisons commençant par un préfixe
+        <red>-> <yellow>/%command% purge <green>(<joueur>|*) <gold>-endwith <green>(suffixe) <gray>Purge les maisons se terminant par un suffixe
+        <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(joueurs) <gray>Purge les maisons uniquement pour des joueurs spécifiques
+        <aqua>Vous pouvez combiner plusieurs filtres:
+        <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+        <red>-> <yellow>/%command% purge <green>NomJoueur <gold>-world <green>world_the_end <gold>-endwith <green>_old
+      output: "%prefix% <green>Purgé avec succès <yellow>%amount% <green>maison(s)!"
+    converter:
+      usage: |-
+        %prefix% <aqua>Utilisations de <yellow>/%command% <green>converter<aqua>:
+        <red>-> <yellow>/%command% <green>converter sqlitetoh2
+        <red>-> <yellow>/%command% <green>converter sqlitetomysql
+        <red>-> <yellow>/%command% <green>converter sqlitetomariadb
+        <red>-> <yellow>/%command% <green>converter mysqltosqlite
+        <red>-> <yellow>/%command% <green>converter mysqltoh2
+        <red>-> <yellow>/%command% <green>converter mariadbtosqlite
+        <red>-> <yellow>/%command% <green>converter mariadbtoh2
+        <red>-> <yellow>/%command% <green>converter h2tosqlite
+        <red>-> <yellow>/%command% <green>converter h2tomysql
+        <red>-> <yellow>/%command% <green>converter h2tomariadb
+        <red>-> <yellow>/%command% <green>converter essentials
+        <red>-> <yellow>/%command% <green>converter sethome
+        <red>-> <yellow>/%command% <green>converter ultimatehomes
+        <red>-> <yellow>/%command% <green>converter xhomes
+        <red>-> <yellow>/%command% <green>converter zhome
+      output: "%prefix% <green>Toutes les données converties !"
+      error: "%prefix% <red>Une erreur s'est produite lors de la conversion, vérifiez la console de votre serveur."
+    export:
+      output: "%prefix% <green>Toutes les homes exportées vers <yellow>%file%<green> !"
+      error: "%prefix% <red>Une erreur s'est produite lors de l'exportation, vérifiez la console de votre serveur."
+    import:
+      usage: "<red>-> <yellow>/%command% import <green>(<fichier>)"
+      output: "%prefix% <green>Toutes les homes importées depuis <yellow>%file%<green> !"
+      file-not-found: "%prefix% <red>Le fichier <yellow>%file% <red>est introuvable."
+      error: "%prefix% <red>Une erreur s'est produite lors de l'importation, vérifiez la console de votre serveur."
+  sethome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>Home <yellow>%home% <green>définie à votre position."
+    limit-reached: "<red>Vous ne pouvez pas définir plus de homes, vous avez atteint votre limite <yellow>(%limit% homes)<red> !"
+  delhome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <red>Home <yellow>%home% <red>supprimée."
+  home:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>Téléporté vers <yellow>%home%<green>..."
+    cant-dimensional-teleport: "<red>Votre téléportation a été annulée ! La téléportation dimensionnelle est désactivée."
+    rename:
+      usage: "<red>-> <yellow>/%command% <green>rename (Home) (NouveauNom)"
+      output: "%prefix% <green>Home <yellow>%home% <green>renommée en <yellow>%newname%<green>."
+      same-name: "%prefix% <red>Vous ne pouvez pas renommer une home avec le même nom."
+  homes:
+    output: "%prefix% <gray>Vos homes (%amount%) : <white>%homes%"
+    home-string: "<reset><hover:show_text:'<green>Cliquer pour se téléporter.'><click:run_command:'/%homecommand% %home%'>%home%</click></hover>"
+    invalid-page: "%prefix% <red>Numéro de page invalide ! Veuillez utiliser un nombre supérieur à 0."
+    others:
+      output: "%prefix% <gray>Homes de <yellow>%player% <gray>(%amount%) : <white>%homes%"
+      home-string: "<reset><hover:show_text:'<green>Cliquer pour se téléporter.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+
+# !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
+
+config-version: "1.0.1"

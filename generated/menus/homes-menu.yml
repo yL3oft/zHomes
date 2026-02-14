@@ -1,0 +1,82 @@
+####################################################################################################
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                 zHomes — Large Homes Menu                                    | #
+# |                                                                                              | #
+# |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
+# |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
+# |   • GitHub:      https://github.com/yL3oft/zHomes                                            | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+####################################################################################################
+
+# Wiki for menus is still being created... If you have any doubts, please ask in the Discord server.
+
+Inventory:
+  title: "<red>> Homes"
+  title-other: "<red>> <yellow>%target%<red>'s Homes"
+
+  # This menu is modular, so if you want to just shrink the menu size, just change the number of rows. Make sure it's more than 1 row though!
+  rows: 6
+  placeholders:
+    slots: "{math: 9*%rows%}"
+    home-slots: "{math: 9*(%rows%-1)}"
+
+Items:
+  filler:
+    material: "GRAY_STAINED_GLASS_PANE"
+    slot: "0-%slots%"
+    name: ""
+  close:
+    material: "BARRIER"
+    slot: "{math: %slots%-5}"
+    name: "<red>Close"
+    commands: "[INV] close"
+    enchantments: "FIRE_ASPECT;1"
+    itemflags: "HIDE_ENCHANTS"
+  homes:
+    material:
+      - "WHITE_BED"
+      - "LIGHT_GRAY_BED"
+      - "GRAY_BED"
+      - "BLACK_BED"
+      - "BROWN_BED"
+      - "RED_BED"
+      - "ORANGE_BED"
+      - "YELLOW_BED"
+      - "LIME_BED"
+      - "GREEN_BED"
+      - "CYAN_BED"
+      - "LIGHT_BLUE_BED"
+      - "BLUE_BED"
+      - "PURPLE_BED"
+      - "MAGENTA_BED"
+      - "PINK_BED"
+    slot: "0-{math: %home-slots%-1}"
+    name: "<green>Home: <yellow>%currenthome%"
+    lore:
+      - "<aqua>Click to teleport!"
+    commands:
+      - "home %currenthome%"
+      - "[INV] close"
+    display-condition: "%currenthome%!="
+    placeholders:
+      currenthome: "%zhomes_%target%_home_{math: %currentitem%+(%page%-1)*%home-slots%}%"
+  previous-page:
+    material: "ARROW"
+    slot: "{math: %slots%-7}"
+    name: "<red>Previous Page"
+    commands: "homes {math: %page%-1}"
+    enchantments: "FIRE_ASPECT;1"
+    itemflags: "HIDE_ENCHANTS"
+    display-condition: "%page%>1"
+  next-page:
+    material: "ARROW"
+    slot: "{math: %slots%-3}"
+    name: "<green>Next Page"
+    commands: "homes {math: %page%+1}"
+    enchantments: "FIRE_ASPECT;1"
+    itemflags: "HIDE_ENCHANTS"
+    display-condition: "%zhomes_%target%_set%-(%page%-1)*%home-slots%>%home-slots%"
+
+config-version: "1.0.0"

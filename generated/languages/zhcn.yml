@@ -1,0 +1,173 @@
+####################################################################################################
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                       zHomes — 语言文件                                        | #
+# |                                                                                              | #
+# |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
+# |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
+# |   • GitHub:      https://github.com/yL3oft/zHomes                                            | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+####################################################################################################
+
+# 在这里您可以管理 Hook 消息。
+hooks:
+  griefprevention:
+    cant-set-homes: "%prefix% <red>您无法在此区域设置 home。"
+  worldguard:
+    cant-use-homes: "%prefix% <red>您无法在此处使用 home。"
+    cant-set-homes: "%prefix% <red>您无法在此处设置 home。"
+  vault:
+    cant-afford-command: "%prefix% <red>您需要 <gold>$%cost% <red>才能执行此命令。"
+
+# 与传送准备时间相关的消息。
+teleport-warmup:
+  warmup: "%prefix% <green>将在 %time% 秒后传送！请勿移动！"
+  warmup-actionbar: "<green>将在 %time% 秒后传送…"
+  cancelled: "%prefix% <red>您移动了！传送已取消。"
+  cancelled-actionbar: "<red>您移动了！传送已取消。"
+
+# 与命令相关的消息。
+commands:
+  # 这里是可在多个命令中使用的消息。
+  no-permission: "%prefix% <red>您没有权限执行此命令。"
+  only-players: "%prefix% <red>只有玩家才能执行此命令。"
+  in-cooldown: "%prefix% <red>您需等待 %time% 秒后才能再次使用此命令。"
+  home-already-exist: "%prefix% <red>您已有同名 home。"
+  home-doesnt-exist: "%prefix% <red>您没有该名称的 home。"
+  home-doesnt-exist-others: "%prefix% <yellow>%player% <red>没有该名称的 home。"
+  cant-use-2dot: "%prefix% <red>此命令中不能使用 <yellow>':'。"
+  cant-find-player: "%prefix% <red>未找到该玩家。"
+  unable-to-find-safe-location: "%prefix% <red>无法找到安全的传送地点。"
+  world-restricted-sethome: "%prefix% <red>您无法在此世界设置 home。"
+  world-restricted-home: "%prefix% <red>您无法传送到该世界的 home。"
+
+  # 以下是各命令的专属消息。
+  main:
+    help:
+      help-perm: |-
+        %prefix% <aqua>用法 <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>help <gray>显示此帮助信息
+        <red>-> <yellow>/%command% <green>info <gray>显示插件信息
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+        <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
+        <red>-> <yellow>/%command% <green>nearhomes <gold>(半径) <gray>列出指定半径内的附近 home
+        <red>-> <yellow>/%command% <green>parse <gold>(玩家) (文本) <gray>解析指定玩家的占位符文本
+        <red>-> <yellow>/%command% <green>purge (<玩家>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>使用过滤器清除家
+        <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>将数据从一个地方转移到另一个地方
+        <red>-> <yellow>/%command% <green>export <gray>将所有 home 导出到一个文件
+        <red>-> <yellow>/%command% <green>import (<file>) <gray>从一个文件导入 home
+      help-noperm: |-
+        %prefix% <aqua>用法 <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>(help|?) <gray>显示此帮助信息
+        <red>-> <yellow>/%command% <green>(version|ver) <gray>显示插件版本
+    info:
+      output: |-
+        %prefix% <aqua>运行中 <dark_aqua>%name% v%version% <aqua>作者 <dark_aqua>%author%<aqua>:
+        %prefix% <aqua>- 服务器信息:
+        %prefix% <dark_aqua>   Software: <white>%server.software%
+        %prefix% <dark_aqua>   版本: <white>%server.version%
+        %prefix% <dark_aqua>   需要更新: <white>%requpdate%
+        %prefix% <dark_aqua>   语言: <white>%language%
+        %prefix% <aqua>- 存储:
+        %prefix% <dark_aqua>   类型: <white>%storage.type%
+        %prefix% <dark_aqua>   用户: <white>%storage.users%
+        %prefix% <dark_aqua>   Homes: <white>%storage.homes%
+        %prefix% <aqua>- Hooks:
+        %prefix% <dark_aqua>   PlaceholderAPI: <white>%use.placeholderapi%
+        %prefix% <dark_aqua>   MiniPlaceholders: <white>%use.miniplaceholders%
+        %prefix% <dark_aqua>   GriefPrevention: <white>%use.griefprevention%
+        %prefix% <dark_aqua>   WorldGuard: <white>%use.worldguard%
+        %prefix% <dark_aqua>   Vault: <white>%use.vault%
+      requpdate-yes: "<red>是 <gray>(使用 <yellow>/%command% version <gray>查看更多信息)"
+      requpdate-no: "<green>否"
+    version:
+      output: "%prefix% <aqua>当前版本：<green>%version%"
+    reload:
+      usage: |-
+        %prefix% <aqua>用法 <yellow>/%command% <green>(reload|rl)<aqua>:
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+      output: "%prefix% <green>插件已在 <aqua>%time%ms<green> 内重载。"
+      commands:
+        output: "%prefix% <green>所有插件命令已在 <aqua>%time%ms<green> 内重载。"
+      config:
+        output: "%prefix% <green>插件配置文件已在 <aqua>%time%ms<green> 内重载。"
+      languages:
+        output: "%prefix% <green>插件语言已在 <aqua>%time%ms<green> 内重载。"
+    nearhomes:
+      usage: "<red>-> <yellow>/%command% nearhomes <green>[<半径>]"
+      output: "%prefix% <gray>您附近 <yellow>%radius% <gray>格内的 home：<white>%homes%"
+      output-not-found: "%prefix% <red>未在 <yellow>%radius% <red>格内找到 home。"
+      home-string: "<yellow><hover:show_text:'<green>点击传送.'><click:run_command:'/%homecommand% %owner%:%home%'>%home%</click></hover> <gray><hover:show_text:'<green>点击按玩家筛选.'><click:run_command:'/%maincommand% nearhomes %radius% -user %owner%'>(%owner%)</click></hover>"
+      filtered-player:
+        output: "%prefix% <gray>玩家 <yellow>%player% <gray>在您附近 <yellow>%radius% <gray>格内的 home：<white>%homes%"
+        home-string: "<yellow><hover:show_text:'<green>点击传送.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+    parse:
+      usage: "<red>-> <yellow>/%command% parse <gold>(玩家) (文本)"
+      output: "%prefix% <gray>解析文本：<white>%parsed%"
+    purge:
+      usage: |-
+        %prefix% <aqua><yellow>/%command% purge<aqua>的用法:
+        <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gray>清除玩家或所有人的所有家
+        <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gold>-world <green>(世界) <gray>清除特定世界中的家
+        <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gold>-startwith <green>(前缀) <gray>清除以前缀开头的家
+        <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gold>-endwith <green>(后缀) <gray>清除以后缀结尾的家
+        <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(玩家) <gray>仅清除特定玩家的家
+        <aqua>您可以组合多个过滤器:
+        <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+        <red>-> <yellow>/%command% purge <green>玩家名 <gold>-world <green>world_the_end <gold>-endwith <green>_old
+      output: "%prefix% <green>成功清除了 <yellow>%amount% <green>个家!"
+    converter:
+      usage: |-
+        %prefix% <aqua>用法 <yellow>/%command% <green>converter<aqua>:
+        <red>-> <yellow>/%command% <green>converter sqlitetoh2
+        <red>-> <yellow>/%command% <green>converter sqlitetomysql
+        <red>-> <yellow>/%command% <green>converter sqlitetomariadb
+        <red>-> <yellow>/%command% <green>converter mysqltosqlite
+        <red>-> <yellow>/%command% <green>converter mysqltoh2
+        <red>-> <yellow>/%command% <green>converter mariadbtosqlite
+        <red>-> <yellow>/%command% <green>converter mariadbtoh2
+        <red>-> <yellow>/%command% <green>converter h2tosqlite
+        <red>-> <yellow>/%command% <green>converter h2tomysql
+        <red>-> <yellow>/%command% <green>converter h2tomariadb
+        <red>-> <yellow>/%command% <green>converter essentials
+        <red>-> <yellow>/%command% <green>converter sethome
+        <red>-> <yellow>/%command% <green>converter ultimatehomes
+        <red>-> <yellow>/%command% <green>converter xhomes
+        <red>-> <yellow>/%command% <green>converter zhome
+      output: "%prefix% <green>所有数据已转换！"
+      error: "%prefix% <red>转换数据时出错，请检查服务器控制台。"
+    export:
+      output: "%prefix% <green>所有 home 已导出到 <yellow>%file%<green>！"
+      error: "%prefix% <red>导出数据时出错，请检查服务器控制台。"
+    import:
+      usage: "<red>-> <yellow>/%command% import <green>(<文件>)"
+      output: "%prefix% <green>已从 <yellow>%file%<green> 导入所有 home！"
+      file-not-found: "%prefix% <red>未找到文件 <yellow>%file%。"
+      error: "%prefix% <red>导入数据时出错，请检查服务器控制台。"
+  sethome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>Home <yellow>%home% <green>已设置在您的位置。"
+    limit-reached: "<red>您已达到 home 上限，无法再设置更多 home <yellow>(%limit% homes)<red>！"
+  delhome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <red>Home <yellow>%home% <red>已删除。"
+  home:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>已传送至 <yellow>%home%<green>…"
+    cant-dimensional-teleport: "<red>传送已取消！跨维传送已禁用。"
+    rename:
+      usage: "<red>-> <yellow>/%command% <green>rename (Home) (新名称)"
+      output: "%prefix% <green>Home <yellow>%home% <green>已重命名为 <yellow>%newname%<green>。"
+      same-name: "%prefix% <red>不能将 home 重命名为相同的名称。"
+  homes:
+    output: "%prefix% <gray>您的 home (%amount%)：<white>%homes%"
+    home-string: "<reset><hover:show_text:'<green>点击传送.'><click:run_command:'/%homecommand% %home%'>%home%</click></hover>"
+    invalid-page: "%prefix% <red>页码无效！请输入大于 0 的数字。"
+    others:
+      output: "%prefix% <gray>玩家 <yellow>%player% <gray>的 home (%amount%)：<white>%homes%"
+      home-string: "<reset><hover:show_text:'<green>点击传送.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+
+# !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
+
+config-version: "1.0.1"

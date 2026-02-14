@@ -153,6 +153,7 @@ public class zhcnYAML extends LanguageBuilder {
                 <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
                 <red>-> <yellow>/%command% <green>nearhomes <gold>(半径) <gray>列出指定半径内的附近 home
                 <red>-> <yellow>/%command% <green>parse <gold>(玩家) (文本) <gray>解析指定玩家的占位符文本
+                <red>-> <yellow>/%command% <green>purge (<玩家>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>使用过滤器清除家
                 <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>将数据从一个地方转移到另一个地方
                 <red>-> <yellow>/%command% <green>export <gray>将所有 home 导出到一个文件
                 <red>-> <yellow>/%command% <green>import (<file>) <gray>从一个文件导入 home
@@ -190,10 +191,6 @@ public class zhcnYAML extends LanguageBuilder {
         // commands.main.version
         t.put(formPath("commands", "main", "version", "output"),
                 "%prefix% <aqua>当前版本：<green>%version%");
-        t.put(formPath("commands", "main", "version", "update", "output"),
-                "%prefix% <green>zHomes 已更新至最新版本 <yellow>(%update%)<green>，请重启服务器。");
-        t.put(formPath("commands", "main", "version", "update", "no-update"),
-                "%prefix% <green>您已在使用最新版本的 zHomes。");
 
         // commands.main.reload
         t.put(formPath("commands", "main", "reload", "usage"), """
@@ -228,6 +225,21 @@ public class zhcnYAML extends LanguageBuilder {
                 "<red>-> <yellow>/%command% parse <gold>(玩家) (文本)");
         t.put(formPath("commands", "main", "parse", "output"),
                 "%prefix% <gray>解析文本：<white>%parsed%");
+
+        // commands.main.purge
+        t.put(formPath("commands", "main", "purge", "usage"), """
+                %prefix% <aqua><yellow>/%command% purge<aqua>的用法:
+                <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gray>清除玩家或所有人的所有家
+                <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gold>-world <green>(世界) <gray>清除特定世界中的家
+                <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gold>-startwith <green>(前缀) <gray>清除以前缀开头的家
+                <red>-> <yellow>/%command% purge <green>(<玩家>|*) <gold>-endwith <green>(后缀) <gray>清除以后缀结尾的家
+                <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(玩家) <gray>仅清除特定玩家的家
+                <aqua>您可以组合多个过滤器:
+                <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+                <red>-> <yellow>/%command% purge <green>玩家名 <gold>-world <green>world_the_end <gold>-endwith <green>_old
+                """);
+        t.put(formPath("commands", "main", "purge", "output"),
+                "%prefix% <green>成功清除了 <yellow>%amount% <green>个家!");
 
         // commands.main.converter
         t.put(formPath("commands", "main", "converter", "usage"), """

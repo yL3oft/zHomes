@@ -262,113 +262,196 @@ public class DatabaseEditor extends DatabaseConnection {
     //</editor-fold>
 
     //<editor-fold desc="Purge">
-    /**
-     * Purges all homes for a specific player
-     * @param p The player whose homes should be deleted
-     * @return Number of homes deleted, or -1 if an error occurred
-     */
-    public static int purgeHomes(OfflinePlayer p) {
-        if (p == null) return 0;
+    public static class PurgeFilter {
+        private UUID playerUuid;
+        private String worldName;
+        private String homeStartsWith;
+        private String homeEndsWith;
+        private Map<UUID, List<String>> customFilter;
 
-        try (Connection con = getConnection();
-             PreparedStatement ps = con.prepareStatement("DELETE FROM " + databaseTable() + " WHERE UUID=?")) {
-            ps.setString(1, p.getUniqueId().toString());
-            int deleted = ps.executeUpdate();
-            zHomes.getInstance().getLoggerInstance().info("Purged " + deleted + " homes for player: " + p.getName());
-            return deleted;
+        private PurgeFilter() {}
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public static class Builder {
+            private final PurgeFilter filter = new PurgeFilter();
+
+            public Builder player(OfflinePlayer player) {
+                if (player != null) filter.playerUuid = player.getUniqueId();
+                return this;
+            }
+
+            public Builder playerUuid(UUID uuid) {
+                filter.playerUuid = uuid;
+                return this;
+            }
+
+            public Builder world(World world) {
+                if (world != null) filter.worldName = world.getName();
+                return this;
+            }
+
+            public Builder worldName(String worldName) {
+                filter.worldName = worldName;
+                return this;
+            }
+
+            public Builder homeStartsWith(String prefix) {
+                filter.homeStartsWith = prefix;
+                return this;
+            }
+
+            public Builder homeEndsWith(String suffix) {
+                filter.homeEndsWith = suffix;
+                return this;
+            }
+
+            public Builder customFilter(Map<UUID, List<String>> customFilter) {
+                filter.customFilter = customFilter;
+                return this;
+            }
+
+            public PurgeFilter build() {
+                return filter;
+            }
+        }
+
+        boolean hasInMemoryFilters() {
+            return worldName != null || customFilter != null;
+        }
+
+        boolean matchesCustomFilter(UUID uuid, String homeName) {
+            if (customFilter == null) return true;
+            List<String> allowedHomes = customFilter.get(uuid);
+            return allowedHomes != null && allowedHomes.contains(homeName);
+        }
+    }
+    public static int purgeHomes(PurgeFilter filter) {
+        if (filter == null) return 0;
+
+        try (Connection con = getConnection()) {
+            if (filter.hasInMemoryFilters()) {
+                return purgeWithInMemoryFilter(con, filter);
+            } else {
+                return purgeWithSqlFilter(con, filter);
+            }
         } catch (SQLException e) {
-            zHomes.getInstance().getLoggerInstance().error("Error purging homes for player: " + p.getName(), e);
+            zHomes.getInstance().getLoggerInstance().error("Error purging homes with filter", e);
             return -1;
         }
     }
 
-    /**
-     * Purges all homes in a specific world
-     * @param world The world whose homes should be deleted
-     * @return Number of homes deleted
-     */
-    public static int purgeHomes(World world) {
-        if (world == null) return 0;
-        return purgeHomes(world.getName());
+    private static int purgeWithSqlFilter(Connection con, PurgeFilter filter) throws SQLException {
+        StringBuilder sql = new StringBuilder("DELETE FROM ").append(databaseTable()).append(" WHERE 1=1");
+        List<String> params = new ArrayList<>();
+
+        if (filter.playerUuid != null) {
+            sql.append(" AND UUID=?");
+            params.add(filter.playerUuid.toString());
+        }
+
+        if (filter.homeStartsWith != null && !filter.homeStartsWith.isEmpty()) {
+            sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
+            params.add(filter.homeStartsWith + "%");
+        }
+
+        if (filter.homeEndsWith != null && !filter.homeEndsWith.isEmpty()) {
+            sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
+            params.add("%" + filter.homeEndsWith);
+        }
+
+        try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setString(i + 1, params.get(i));
+            }
+
+            int deleted = ps.executeUpdate();
+            zHomes.getInstance().getLoggerInstance().info("Purged " + deleted + " homes with SQL filter");
+            return deleted;
+        }
     }
 
-    /**
-     * Purges all homes in a specific world by name (optimized for large datasets)
-     * @param worldName The name of the world whose homes should be deleted
-     * @return Number of homes deleted
-     */
-    public static int purgeHomes(String worldName) {
-        if (worldName == null || worldName.isEmpty()) return 0;
+    private static int purgeWithInMemoryFilter(Connection con, PurgeFilter filter) throws SQLException {
+        List<String> toDelete = new ArrayList<>();
 
-        int deleted = 0;
-        try (Connection con = getConnection()) {
-            // Fetch all locations and check world name in-memory
-            List<String> toDelete = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT UUID, HOME, LOCATION FROM ").append(databaseTable()).append(" WHERE 1=1");
+        List<String> params = new ArrayList<>();
 
-            try (PreparedStatement ps = con.prepareStatement("SELECT UUID, HOME, LOCATION FROM " + databaseTable());
-                 ResultSet rs = ps.executeQuery()) {
+        if (filter.playerUuid != null) {
+            sql.append(" AND UUID=?");
+            params.add(filter.playerUuid.toString());
+        }
 
+        if (filter.homeStartsWith != null && !filter.homeStartsWith.isEmpty()) {
+            sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
+            params.add(filter.homeStartsWith + "%");
+        }
+
+        if (filter.homeEndsWith != null && !filter.homeEndsWith.isEmpty()) {
+            sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
+            params.add("%" + filter.homeEndsWith);
+        }
+
+        try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setString(i + 1, params.get(i));
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
+                    String uuidStr = rs.getString("UUID");
+                    String homeName = rs.getString("HOME");
                     String locationStr = rs.getString("LOCATION");
+
                     try {
-                        Location loc = LocationHandler.deserialize(locationStr);
-                        if (loc != null && loc.getWorld() != null && loc.getWorld().getName().equalsIgnoreCase(worldName)) {
-                            toDelete.add(rs.getString("UUID") + ":" + rs.getString("HOME"));
+                        UUID uuid = UUID.fromString(uuidStr);
+
+                        if (filter.customFilter != null && !filter.matchesCustomFilter(uuid, homeName)) {
+                            continue;
                         }
+
+                        if (filter.worldName != null) {
+                            Location loc = LocationHandler.deserialize(locationStr);
+                            if (loc == null || loc.getWorld() == null || !loc.getWorld().getName().equalsIgnoreCase(filter.worldName)) {
+                                continue;
+                            }
+                        }
+
+                        toDelete.add(uuidStr + ":" + homeName);
                     } catch (Exception ignored) {
                     }
                 }
             }
-
-            if (!toDelete.isEmpty()) {
-                try (PreparedStatement deletePs = con.prepareStatement(
-                        "DELETE FROM " + databaseTable() + " WHERE UUID=? AND HOME=?")) {
-                    con.setAutoCommit(false);
-
-                    for (String entry : toDelete) {
-                        String[] parts = entry.split(":", 2);
-                        deletePs.setString(1, parts[0]);
-                        deletePs.setString(2, parts[1]);
-                        deletePs.addBatch();
-                    }
-
-                    int[] results = deletePs.executeBatch();
-                    con.commit();
-                    con.setAutoCommit(true);
-
-                    for (int result : results) {
-                        if (result > 0) deleted += result;
-                    }
-                }
-            }
-
-            zHomes.getInstance().getLoggerInstance().info("Purged " + deleted + " homes in world: " + worldName);
-            return deleted;
-        } catch (SQLException e) {
-            zHomes.getInstance().getLoggerInstance().error("Error purging homes for world: " + worldName, e);
-            return -1;
         }
-    }
 
-    /**
-     * Purges ALL homes from the database (use with extreme caution!)
-     * @param confirm Must be true to execute
-     * @return Number of homes deleted
-     */
-    public static int purgeAllHomes(boolean confirm) {
-        if (!confirm) {
-            zHomes.getInstance().getLoggerInstance().warn("purgeAllHomes called without confirmation");
+        if (toDelete.isEmpty()) {
             return 0;
         }
 
-        try (Connection con = getConnection();
-             PreparedStatement ps = con.prepareStatement("DELETE FROM " + databaseTable())) {
-            int deleted = ps.executeUpdate();
-            zHomes.getInstance().getLoggerInstance().warn("PURGED ALL HOMES: " + deleted + " homes deleted!");
+        try (PreparedStatement deletePs = con.prepareStatement(
+                "DELETE FROM " + databaseTable() + " WHERE UUID=? AND HOME=?")) {
+            con.setAutoCommit(false);
+
+            for (String entry : toDelete) {
+                String[] parts = entry.split(":", 2);
+                deletePs.setString(1, parts[0]);
+                deletePs.setString(2, parts[1]);
+                deletePs.addBatch();
+            }
+
+            int[] results = deletePs.executeBatch();
+            con.commit();
+            con.setAutoCommit(true);
+
+            int deleted = 0;
+            for (int result : results) {
+                deleted += Math.max(0, result);
+            }
+
+            zHomes.getInstance().getLoggerInstance().info("Purged " + deleted + " homes with in-memory filter");
             return deleted;
-        } catch (SQLException e) {
-            zHomes.getInstance().getLoggerInstance().error("Error purging all homes", e);
-            return -1;
         }
     }
     //</editor-fold>

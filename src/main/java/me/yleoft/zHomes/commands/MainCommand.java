@@ -16,6 +16,7 @@ public class MainCommand implements Command {
         addSubCommand(new MainVersionSubCommand());
         addSubCommand(new MainNearhomesSubCommand());
         addSubCommand(new MainParseSubCommand());
+        addSubCommand(new MainPurgeSubCommand());
         addSubCommand(new MainConverterSubCommand());
         addSubCommand(new MainExportSubCommand());
         addSubCommand(new MainImportSubCommand());
@@ -66,6 +67,9 @@ public class MainCommand implements Command {
         }
         if(sender.hasPermission(zHomes.getConfigYAML().getMainCommandParsePermission())) {
             completions.add("parse");
+        }
+        if(sender.hasPermission(zHomes.getConfigYAML().getMainCommandPurgePermission())) {
+            completions.add("purge");
         }
         if(sender.hasPermission(zHomes.getConfigYAML().getMainCommandConverterPermission())) {
             completions.add("converter");

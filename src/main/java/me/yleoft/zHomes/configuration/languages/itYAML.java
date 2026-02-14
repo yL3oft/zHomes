@@ -153,6 +153,7 @@ public class itYAML extends LanguageBuilder {
                 <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
                 <red>-> <yellow>/%command% <green>nearhomes <gold>(Raggio) <gray>Elenca le home vicine entro un certo raggio
                 <red>-> <yellow>/%command% <green>parse <gold>(Giocatore) (Testo) <gray>Analizza un testo con placeholder per un giocatore specifico
+                <red>-> <yellow>/%command% <green>purge (<giocatore>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Elimina case con filtri
                 <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Converte i dati da un posto a un altro
                 <red>-> <yellow>/%command% <green>export <gray>Esporta tutte le home in un singolo file
                 <red>-> <yellow>/%command% <green>import (<file>) <gray>Importa home da un singolo file
@@ -190,10 +191,6 @@ public class itYAML extends LanguageBuilder {
         // commands.main.version
         t.put(formPath("commands", "main", "version", "output"),
                 "%prefix% <aqua>Versione attuale: <green>%version%");
-        t.put(formPath("commands", "main", "version", "update", "output"),
-                "%prefix% <green>zHomes aggiornato all'ultima versione <yellow>(%update%)<green>, riavvia il server per applicare le modifiche.");
-        t.put(formPath("commands", "main", "version", "update", "no-update"),
-                "%prefix% <green>Stai già usando l'ultima versione di zHomes.");
 
         // commands.main.reload
         t.put(formPath("commands", "main", "reload", "usage"), """
@@ -228,6 +225,21 @@ public class itYAML extends LanguageBuilder {
                 "<red>-> <yellow>/%command% parse <gold>(Giocatore) (Testo)");
         t.put(formPath("commands", "main", "parse", "output"),
                 "%prefix% <gray>Testo analizzato: <white>%parsed%");
+
+        // commands.main.purge
+        t.put(formPath("commands", "main", "purge", "usage"), """
+                %prefix% <aqua>Usi di <yellow>/%command% purge<aqua>:
+                <red>-> <yellow>/%command% purge <green>(<giocatore>|*) <gray>Elimina tutte le case di un giocatore o di tutti
+                <red>-> <yellow>/%command% purge <green>(<giocatore>|*) <gold>-world <green>(mondo) <gray>Elimina case in un mondo specifico
+                <red>-> <yellow>/%command% purge <green>(<giocatore>|*) <gold>-startwith <green>(prefisso) <gray>Elimina case che iniziano con un prefisso
+                <red>-> <yellow>/%command% purge <green>(<giocatore>|*) <gold>-endwith <green>(suffisso) <gray>Elimina case che terminano con un suffisso
+                <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(giocatori) <gray>Elimina case solo per giocatori specifici
+                <aqua>Puoi combinare più filtri:
+                <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+                <red>-> <yellow>/%command% purge <green>NomeGiocatore <gold>-world <green>world_the_end <gold>-endwith <green>_old
+                """);
+        t.put(formPath("commands", "main", "purge", "output"),
+                "%prefix% <green>Eliminate con successo <yellow>%amount% <green>casa/e!");
 
         // commands.main.converter
         t.put(formPath("commands", "main", "converter", "usage"), """

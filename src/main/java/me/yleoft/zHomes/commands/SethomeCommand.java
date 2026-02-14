@@ -72,6 +72,10 @@ public class SethomeCommand extends HomesUtils implements Command {
         home = event.getHome();
 
         if (!inMaxLimit(player)) {
+            if(home.contains(":")) {
+                message(player, zHomes.getLanguageYAML().getCantUse2Dot());
+                return;
+            }
             if(!hasHome(player, home)) {
                 if (HookRegistry.VAULT.canAfford(player, zHomes.getConfigYAML().getSetHomeCommandPermission(), zHomes.getConfigYAML().getSetHomeCommandCost())) {
                     addHome(player, home, player.getLocation());

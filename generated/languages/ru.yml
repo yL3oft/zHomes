@@ -1,0 +1,173 @@
+####################################################################################################
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                   zHomes — Языковой Файл                                     | #
+# |                                                                                              | #
+# |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
+# |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
+# |   • GitHub:      https://github.com/yL3oft/zHomes                                            | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+####################################################################################################
+
+# Здесь вы можете управлять сообщениями хуков.
+hooks:
+  griefprevention:
+    cant-set-homes: "%prefix% <red>Вы не можете устанавливать home в этой области."
+  worldguard:
+    cant-use-homes: "%prefix% <red>Вы не можете использовать home здесь."
+    cant-set-homes: "%prefix% <red>Вы не можете установить home здесь."
+  vault:
+    cant-afford-command: "%prefix% <red>Вам нужно <gold>$%cost% <red>для выполнения этой команды."
+
+# Сообщения, связанные с отожкой телепортации.
+teleport-warmup:
+  warmup: "%prefix% <green>Телепортация через %time% сек... Не двигайтесь!"
+  warmup-actionbar: "<green>Телепортация через %time% сек..."
+  cancelled: "%prefix% <red>Вы двинулись! Телепортация отменена."
+  cancelled-actionbar: "<red>Вы двинулись! Телепортация отменена."
+
+# Сообщения, связанные с командами.
+commands:
+  # Здесь вы найдёте сообщения, которые можно использовать в нескольких командах.
+  no-permission: "%prefix% <red>У вас нет прав для выполнения этой команды."
+  only-players: "%prefix% <red>Только игроки могут выполнять эту команду."
+  in-cooldown: "%prefix% <red>Вы должны подождать %time% секунд перед повторным использованием."
+  home-already-exist: "%prefix% <red>У вас уже есть home с таким названием."
+  home-doesnt-exist: "%prefix% <red>У вас нет home с таким названием."
+  home-doesnt-exist-others: "%prefix% <yellow>%player% <red>нет home с таким названием."
+  cant-use-2dot: "%prefix% <red>Вы не можете использовать <yellow>':' <red>в этой команде."
+  cant-find-player: "%prefix% <red>Игрок не найден."
+  unable-to-find-safe-location: "%prefix% <red>Не удалось найти безопасное место для телепортации."
+  world-restricted-sethome: "%prefix% <red>Вы не можете устанавливать home в этом мире."
+  world-restricted-home: "%prefix% <red>Вы не можете телепортироваться к home в том мире."
+
+  # Ниже вы найдёте сообщения, специфичные для каждой команды.
+  main:
+    help:
+      help-perm: |-
+        %prefix% <aqua>Использование <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>help <gray>Показывает это сообщение помощи
+        <red>-> <yellow>/%command% <green>info <gray>Показывает информацию о плагине
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+        <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
+        <red>-> <yellow>/%command% <green>nearhomes <gold>(Радиус) <gray>Список home поблизости в заданном радиусе
+        <red>-> <yellow>/%command% <green>parse <gold>(Игрок) (Текст) <gray>Обрабатывает текст с плейсхолдерами для определённого игрока
+        <red>-> <yellow>/%command% <green>purge (<игрок>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Очистка домов с фильтрами
+        <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Конвертирует данные из одного места в другое
+        <red>-> <yellow>/%command% <green>export <gray>Экспортирует все home в один файл
+        <red>-> <yellow>/%command% <green>import (<file>) <gray>Импортирует home из одного файла
+      help-noperm: |-
+        %prefix% <aqua>Использование <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>(help|?) <gray>Показывает это сообщение помощи
+        <red>-> <yellow>/%command% <green>(version|ver) <gray>Показывает версию плагина
+    info:
+      output: |-
+        %prefix% <aqua>Запущен <dark_aqua>%name% v%version% <aqua>от <dark_aqua>%author%<aqua>:
+        %prefix% <aqua>- Инфо сервера:
+        %prefix% <dark_aqua>   Software: <white>%server.software%
+        %prefix% <dark_aqua>   Версия: <white>%server.version%
+        %prefix% <dark_aqua>   Требуется обновление: <white>%requpdate%
+        %prefix% <dark_aqua>   Язык: <white>%language%
+        %prefix% <aqua>- Хранилище:
+        %prefix% <dark_aqua>   Тип: <white>%storage.type%
+        %prefix% <dark_aqua>   Пользователи: <white>%storage.users%
+        %prefix% <dark_aqua>   Homes: <white>%storage.homes%
+        %prefix% <aqua>- Hooks:
+        %prefix% <dark_aqua>   PlaceholderAPI: <white>%use.placeholderapi%
+        %prefix% <dark_aqua>   MiniPlaceholders: <white>%use.miniplaceholders%
+        %prefix% <dark_aqua>   GriefPrevention: <white>%use.griefprevention%
+        %prefix% <dark_aqua>   WorldGuard: <white>%use.worldguard%
+        %prefix% <dark_aqua>   Vault: <white>%use.vault%
+      requpdate-yes: "<red>Да <gray>(Используйте <yellow>/%command% version <gray>для подробностей)"
+      requpdate-no: "<green>Нет"
+    version:
+      output: "%prefix% <aqua>Текущая версия: <green>%version%"
+    reload:
+      usage: |-
+        %prefix% <aqua>Использование <yellow>/%command% <green>(reload|rl)<aqua>:
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+      output: "%prefix% <green>Плагин перезагружен за <aqua>%time%ms<green>."
+      commands:
+        output: "%prefix% <green>Все команды плагина перезагружены за <aqua>%time%ms<green>."
+      config:
+        output: "%prefix% <green>Файл конфигурации плагина перезагружен за <aqua>%time%ms<green>."
+      languages:
+        output: "%prefix% <green>Языки плагина перезагружены за <aqua>%time%ms<green>."
+    nearhomes:
+      usage: "<red>-> <yellow>/%command% nearhomes <green>[<Радиус>]"
+      output: "%prefix% <gray>Home в вашей окрестности в <yellow>%radius% <gray>блоках: <white>%homes%"
+      output-not-found: "%prefix% <red>Home в радиусе <yellow>%radius% <red>блоков не найдены."
+      home-string: "<yellow><hover:show_text:'<green>Нажмите для телепортации.'><click:run_command:'/%homecommand% %owner%:%home%'>%home%</click></hover> <gray><hover:show_text:'<green>Нажмите для фильтрации по игроку.'><click:run_command:'/%maincommand% nearhomes %radius% -user %owner%'>(%owner%)</click></hover>"
+      filtered-player:
+        output: "%prefix% <gray>Home игрока <yellow>%player% <gray>в вашей окрестности в <yellow>%radius% <gray>блоках: <white>%homes%"
+        home-string: "<yellow><hover:show_text:'<green>Нажмите для телепортации.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+    parse:
+      usage: "<red>-> <yellow>/%command% parse <gold>(Игрок) (Текст)"
+      output: "%prefix% <gray>Обработанный текст: <white>%parsed%"
+    purge:
+      usage: |-
+        %prefix% <aqua>Использование <yellow>/%command% purge<aqua>:
+        <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gray>Очистить все дома игрока или всех
+        <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gold>-world <green>(мир) <gray>Очистить дома в определенном мире
+        <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gold>-startwith <green>(префикс) <gray>Очистить дома, начинающиеся с префикса
+        <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gold>-endwith <green>(суффикс) <gray>Очистить дома, заканчивающиеся суффиксом
+        <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(игроки) <gray>Очистить дома только для определенных игроков
+        <aqua>Вы можете комбинировать несколько фильтров:
+        <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+        <red>-> <yellow>/%command% purge <green>ИмяИгрока <gold>-world <green>world_the_end <gold>-endwith <green>_old
+      output: "%prefix% <green>Успешно очищено <yellow>%amount% <green>дом(ов)!"
+    converter:
+      usage: |-
+        %prefix% <aqua>Использование <yellow>/%command% <green>converter<aqua>:
+        <red>-> <yellow>/%command% <green>converter sqlitetoh2
+        <red>-> <yellow>/%command% <green>converter sqlitetomysql
+        <red>-> <yellow>/%command% <green>converter sqlitetomariadb
+        <red>-> <yellow>/%command% <green>converter mysqltosqlite
+        <red>-> <yellow>/%command% <green>converter mysqltoh2
+        <red>-> <yellow>/%command% <green>converter mariadbtosqlite
+        <red>-> <yellow>/%command% <green>converter mariadbtoh2
+        <red>-> <yellow>/%command% <green>converter h2tosqlite
+        <red>-> <yellow>/%command% <green>converter h2tomysql
+        <red>-> <yellow>/%command% <green>converter h2tomariadb
+        <red>-> <yellow>/%command% <green>converter essentials
+        <red>-> <yellow>/%command% <green>converter sethome
+        <red>-> <yellow>/%command% <green>converter ultimatehomes
+        <red>-> <yellow>/%command% <green>converter xhomes
+        <red>-> <yellow>/%command% <green>converter zhome
+      output: "%prefix% <green>Все данные конвертированы!"
+      error: "%prefix% <red>Произошла ошибка при конвертации, проверьте консоль сервера."
+    export:
+      output: "%prefix% <green>Все home экспортированы в <yellow>%file%<green>!"
+      error: "%prefix% <red>Произошла ошибка при экспорте, проверьте консоль сервера."
+    import:
+      usage: "<red>-> <yellow>/%command% import <green>(<файл>)"
+      output: "%prefix% <green>Все home импортированы из <yellow>%file%<green>!"
+      file-not-found: "%prefix% <red>Файл <yellow>%file% <red>не найден."
+      error: "%prefix% <red>Произошла ошибка при импорте, проверьте консоль сервера."
+  sethome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>Home <yellow>%home% <green>установлена в вашей позиции."
+    limit-reached: "<red>Вы не можете установить больше home, достигнут лимит <yellow>(%limit% homes)<red>!"
+  delhome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <red>Home <yellow>%home% <red>удалена."
+  home:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>Телепортирование к <yellow>%home%<green>..."
+    cant-dimensional-teleport: "<red>Телепортация отменена! Межмирная телепортация отключена."
+    rename:
+      usage: "<red>-> <yellow>/%command% <green>rename (Home) (НовоеИмя)"
+      output: "%prefix% <green>Home <yellow>%home% <green>переименована в <yellow>%newname%<green>."
+      same-name: "%prefix% <red>Нельзя переименовать home в то же имя."
+  homes:
+    output: "%prefix% <gray>Ваши home (%amount%): <white>%homes%"
+    home-string: "<reset><hover:show_text:'<green>Нажмите для телепортации.'><click:run_command:'/%homecommand% %home%'>%home%</click></hover>"
+    invalid-page: "%prefix% <red>Неверный номер страницы! Используйте число больше 0."
+    others:
+      output: "%prefix% <gray>Home игрока <yellow>%player% <gray>(%amount%): <white>%homes%"
+      home-string: "<reset><hover:show_text:'<green>Нажмите для телепортации.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+
+# !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
+
+config-version: "1.0.1"

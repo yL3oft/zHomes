@@ -1,0 +1,173 @@
+####################################################################################################
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                                    zHomes — Taalbestand                                      | #
+# |                                                                                              | #
+# |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
+# |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
+# |   • GitHub:      https://github.com/yL3oft/zHomes                                            | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+####################################################################################################
+
+# Hier kun je hook-berichten beheren.
+hooks:
+  griefprevention:
+    cant-set-homes: "%prefix% <red>Je kunt geen homes instellen in dit gebied."
+  worldguard:
+    cant-use-homes: "%prefix% <red>Je kunt hier geen homes gebruiken."
+    cant-set-homes: "%prefix% <red>Je kunt hier geen home instellen."
+  vault:
+    cant-afford-command: "%prefix% <red>Je hebt <gold>$%cost% <red>nodig om dit commando uit te voeren."
+
+# Berichten gerelateerd aan teleport-opwarming.
+teleport-warmup:
+  warmup: "%prefix% <green>Teleporteren in %time% seconden... Niet bewegen!"
+  warmup-actionbar: "<green>Teleporteren in %time% seconden..."
+  cancelled: "%prefix% <red>Je bewoog! Teleportatie geannuleerd."
+  cancelled-actionbar: "<red>Je bewoog! Teleportatie geannuleerd."
+
+# Berichten gerelateerd aan commando's.
+commands:
+  # Hier vind je berichten die in meerdere commando's gebruikt kunnen worden.
+  no-permission: "%prefix% <red>Je hebt geen toestemming om dit commando uit te voeren."
+  only-players: "%prefix% <red>Alleen spelers kunnen dit commando uitvoeren."
+  in-cooldown: "%prefix% <red>Je moet %time% seconden wachten voordat je dit commando opnieuw gebruikt."
+  home-already-exist: "%prefix% <red>Je hebt al een home met deze naam."
+  home-doesnt-exist: "%prefix% <red>Je hebt geen home met deze naam."
+  home-doesnt-exist-others: "%prefix% <yellow>%player% <red>heeft geen home met deze naam."
+  cant-use-2dot: "%prefix% <red>Je kunt <yellow>':' <red>niet gebruiken in dit commando."
+  cant-find-player: "%prefix% <red>Deze speler werd niet gevonden."
+  unable-to-find-safe-location: "%prefix% <red>Er kon geen veilige locatie worden gevonden om je naartoe te teleporteren."
+  world-restricted-sethome: "%prefix% <red>Je kunt geen homes instellen in deze wereld."
+  world-restricted-home: "%prefix% <red>Je kunt niet teleporteren naar homes in die wereld."
+
+  # Hieronder vind je berichten die specifiek zijn voor de commando's.
+  main:
+    help:
+      help-perm: |-
+        %prefix% <aqua>Gebruik van <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>help <gray>Toont dit hulpbericht
+        <red>-> <yellow>/%command% <green>info <gray>Toont plugin-informatie
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+        <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
+        <red>-> <yellow>/%command% <green>nearhomes <gold>(Straal) <gray>Lijst homes in de buurt binnen een straal
+        <red>-> <yellow>/%command% <green>parse <gold>(Speler) (Tekst) <gray>Verwerkt een tekst met placeholders voor een specifieke speler
+        <red>-> <yellow>/%command% <green>purge (<speler>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Verwijder huizen met filters
+        <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Converteert gegevens van de ene naar de andere plek
+        <red>-> <yellow>/%command% <green>export <gray>Exporteert alle homes naar één bestand
+        <red>-> <yellow>/%command% <green>import (<file>) <gray>Importeert homes vanuit één bestand
+      help-noperm: |-
+        %prefix% <aqua>Gebruik van <yellow>/%command%<aqua>:
+        <red>-> <yellow>/%command% <green>(help|?) <gray>Toont dit hulpbericht
+        <red>-> <yellow>/%command% <green>(version|ver) <gray>Toont de plugin-versie
+    info:
+      output: |-
+        %prefix% <aqua>Actief <dark_aqua>%name% v%version% <aqua>door <dark_aqua>%author%<aqua>:
+        %prefix% <aqua>- Server-info:
+        %prefix% <dark_aqua>   Software: <white>%server.software%
+        %prefix% <dark_aqua>   Versie: <white>%server.version%
+        %prefix% <dark_aqua>   Update vereist: <white>%requpdate%
+        %prefix% <dark_aqua>   Taal: <white>%language%
+        %prefix% <aqua>- Opslag:
+        %prefix% <dark_aqua>   Type: <white>%storage.type%
+        %prefix% <dark_aqua>   Gebruikers: <white>%storage.users%
+        %prefix% <dark_aqua>   Homes: <white>%storage.homes%
+        %prefix% <aqua>- Hooks:
+        %prefix% <dark_aqua>   PlaceholderAPI: <white>%use.placeholderapi%
+        %prefix% <dark_aqua>   MiniPlaceholders: <white>%use.miniplaceholders%
+        %prefix% <dark_aqua>   GriefPrevention: <white>%use.griefprevention%
+        %prefix% <dark_aqua>   WorldGuard: <white>%use.worldguard%
+        %prefix% <dark_aqua>   Vault: <white>%use.vault%
+      requpdate-yes: "<red>Ja <gray>(Gebruik <yellow>/%command% version <gray>voor meer informatie)"
+      requpdate-no: "<green>Nee"
+    version:
+      output: "%prefix% <aqua>Huidige versie: <green>%version%"
+    reload:
+      usage: |-
+        %prefix% <aqua>Gebruik van <yellow>/%command% <green>(reload|rl)<aqua>:
+        <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
+      output: "%prefix% <green>Plugin herladen in <aqua>%time%ms<green>."
+      commands:
+        output: "%prefix% <green>Alle plugin-commando's herladen in <aqua>%time%ms<green>."
+      config:
+        output: "%prefix% <green>Plugin-configuratiebestand herladen in <aqua>%time%ms<green>."
+      languages:
+        output: "%prefix% <green>Plugin-talen herladen in <aqua>%time%ms<green>."
+    nearhomes:
+      usage: "<red>-> <yellow>/%command% nearhomes <green>[<Straal>]"
+      output: "%prefix% <gray>Homes bij jou in de buurt binnen <yellow>%radius% <gray>blokken: <white>%homes%"
+      output-not-found: "%prefix% <red>Geen homes gevonden binnen <yellow>%radius% <red>blokken."
+      home-string: "<yellow><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %owner%:%home%'>%home%</click></hover> <gray><hover:show_text:'<green>Klik om op speler te filteren.'><click:run_command:'/%maincommand% nearhomes %radius% -user %owner%'>(%owner%)</click></hover>"
+      filtered-player:
+        output: "%prefix% <gray>Homes van <yellow>%player% <gray>bij jou in de buurt binnen <yellow>%radius% <gray>blokken: <white>%homes%"
+        home-string: "<yellow><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+    parse:
+      usage: "<red>-> <yellow>/%command% parse <gold>(Speler) (Tekst)"
+      output: "%prefix% <gray>Verwerkte tekst: <white>%parsed%"
+    purge:
+      usage: |-
+        %prefix% <aqua>Gebruik van <yellow>/%command% purge<aqua>:
+        <red>-> <yellow>/%command% purge <green>(<speler>|*) <gray>Verwijder alle huizen van een speler of iedereen
+        <red>-> <yellow>/%command% purge <green>(<speler>|*) <gold>-world <green>(wereld) <gray>Verwijder huizen in een specifieke wereld
+        <red>-> <yellow>/%command% purge <green>(<speler>|*) <gold>-startwith <green>(voorvoegsel) <gray>Verwijder huizen die beginnen met voorvoegsel
+        <red>-> <yellow>/%command% purge <green>(<speler>|*) <gold>-endwith <green>(achtervoegsel) <gray>Verwijder huizen die eindigen met achtervoegsel
+        <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(spelers) <gray>Verwijder huizen alleen voor specifieke spelers
+        <aqua>Je kunt meerdere filters combineren:
+        <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+        <red>-> <yellow>/%command% purge <green>SpelerNaam <gold>-world <green>world_the_end <gold>-endwith <green>_old
+      output: "%prefix% <green>Succesvol <yellow>%amount% <green>hui(s/zen) verwijderd!"
+    converter:
+      usage: |-
+        %prefix% <aqua>Gebruik van <yellow>/%command% <green>converter<aqua>:
+        <red>-> <yellow>/%command% <green>converter sqlitetoh2
+        <red>-> <yellow>/%command% <green>converter sqlitetomysql
+        <red>-> <yellow>/%command% <green>converter sqlitetomariadb
+        <red>-> <yellow>/%command% <green>converter mysqltosqlite
+        <red>-> <yellow>/%command% <green>converter mysqltoh2
+        <red>-> <yellow>/%command% <green>converter mariadbtosqlite
+        <red>-> <yellow>/%command% <green>converter mariadbtoh2
+        <red>-> <yellow>/%command% <green>converter h2tosqlite
+        <red>-> <yellow>/%command% <green>converter h2tomysql
+        <red>-> <yellow>/%command% <green>converter h2tomariadb
+        <red>-> <yellow>/%command% <green>converter essentials
+        <red>-> <yellow>/%command% <green>converter sethome
+        <red>-> <yellow>/%command% <green>converter ultimatehomes
+        <red>-> <yellow>/%command% <green>converter xhomes
+        <red>-> <yellow>/%command% <green>converter zhome
+      output: "%prefix% <green>Alle gegevens geconverteerd!"
+      error: "%prefix% <red>Er is iets misgegaan bij het converteren, controleer je serverconsole."
+    export:
+      output: "%prefix% <green>Alle homes geëxporteerd naar <yellow>%file%<green>!"
+      error: "%prefix% <red>Er is iets misgegaan bij het exporteren, controleer je serverconsole."
+    import:
+      usage: "<red>-> <yellow>/%command% import <green>(<bestand>)"
+      output: "%prefix% <green>Alle homes geïmporteerd vanuit <yellow>%file%<green>!"
+      file-not-found: "%prefix% <red>Het bestand <yellow>%file% <red>werd niet gevonden."
+      error: "%prefix% <red>Er is iets misgegaan bij het importeren, controleer je serverconsole."
+  sethome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>Home <yellow>%home% <green>ingesteld op je positie."
+    limit-reached: "<red>Je kunt geen homes meer instellen omdat je je limiet hebt bereikt <yellow>(%limit% homes)<red>!"
+  delhome:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <red>Home <yellow>%home% <red>verwijderd."
+  home:
+    usage: "<red>-> <yellow>/%command% <green>(Home)"
+    output: "%prefix% <green>Geteleporteerd naar <yellow>%home%<green>..."
+    cant-dimensional-teleport: "<red>Je teleportatie is geannuleerd! Dimensionale teleportatie is uitgeschakeld."
+    rename:
+      usage: "<red>-> <yellow>/%command% <green>rename (Home) (NieuweNaam)"
+      output: "%prefix% <green>Home <yellow>%home% <green>hernoemd naar <yellow>%newname%<green>."
+      same-name: "%prefix% <red>Je kunt een home niet hernoemen naar dezelfde naam."
+  homes:
+    output: "%prefix% <gray>Jouw homes (%amount%): <white>%homes%"
+    home-string: "<reset><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %home%'>%home%</click></hover>"
+    invalid-page: "%prefix% <red>Ongeldig paginanummer! Gebruik een getal hoger dan 0."
+    others:
+      output: "%prefix% <gray>Homes van <yellow>%player% <gray>(%amount%): <white>%homes%"
+      home-string: "<reset><hover:show_text:'<green>Klik om te teleporteren.'><click:run_command:'/%homecommand% %player%:%home%'>%home%</click></hover>"
+
+# !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
+
+config-version: "1.0.1"

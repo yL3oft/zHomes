@@ -60,7 +60,7 @@ public class PlayerListeners extends HomesUtils implements Listener {
                 return;
             }
         }
-        if(zHomes.updateUtils.needsUpdate && zHomes.getConfigYAML().isAnnounceUpdateEnabled() && (p.isOp() || p.hasPermission(zHomes.getConfigYAML().getMainCommandVersionUpdatePermission()))) {
+        if(zHomes.updateUtils.needsUpdate && zHomes.getConfigYAML().isAnnounceUpdateEnabled() && (p.isOp() || p.hasPermission(zHomes.getConfigYAML().getMainCommandVersionAnnouncePermission()))) {
             lastAnnounced.put(uuid, System.currentTimeMillis());
             zAPI.getScheduler().runLater(() -> {
                 if(!p.isOnline()) return;

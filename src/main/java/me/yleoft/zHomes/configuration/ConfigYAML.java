@@ -43,9 +43,13 @@ public class ConfigYAML extends YAMLBuilder {
                 .replace("%h1", zHomes.getLanguageYAML().getConfigCommentHeader1())
                 .replace("%h2", zHomes.getLanguageYAML().getConfigCommentHeader2()));
 
-        if (versionOlder(currentVersion)) {
+        if (versionOlder("1.0.1")) {
             voidPath(formPath("general", "auto-update"));
             voidPath(formPath("commands", "main", "version", "update"));
+            updateVersion("1.0.1");
+        }
+
+        if(versionOlder(currentVersion)) {
             updateVersion(currentVersion);
         }
 
@@ -130,10 +134,12 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("commands", "main", "help", "permission"), "zhomes.command.main.help");
         addDefault(formPath("commands", "main", "info", "permission"), "zhomes.command.main.info");
         addDefault(formPath("commands", "main", "version", "permission"), "zhomes.command.main.version");
+        addDefault(formPath("commands", "main", "version", "announce-permission"), "zhomes.command.main.announceversion");
         addDefault(formPath("commands", "main", "reload", "permission"), "zhomes.command.main.reload");
         addDefault(formPath("commands", "main", "nearhomes", "permission"), "zhomes.command.main.nearhomes");
         addDefault(formPath("commands", "main", "nearhomes", "limit"), 500.0);
         addDefault(formPath("commands", "main", "parse", "permission"), "zhomes.command.main.parse");
+        addDefault(formPath("commands", "main", "purge", "permission"), "zhomes.command.main.purge");
         addDefault(formPath("commands", "main", "converter", "permission"), "zhomes.command.main.converter");
         addDefault(formPath("commands", "main", "importexport", "permission"), "zhomes.command.main.importexport");
 
@@ -323,8 +329,8 @@ public class ConfigYAML extends YAMLBuilder {
     public String getMainCommandVersionPermission() {
         return getString(formPath("commands", "main", "version", "permission"));
     }
-    public String getMainCommandVersionUpdatePermission() {
-        return getString(formPath("commands", "main", "version", "update", "permission"));
+    public String getMainCommandVersionAnnouncePermission() {
+        return getString(formPath("commands", "main", "version", "announce-permission"));
     }
     public String getMainCommandReloadPermission() {
         return getString(formPath("commands", "main", "reload", "permission"));
@@ -337,6 +343,9 @@ public class ConfigYAML extends YAMLBuilder {
     }
     public String getMainCommandParsePermission() {
         return getString(formPath("commands", "main", "parse", "permission"));
+    }
+    public String getMainCommandPurgePermission() {
+        return getString(formPath("commands", "main", "purge", "permission"));
     }
     public String getMainCommandConverterPermission() {
         return getString(formPath("commands", "main", "converter", "permission"));

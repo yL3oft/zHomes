@@ -182,14 +182,16 @@ public final class zHomes extends JavaPlugin {
         logger.info("<green>All commands have been loaded!");
         //</editor-fold>
         //<editor-fold desc="Metrics">
-        logger.info("<yellow>Enabling bStats metrics...");
-        try {
-            int bStatsID = 25021;
-            new zHomesMetrics(this, bStatsID);
-        }catch (Exception exception) {
-            logger.warn("Failed to create a bStats instance.", exception);
+        if(getConfigYAML().isMetricsEnabled()) {
+            logger.info("<yellow>Enabling bStats metrics...");
+            try {
+                int bStatsID = 25021;
+                new zHomesMetrics(this, bStatsID);
+            } catch (Exception exception) {
+                logger.warn("Failed to create a bStats instance.", exception);
+            }
+            logger.info("<green>bStats metrics enabled! Thank you for helping us improve zHomes.");
         }
-        logger.info("<green>bStats metrics enabled! Thank you for helping us improve zHomes.");
         //</editor-fold>
     }
 
@@ -232,11 +234,12 @@ public final class zHomes extends JavaPlugin {
             PluginYAML.registerPermission(getConfigYAML().getMainCommandPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + "' command", PermissionDefault.TRUE);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandHelpPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " (help|?)' command (With perm)", PermissionDefault.OP);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandVersionPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " (version|ver)' command", PermissionDefault.TRUE);
-            PluginYAML.registerPermission(getConfigYAML().getMainCommandVersionUpdatePermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " (version|ver) update' command", PermissionDefault.OP);
+            PluginYAML.registerPermission(getConfigYAML().getMainCommandVersionAnnouncePermission(), "Should the plugin announce a version update for the player?", PermissionDefault.OP);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandInfoPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " info' command", PermissionDefault.OP);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandReloadPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " (reload|rl)' command", PermissionDefault.OP, helpANDmainChildren);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandNearHomesPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " nearhomes' command", PermissionDefault.OP);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandParsePermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " parse' command", PermissionDefault.OP);
+            PluginYAML.registerPermission(getConfigYAML().getMainCommandPurgePermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " purge' command", PermissionDefault.OP);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandConverterPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " converter' command", PermissionDefault.OP);
             PluginYAML.registerPermission(getConfigYAML().getMainCommandImportExportPermission(), "Permission to use the '/" + getConfigYAML().getMainCommand() + " (export|import)' command", PermissionDefault.OP);
             PluginYAML.registerPermission(getConfigYAML().getSetHomeCommandPermission(), "Permission to use the '/" + getConfigYAML().getSetHomeCommand() + "' command", PermissionDefault.TRUE);
@@ -285,7 +288,7 @@ public final class zHomes extends JavaPlugin {
                 };
             }));
             addCustomChart(new SimplePie("language", () -> {
-                String language = config.getString(Path.formPath("general.lang"), "en");
+                String language = getConfigYAML().getLanguageCode();
                 return switch (language.toLowerCase()) {
                     case "de" -> "German";
                     case "en" -> "English";
@@ -294,15 +297,11 @@ public final class zHomes extends JavaPlugin {
                     case "it" -> "Italian";
                     case "nl" -> "Dutch";
                     case "pl" -> "Polish";
-                    case "pt_br" -> "Portuguese (Brazil)";
+                    case "pt-br" -> "Portuguese (Brazil)";
                     case "ru" -> "Russian";
                     case "zhcn" -> "Chinese (Simplified)";
                     default -> "Custom";
                 };
-            }));
-            addCustomChart(new SimplePie("auto_update", () -> {
-                boolean autoUpdate = config.getBoolean(Path.formPath("general.auto-update"), false);
-                return autoUpdate ? "Enabled" : "Disabled";
             }));
         }
     }

@@ -169,9 +169,10 @@ public class LanguageBuilder extends YAMLBuilder {
                 <red>-> <yellow>/%command% <green>help <gray>Shows this exact help message
                 <red>-> <yellow>/%command% <green>info <gray>Shows plugin information
                 <red>-> <yellow>/%command% <green>(reload|rl) <gold>[all, commands, config, languages]
-                <red>-> <yellow>/%command% <green>(version|ver)
-                <red>-> <yellow>/%command% <green>nearhomes <gold>(<radius>) <gray>List homes near you within a certain radius
-                <red>-> <yellow>/%command% <green>parse <gold>(Player) (String) <gray>Parses a string with placeholders for a specific player
+                <red>-> <yellow>/%command% <green>(version|ver) <gray>Shows plugin version
+                <red>-> <yellow>/%command% <green>nearhomes (radius) <gray>List homes near you within a certain radius
+                <red>-> <yellow>/%command% <green>parse (Player) (String) <gray>Parses a string with placeholders for a specific player
+                <red>-> <yellow>/%command% <green>purge (<player>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Purge homes with filters
                 <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Convert data from one place to another
                 <red>-> <yellow>/%command% <green>export <gray>Exports all homes to a single file
                 <red>-> <yellow>/%command% <green>import (<file>) <gray>Imports homes from a single file
@@ -244,6 +245,21 @@ public class LanguageBuilder extends YAMLBuilder {
                 "<red>-> <yellow>/%command% parse <gold>(Player) (String)"));
         addDefault(formPath("commands", "main", "parse", "output"), t(formPath("commands", "main", "parse", "output"),
                 "%prefix% <gray>Parsed text: <white>%parsed%"));
+
+        // commands.main.purge
+        addDefault(formPath("commands", "main", "purge", "usage"), t(formPath("commands", "main", "purge", "usage"), """
+                %prefix% <aqua>Usages of <yellow>/%command% purge<aqua>:
+                <red>-> <yellow>/%command% purge <green>(<player>|*) <gray>Purge all homes for a player or everyone
+                <red>-> <yellow>/%command% purge <green>(<player>|*) <gold>-world <green>(world) <gray>Purge homes in a specific world
+                <red>-> <yellow>/%command% purge <green>(<player>|*) <gold>-startwith <green>(prefix) <gray>Purge homes starting with prefix
+                <red>-> <yellow>/%command% purge <green>(<player>|*) <gold>-endwith <green>(suffix) <gray>Purge homes ending with suffix
+                <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(players) <gray>Purge homes only for specific players
+                <aqua>You can combine multiple filters:
+                <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+                <red>-> <yellow>/%command% purge <green>PlayerName <gold>-world <green>world_the_end <gold>-endwith <green>_old
+                """));
+        addDefault(formPath("commands", "main", "purge", "output"), t(formPath("commands", "main", "purge", "output"),
+                "%prefix% <green>Successfully purged <yellow>%amount% <green>home(s)!"));
 
         // commands.main.converter
         addDefault(formPath("commands", "main", "converter", "usage"), t(formPath("commands", "main", "converter", "usage"), """
@@ -614,6 +630,13 @@ public class LanguageBuilder extends YAMLBuilder {
     public Component getMainParseOutput(String parsed) {
         return getMainParseOutput(null, parsed);
     }
+    public String getMainPurgeUsage() {
+        return getString(zHomes.getConfigYAML().getMainCommand(), formPath("commands", "main", "purge", "usage"));
+    }
+    public String getMainPurgeOutput(int amount) {
+        return getString(zHomes.getConfigYAML().getMainCommand(), formPath("commands", "main", "purge", "output"))
+                .replace("%amount%", String.valueOf(amount));
+    }
     public String getMainConverterUsage() {
         return getString(zHomes.getConfigYAML().getMainCommand(), formPath("commands", "main", "converter", "usage"));
     }
@@ -743,7 +766,8 @@ public class LanguageBuilder extends YAMLBuilder {
     //<editor-fold desc="Overrides">
     public String getString(String command, String path) {
         return getString(path)
-                .replace("%command%", command);
+                .replace("%command%", command)
+                .replace("<command>", command);
     }
 
     // Helper to reduce repetition

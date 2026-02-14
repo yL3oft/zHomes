@@ -153,6 +153,7 @@ public class ruYAML extends LanguageBuilder {
                 <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
                 <red>-> <yellow>/%command% <green>nearhomes <gold>(Радиус) <gray>Список home поблизости в заданном радиусе
                 <red>-> <yellow>/%command% <green>parse <gold>(Игрок) (Текст) <gray>Обрабатывает текст с плейсхолдерами для определённого игрока
+                <red>-> <yellow>/%command% <green>purge (<игрок>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Очистка домов с фильтрами
                 <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Конвертирует данные из одного места в другое
                 <red>-> <yellow>/%command% <green>export <gray>Экспортирует все home в один файл
                 <red>-> <yellow>/%command% <green>import (<file>) <gray>Импортирует home из одного файла
@@ -190,10 +191,6 @@ public class ruYAML extends LanguageBuilder {
         // commands.main.version
         t.put(formPath("commands", "main", "version", "output"),
                 "%prefix% <aqua>Текущая версия: <green>%version%");
-        t.put(formPath("commands", "main", "version", "update", "output"),
-                "%prefix% <green>zHomes обновлён до последней версии <yellow>(%update%)<green>, перезапустите сервер.");
-        t.put(formPath("commands", "main", "version", "update", "no-update"),
-                "%prefix% <green>Вы уже используете последнюю версию zHomes.");
 
         // commands.main.reload
         t.put(formPath("commands", "main", "reload", "usage"), """
@@ -228,6 +225,21 @@ public class ruYAML extends LanguageBuilder {
                 "<red>-> <yellow>/%command% parse <gold>(Игрок) (Текст)");
         t.put(formPath("commands", "main", "parse", "output"),
                 "%prefix% <gray>Обработанный текст: <white>%parsed%");
+
+        // commands.main.purge
+        t.put(formPath("commands", "main", "purge", "usage"), """
+                %prefix% <aqua>Использование <yellow>/%command% purge<aqua>:
+                <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gray>Очистить все дома игрока или всех
+                <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gold>-world <green>(мир) <gray>Очистить дома в определенном мире
+                <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gold>-startwith <green>(префикс) <gray>Очистить дома, начинающиеся с префикса
+                <red>-> <yellow>/%command% purge <green>(<игрок>|*) <gold>-endwith <green>(суффикс) <gray>Очистить дома, заканчивающиеся суффиксом
+                <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(игроки) <gray>Очистить дома только для определенных игроков
+                <aqua>Вы можете комбинировать несколько фильтров:
+                <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+                <red>-> <yellow>/%command% purge <green>ИмяИгрока <gold>-world <green>world_the_end <gold>-endwith <green>_old
+                """);
+        t.put(formPath("commands", "main", "purge", "output"),
+                "%prefix% <green>Успешно очищено <yellow>%amount% <green>дом(ов)!");
 
         // commands.main.converter
         t.put(formPath("commands", "main", "converter", "usage"), """

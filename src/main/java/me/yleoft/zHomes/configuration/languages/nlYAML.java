@@ -153,6 +153,7 @@ public class nlYAML extends LanguageBuilder {
                 <red>-> <yellow>/%command% <green>(version|ver) <gold>[update]
                 <red>-> <yellow>/%command% <green>nearhomes <gold>(Straal) <gray>Lijst homes in de buurt binnen een straal
                 <red>-> <yellow>/%command% <green>parse <gold>(Speler) (Tekst) <gray>Verwerkt een tekst met placeholders voor een specifieke speler
+                <red>-> <yellow>/%command% <green>purge (<speler>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Verwijder huizen met filters
                 <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Converteert gegevens van de ene naar de andere plek
                 <red>-> <yellow>/%command% <green>export <gray>Exporteert alle homes naar één bestand
                 <red>-> <yellow>/%command% <green>import (<file>) <gray>Importeert homes vanuit één bestand
@@ -190,10 +191,6 @@ public class nlYAML extends LanguageBuilder {
         // commands.main.version
         t.put(formPath("commands", "main", "version", "output"),
                 "%prefix% <aqua>Huidige versie: <green>%version%");
-        t.put(formPath("commands", "main", "version", "update", "output"),
-                "%prefix% <green>zHomes bijgewerkt naar de nieuwste versie <yellow>(%update%)<green>, herstart je server om de wijzigingen toe te passen.");
-        t.put(formPath("commands", "main", "version", "update", "no-update"),
-                "%prefix% <green>Je gebruikt al de nieuwste versie van zHomes.");
 
         // commands.main.reload
         t.put(formPath("commands", "main", "reload", "usage"), """
@@ -228,6 +225,21 @@ public class nlYAML extends LanguageBuilder {
                 "<red>-> <yellow>/%command% parse <gold>(Speler) (Tekst)");
         t.put(formPath("commands", "main", "parse", "output"),
                 "%prefix% <gray>Verwerkte tekst: <white>%parsed%");
+
+        // commands.main.purge
+        t.put(formPath("commands", "main", "purge", "usage"), """
+                %prefix% <aqua>Gebruik van <yellow>/%command% purge<aqua>:
+                <red>-> <yellow>/%command% purge <green>(<speler>|*) <gray>Verwijder alle huizen van een speler of iedereen
+                <red>-> <yellow>/%command% purge <green>(<speler>|*) <gold>-world <green>(wereld) <gray>Verwijder huizen in een specifieke wereld
+                <red>-> <yellow>/%command% purge <green>(<speler>|*) <gold>-startwith <green>(voorvoegsel) <gray>Verwijder huizen die beginnen met voorvoegsel
+                <red>-> <yellow>/%command% purge <green>(<speler>|*) <gold>-endwith <green>(achtervoegsel) <gray>Verwijder huizen die eindigen met achtervoegsel
+                <red>-> <yellow>/%command% purge <green>* <gold>-player <green>(spelers) <gray>Verwijder huizen alleen voor specifieke spelers
+                <aqua>Je kunt meerdere filters combineren:
+                <red>-> <yellow>/%command% purge <green>* <gold>-world <green>world_nether <gold>-startwith <green>temp_
+                <red>-> <yellow>/%command% purge <green>SpelerNaam <gold>-world <green>world_the_end <gold>-endwith <green>_old
+                """);
+        t.put(formPath("commands", "main", "purge", "output"),
+                "%prefix% <green>Succesvol <yellow>%amount% <green>hui(s/zen) verwijderd!");
 
         // commands.main.converter
         t.put(formPath("commands", "main", "converter", "usage"), """

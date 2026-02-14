@@ -2,14 +2,11 @@ package me.yleoft.zHomes.commands;
 
 import me.yleoft.zAPI.command.SubCommand;
 import me.yleoft.zAPI.player.PlayerHandler;
-import me.yleoft.zAPI.utility.TextFormatter;
 import me.yleoft.zHomes.hooks.HookRegistry;
 import me.yleoft.zHomes.zHomes;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;

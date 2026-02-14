@@ -1,0 +1,206 @@
+####################################################################################################
+# +----------------------------------------------------------------------------------------------+ #
+# |                                                                                              | #
+# |                      ░██     ░██                                                             | #
+# |                      ░██     ░██                                                             | #
+# |           ░█████████ ░██     ░██  ░███████  ░█████████████   ░███████   ░███████             | #
+# |                ░███  ░██████████ ░██    ░██ ░██   ░██   ░██ ░██    ░██ ░██                   | #
+# |              ░███    ░██     ░██ ░██    ░██ ░██   ░██   ░██ ░█████████  ░███████             | #
+# |            ░███      ░██     ░██ ░██    ░██ ░██   ░██   ░██ ░██               ░██            | #
+# |           ░█████████ ░██     ░██  ░███████  ░██   ░██   ░██  ░███████   ░███████             | #
+# |                                                                                              | #
+# |                                   Plugin links & support                                     | #
+# |                                                                                              | #
+# |   • Wiki:        https://docs.yleoft.me/zhomes                                               | #
+# |   • Discord:     https://discord.gg/yCdhVDgn4K                                               | #
+# |   • Bug reports: https://github.com/yL3oft/zHomes/issues                                     | #
+# |                                                                                              | #
+# |   zHomes (c) yL3oft — released under the MIT License.                                        | #
+# |                                                                                              | #
+# +----------------------------------------------------------------------------------------------+ #
+####################################################################################################
+
+prefix: "<dark_gray>[<red>zHomes<dark_gray>]"
+
+# Edit your database settings below
+database:
+  # Here you can define how to store the plugin data.
+  # OPTIONS:
+  # - H2 (Preferred over SQLite)
+  # - SQLite
+  # - MariaDB (Preferred over MySQL)
+  # - MySQL
+  # DEFAULT: H2
+  type: "H2"
+  host: "localhost"
+  port: 3306
+  database: "db"
+  username: "root"
+  password: "pass"
+  options:
+    useSSL: false
+    allowPublicKeyRetrieval: false
+
+  # # WARNING: DO NOT CHANGE ANYTHING BELOW IF YOU DON'T KNOW WHAT YOU'RE DOING
+  pool-size: 10
+  table-prefix: "zhomes"
+
+general:
+  # Here you can define the language of the plugin, all languages can be found, edited and created on languages' directory.
+  # CURRENTLY AVAILABLE LANGUAGES: [de, en, es, fr, it, nl, pl, pt-br, ru, zhcn, <custom>]
+  language: "en"
+  # Toggle whether the plugin should announce available updates in the console and to players with the appropriate permission.
+  announce-update: true
+  # Enable or disable metrics collection to help improve the plugin.
+  # All data collected is anonymous and used solely for statistical purposes.
+  # !WARNING: Requires server restart to take effect!
+  metrics: true
+  # Enable or disable debug mode for more detailed logging output.
+  debug-mode: false
+
+# Settings related to teleportation behavior
+teleport-options:
+  # Enable or disable safe teleportation to prevent players from being teleported into dangerous locations.
+  enable-safe-teleport: true
+  # Enable or disable dimensional teleportation, allowing players to teleport between different worlds or dimensions.
+  dimensional-teleportation: true
+  # Play a sound effect when a player is teleported.
+  play-sound: true
+  restricted-worlds:
+    # Enable or disable the restriction of teleportation to certain worlds.
+    enable: false
+    # Define the mode for restricted worlds.
+    # OPTIONS:
+    # - blacklist: Players cannot teleport to worlds listed below.
+    # - whitelist: Players can only teleport to worlds listed below.
+    mode: "blacklist"
+    # List of worlds affected by the restricted worlds setting.
+    worlds:
+      - "world_nether"
+      - "world_the_end"
+  warmup:
+    # Enable or disable teleportation warmup period.
+    enable: true
+    # Define the warmup time in seconds before teleportation occurs.
+    time: 5
+    # Cancel the teleportation if the player moves during the warmup period.
+    cancel-on-move: true
+    # Show warmup countdown on the action bar.
+    show-on-actionbar: true
+
+limits:
+  # Enable or disable home limits for players.
+  enabled: false
+  # Default number of homes a player can set.
+  default: 10
+
+  # Limit examples based on player groups.
+  15:
+    - "group.vip"
+    - "group.mvp"
+  999:
+    - "group.admin"
+
+# !WARNING: Mostly everything below needs a restart to apply.
+commands:
+  main:
+    command: "zhomes"
+    description: "The main command for the plugin"
+    permission: "zhomes.command.main"
+    aliases:
+      - "zh"
+    help:
+      permission: "zhomes.command.main.help"
+    info:
+      permission: "zhomes.command.main.info"
+    version:
+      permission: "zhomes.command.main.version"
+      announce-permission: "zhomes.command.main.announceversion"
+    reload:
+      permission: "zhomes.command.main.reload"
+    nearhomes:
+      permission: "zhomes.command.main.nearhomes"
+      limit: 500.0
+    parse:
+      permission: "zhomes.command.main.parse"
+    purge:
+      permission: "zhomes.command.main.purge"
+    converter:
+      permission: "zhomes.command.main.converter"
+    importexport:
+      permission: "zhomes.command.main.importexport"
+  sethome:
+    command: "sethome"
+    description: "Use to set a home"
+    permission: "zhomes.command.sethome"
+    aliases:
+      - "seth"
+    cooldown: 0.0
+    # command-cost requires Vault to work.
+    command-cost: 0
+    others:
+      permission: "zhomes.command.sethome.others"
+  delhome:
+    command: "delhome"
+    description: "Use to delete a home"
+    permission: "zhomes.command.delhome"
+    aliases:
+      - "deletehome"
+      - "delh"
+    cooldown: 0.0
+    # command-cost requires Vault to work.
+    command-cost: 0
+    others:
+      permission: "zhomes.command.delhome.others"
+  homes:
+    command: "homes"
+    description: "List your homes"
+    permission: "zhomes.command.homes"
+    aliases:
+      - "myhomes"
+    cooldown: 0.0
+    # command-cost requires Vault to work.
+    command-cost: 0
+    # Define how the homes will be displayed to the player.
+    # OPTIONS:
+    # - text: Displays homes in a simple list format.
+    # - menu: Opens a graphical menu to select homes.
+    type: "menu"
+    others:
+      permission: "zhomes.command.homes.others"
+  home:
+    command: "home"
+    description: "Teleport to a home"
+    permission: "zhomes.command.home"
+    aliases: []
+    cooldown: 3.0
+    # command-cost requires Vault to work.
+    command-cost: 0
+    others:
+      permission: "zhomes.command.home.others"
+    rename:
+      permission: "zhomes.command.home.rename"
+      # command-cost requires Vault to work.
+      command-cost: 0
+
+# Permission nodes used by the plugin
+permissions:
+  bypass:
+    # Permission to bypass home limits
+    limit: "zhomes.bypass.limit"
+    # Permission to bypass dimensional teleportation restrictions
+    dimensional-teleportation: "zhomes.bypass.dimensionalteleportation"
+    # Permission to bypass safe teleportation checks
+    safe-teleportation: "zhomes.bypass.safeteleport"
+    # Permission to bypass restricted worlds checks
+    restricted-worlds: "zhomes.bypass.restrictedworlds"
+    # Permission to bypass teleportation warmup
+    warmup: "zhomes.bypass.warmup"
+    # Permission to bypass command costs
+    command-cost: "%command_permission%.bypass.command-cost"
+    # Permission to bypass command cooldowns
+    command-cooldown: "%command_permission%.bypass.command-cooldown"
+
+# !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
+
+config-version: "1.0.1"
