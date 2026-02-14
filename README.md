@@ -28,6 +28,7 @@ Some features:
 - Create, delete and list homes
 - Admin tools for managing and converting homes
 - PlaceholderAPI support for message placeholders
+- MiniPlaceholders support for minimessage placeholders
 - Vault support for economy/command-costs
 - GriefPrevention and WorldGuard integration for region checks
 - Teleport warmup and safe-teleport checks
