@@ -1,8 +1,8 @@
 package me.yleoft.zHomes.configuration.languages;
 
 import me.yleoft.zAPI.configuration.YAMLBuilder;
-import me.yleoft.zAPI.hooks.HookRegistry;
-import me.yleoft.zAPI.utility.TextFormatter;
+import me.yleoft.zAPI.hook.HookRegistry;
+import me.yleoft.zAPI.util.TextFormatter;
 import me.yleoft.zHomes.storage.DatabaseEditor;
 import me.yleoft.zHomes.utility.HomesUtils;
 import me.yleoft.zHomes.zHomes;
@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class LanguageBuilder extends YAMLBuilder {
 
-    private static final String currentVersion = "1.0.1";
+    private static final String currentVersion = "1.0.2";
 
     private final static File languageFolder = new File(zHomes.getInstance().getDataFolder(), "languages");
 
@@ -50,6 +50,12 @@ public class LanguageBuilder extends YAMLBuilder {
                 !WARNING: Requires server restart to take effect!
                 """);
         t.put(formPath("config", "comment", "general", "debug-mode"), "Enable or disable debug mode for more detailed logging output.");
+        t.put(formPath("config", "comment", "homes-settings"), "Settings related to home naming rules");
+        t.put(formPath("config", "comment", "homes-settings", "homes-regex"), """
+                Define the regex that home names must match.
+                NOTE: ':' is still blocked separately and cannot be used in home names.
+                DEFAULT: ^[^\\s]{1,20}$
+                """);
         t.put(formPath("config", "comment", "teleport-options"), "Settings related to teleportation behavior");
         t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Enable or disable safe teleportation to prevent players from being teleported into dangerous locations.");
         t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Enable or disable dimensional teleportation, allowing players to teleport between different worlds or dimensions.");
@@ -152,6 +158,8 @@ public class LanguageBuilder extends YAMLBuilder {
                 "%prefix% <yellow>%player% <red>don't have any home with this name."));
         addDefault(formPath("commands", "cant-use-2dot"), t(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>You can't use <yellow>':' <red>in this command."));
+        addDefault(formPath("commands", "invalid-home-format"), t(formPath("commands", "invalid-home-format"),
+                "%prefix% <red>This home name does not match the allowed format."));
         addDefault(formPath("commands", "cant-find-player"), t(formPath("commands", "cant-find-player"),
                 "%prefix% <red>This player was not found."));
         addDefault(formPath("commands", "unable-to-find-safe-location"), t(formPath("commands", "unable-to-find-safe-location"),
@@ -172,7 +180,7 @@ public class LanguageBuilder extends YAMLBuilder {
                 <red>-> <yellow>/%command% <green>(version|ver) <gray>Shows plugin version
                 <red>-> <yellow>/%command% <green>nearhomes (radius) <gray>List homes near you within a certain radius
                 <red>-> <yellow>/%command% <green>parse (Player) (String) <gray>Parses a string with placeholders for a specific player
-                <red>-> <yellow>/%command% <green>purge (<player>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Purge homes with filters
+                <red>-> <yellow>/%command% <green>purge r(<player>|*) <gold>[-world] [-startwith] [-endwith] [-player] <gray>Purge homes with filters
                 <red>-> <yellow>/%command% <green>converter (<converter-type>) <gray>Convert data from one place to another
                 <red>-> <yellow>/%command% <green>export <gray>Exports all homes to a single file
                 <red>-> <yellow>/%command% <green>import (<file>) <gray>Imports homes from a single file
@@ -376,6 +384,12 @@ public class LanguageBuilder extends YAMLBuilder {
     public String getConfigCommentGeneralDebugMode() {
         return translations().get(formPath("config", "comment", "general", "debug-mode"));
     }
+    public String getConfigCommentHomesSettings() {
+        return translations().get(formPath("config", "comment", "homes-settings"));
+    }
+    public String getConfigCommentHomesSettingsHomesRegex() {
+        return translations().get(formPath("config", "comment", "homes-settings", "homes-regex"));
+    }
     public String getConfigCommentTeleportOptions() {
         return translations().get(formPath("config", "comment", "teleport-options"));
     }
@@ -508,6 +522,9 @@ public class LanguageBuilder extends YAMLBuilder {
     }
     public String getCantUse2Dot() {
         return getString(formPath("commands", "cant-use-2dot"));
+    }
+    public String getInvalidHomeFormat() {
+        return getString(formPath("commands", "invalid-home-format"));
     }
     public String getCantFindPlayer() {
         return getString(formPath("commands", "cant-find-player"));

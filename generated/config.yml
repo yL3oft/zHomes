@@ -58,6 +58,13 @@ general:
   # Enable or disable debug mode for more detailed logging output.
   debug-mode: false
 
+# Settings related to home naming rules
+homes-settings:
+  # Define the regex that home names must match.
+  # NOTE: ':' is still blocked separately and cannot be used in home names.
+  # DEFAULT: ^[^\s]{1,20}$
+  homes-regex: "^[^\\\\s]{1,20}$"
+
 # Settings related to teleportation behavior
 teleport-options:
   # Enable or disable safe teleportation to prevent players from being teleported into dangerous locations.
@@ -203,4 +210,4 @@ permissions:
 
 # !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
 
-config-version: "1.0.1"
+config-version: "1.0.2"

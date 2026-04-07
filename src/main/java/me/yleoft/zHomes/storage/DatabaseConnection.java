@@ -134,7 +134,7 @@ public class DatabaseConnection {
                 "&useSSL=" + zHomes.getConfigYAML().isDatabaseUseSSL();
     }
     public static String h2Url() {
-        return "jdbc:h2:" + zHomes.getInstance().getDataFolder().getAbsolutePath() + "/database-h2";
+        return "jdbc:h2:" + zHomes.getInstance().getDataFolder().getAbsolutePath() + "/database-h2;DB_CLOSE_ON_EXIT=FALSE";
     }
     public static String sqliteUrl() {
         return "jdbc:sqlite:" + zHomes.getInstance().getDataFolder().getAbsolutePath() + "/database-sqlite.db";
@@ -666,7 +666,7 @@ public class DatabaseConnection {
                 return results.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            zHomes.getInstance().getLoggerInstance().error("Error checking existence in table: " + table, e);
         }
         return false;
     }

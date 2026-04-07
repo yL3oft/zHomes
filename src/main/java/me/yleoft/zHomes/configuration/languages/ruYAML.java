@@ -38,6 +38,12 @@ public class ruYAML extends LanguageBuilder {
         !ВНИМАНИЕ: Требует перезапуска сервера для вступления в силу!
         """);
         t.put(formPath("config", "comment", "general", "debug-mode"), "Включить или отключить режим отладки для более подробного вывода журнала.");
+        t.put(formPath("config", "comment", "homes-settings"), "Настройки, связанные с правилами именования home");
+        t.put(formPath("config", "comment", "homes-settings", "homes-regex"), """
+        Укажите regex, которому должны соответствовать имена home.
+        ПРИМЕЧАНИЕ: ':' по-прежнему блокируется отдельно и не может использоваться в именах home.
+        ПО УМОЛЧАНИЮ: ^[^\\s]{1,20}$
+        """);
         t.put(formPath("config", "comment", "teleport-options"), "Настройки, связанные с поведением телепортации");
         t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Включить или отключить безопасную телепортацию, чтобы предотвратить телепортацию игроков в опасные места.");
         t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Включить или отключить межмировую телепортацию, позволяя игрокам перемещаться между различными мирами или измерениями.");
@@ -135,6 +141,8 @@ public class ruYAML extends LanguageBuilder {
                 "%prefix% <yellow>%player% <red>нет home с таким названием.");
         t.put(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>Вы не можете использовать <yellow>':' <red>в этой команде.");
+        t.put(formPath("commands", "invalid-home-format"),
+                "%prefix% <red>Это имя home не соответствует допустимому формату.");
         t.put(formPath("commands", "cant-find-player"),
                 "%prefix% <red>Игрок не найден.");
         t.put(formPath("commands", "unable-to-find-safe-location"),

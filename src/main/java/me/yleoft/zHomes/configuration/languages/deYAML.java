@@ -38,6 +38,12 @@ public class deYAML extends LanguageBuilder {
         !WARNUNG: Erfordert einen Server-Neustart, um wirksam zu werden!
         """);
         t.put(formPath("config", "comment", "general", "debug-mode"), "Debug-Modus für detailliertere Protokollausgabe aktivieren oder deaktivieren.");
+        t.put(formPath("config", "comment", "homes-settings"), "Einstellungen für Regeln zur Benennung von Homes");
+        t.put(formPath("config", "comment", "homes-settings", "homes-regex"), """
+        Definiere den Regex, dem Home-Namen entsprechen müssen.
+        HINWEIS: ':' wird weiterhin separat blockiert und kann nicht in Home-Namen verwendet werden.
+        STANDARD: ^[^\\s]{1,20}$
+        """);
         t.put(formPath("config", "comment", "teleport-options"), "Einstellungen für das Teleportationsverhalten");
         t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Sicheres Teleportieren aktivieren oder deaktivieren, um zu verhindern, dass Spieler an gefährliche Orte teleportiert werden.");
         t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Dimensionale Teleportation aktivieren oder deaktivieren, sodass Spieler zwischen verschiedenen Welten oder Dimensionen reisen können.");
@@ -135,6 +141,8 @@ public class deYAML extends LanguageBuilder {
                 "%prefix% <yellow>%player% <red>hat keine Home mit diesem Namen.");
         t.put(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>Du kannst <yellow>':' <red>in diesem Befehl nicht verwenden.");
+        t.put(formPath("commands", "invalid-home-format"),
+                "%prefix% <red>Dieser Home-Name entspricht nicht dem erlaubten Format.");
         t.put(formPath("commands", "cant-find-player"),
                 "%prefix% <red>Dieser Spieler wurde nicht gefunden.");
         t.put(formPath("commands", "unable-to-find-safe-location"),

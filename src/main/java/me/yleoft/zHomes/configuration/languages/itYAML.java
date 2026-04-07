@@ -38,6 +38,12 @@ public class itYAML extends LanguageBuilder {
         !ATTENZIONE: Richiede il riavvio del server per avere effetto!
         """);
         t.put(formPath("config", "comment", "general", "debug-mode"), "Abilitare o disabilitare la modalità di debug per un output di log più dettagliato.");
+        t.put(formPath("config", "comment", "homes-settings"), "Impostazioni relative alle regole dei nomi delle home");
+        t.put(formPath("config", "comment", "homes-settings", "homes-regex"), """
+        Definisci la regex che i nomi delle home devono rispettare.
+        NOTA: ':' è ancora bloccato separatamente e non può essere usato nei nomi delle home.
+        PREDEFINITO: ^[^\\s]{1,20}$
+        """);
         t.put(formPath("config", "comment", "teleport-options"), "Impostazioni relative al comportamento di teletrasporto");
         t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Abilitare o disabilitare il teletrasporto sicuro per evitare che i giocatori vengano teletrasportati in luoghi pericolosi.");
         t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Abilitare o disabilitare il teletrasporto dimensionale, consentendo ai giocatori di teletrasportarsi tra mondi o dimensioni diverse.");
@@ -135,6 +141,8 @@ public class itYAML extends LanguageBuilder {
                 "%prefix% <yellow>%player% <red>non ha nessuna home con questo nome.");
         t.put(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>Non puoi usare <yellow>':' <red>in questo comando.");
+        t.put(formPath("commands", "invalid-home-format"),
+                "%prefix% <red>Questo nome della home non corrisponde al formato consentito.");
         t.put(formPath("commands", "cant-find-player"),
                 "%prefix% <red>Questo giocatore non è stato trovato.");
         t.put(formPath("commands", "unable-to-find-safe-location"),

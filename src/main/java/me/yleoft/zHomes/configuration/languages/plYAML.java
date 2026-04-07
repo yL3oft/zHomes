@@ -38,6 +38,12 @@ public class plYAML extends LanguageBuilder {
         !OSTRZEŻENIE: Wymaga restartu serwera, aby wejść w życie!
         """);
         t.put(formPath("config", "comment", "general", "debug-mode"), "Włącz lub wyłącz tryb debugowania dla bardziej szczegółowego rejestrowania.");
+        t.put(formPath("config", "comment", "homes-settings"), "Ustawienia związane z zasadami nazewnictwa home");
+        t.put(formPath("config", "comment", "homes-settings", "homes-regex"), """
+        Określ regex, który muszą spełniać nazwy home.
+        UWAGA: ':' jest nadal blokowany osobno i nie może być używany w nazwach home.
+        DOMYŚLNIE: ^[^\\s]{1,20}$
+        """);
         t.put(formPath("config", "comment", "teleport-options"), "Ustawienia związane z zachowaniem teleportacji");
         t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Włącz lub wyłącz bezpieczną teleportację, aby zapobiec teleportowaniu graczy w niebezpieczne miejsca.");
         t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Włącz lub wyłącz teleportację wymiarową, umożliwiając graczom teleportowanie między różnymi światami lub wymiarami.");
@@ -135,6 +141,8 @@ public class plYAML extends LanguageBuilder {
                 "%prefix% <yellow>%player% <red>nie ma żadnej home o tej nazwie.");
         t.put(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>Nie możesz używać <yellow>':' <red>w tej komendzie.");
+        t.put(formPath("commands", "invalid-home-format"),
+                "%prefix% <red>Ta nazwa home nie pasuje do dozwolonego formatu.");
         t.put(formPath("commands", "cant-find-player"),
                 "%prefix% <red>Ten gracz nie został znaleziony.");
         t.put(formPath("commands", "unable-to-find-safe-location"),

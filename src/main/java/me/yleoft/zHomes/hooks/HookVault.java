@@ -1,6 +1,6 @@
 package me.yleoft.zHomes.hooks;
 
-import me.yleoft.zAPI.hooks.HookInstance;
+import me.yleoft.zAPI.hook.HookInstance;
 import me.yleoft.zHomes.configuration.languages.LanguageBuilder;
 import me.yleoft.zHomes.zHomes;
 import net.milkbowl.vault.economy.Economy;

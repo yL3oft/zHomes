@@ -10,7 +10,7 @@ import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 import com.sk89q.worldguard.session.SessionManager;
-import me.yleoft.zAPI.hooks.HookInstance;
+import me.yleoft.zAPI.hook.HookInstance;
 import me.yleoft.zHomes.zHomes;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

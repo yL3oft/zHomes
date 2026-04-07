@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import me.yleoft.zAPI.location.LocationHandler;
 import me.yleoft.zAPI.player.PlayerHandler;
-import me.yleoft.zAPI.utility.TextFormatter;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.configuration.languages.LanguageBuilder;
 import me.yleoft.zHomes.zHomes;
@@ -49,7 +48,6 @@ public class DatabaseEditor extends DatabaseConnection {
             justCreated = true;
         } catch (SQLException e) {
             // Column already exists — safe to ignore on all three DB types
-            // H2: error code 42121, SQLite: "duplicate column", MySQL: error code 1060
         }
 
         if (!justCreated) return;
@@ -67,119 +65,181 @@ public class DatabaseEditor extends DatabaseConnection {
             }
 
             int success = 0, failed = 0;
-            for (String uuidStr : uuids) {
-                try {
-                    UUID uuid = UUID.fromString(uuidStr);
-                    OfflinePlayer p = PlayerHandler.getOfflinePlayer(uuid);
-                    if (p.getName() != null) {
-                        try (Connection con = getConnection();
-                             PreparedStatement ps = con.prepareStatement(
-                                     "UPDATE " + databaseTable() + " SET NAME=? WHERE UUID=?")) {
+            try (Connection con = getConnection();
+                 PreparedStatement ps = con.prepareStatement(
+                         "UPDATE " + databaseTable() + " SET NAME=? WHERE UUID=?")) {
+                con.setAutoCommit(false);
+                for (String uuidStr : uuids) {
+                    try {
+                        OfflinePlayer p = PlayerHandler.getOfflinePlayer(UUID.fromString(uuidStr));
+                        if (p.getName() != null) {
                             ps.setString(1, p.getName());
                             ps.setString(2, uuidStr);
-                            ps.executeUpdate();
+                            ps.addBatch();
                             success++;
+                        } else {
+                            failed++;
                         }
-                    } else {
+                    } catch (Exception e) {
                         failed++;
                     }
-                } catch (Exception e) {
-                    failed++;
                 }
+                ps.executeBatch();
+                con.commit();
+                con.setAutoCommit(true);
+            } catch (SQLException e) {
+                zHomes.getInstance().getLoggerInstance().error("Error during name backfill batch", e);
+                return;
             }
             zHomes.getInstance().getLoggerInstance().info("Database Name backfill complete: " + success + " resolved, " + failed + " unresolved (will populate on next players login).");
         });
     }
-    
+
     public static String databaseTable() {
         return zHomes.getConfigYAML().getDatabaseTable();
     }
 
+    /**
+     * Builds the upsert SQL for the current database type.
+     * All four columns (UUID, NAME, HOME, LOCATION) are included.
+     */
+    private static String upsertSql() {
+        String table = databaseTable();
+        return switch (type) {
+            case SQLITE -> "INSERT INTO " + table + " (UUID,NAME,HOME,LOCATION) VALUES (?,?,?,?) " +
+                    "ON CONFLICT(UUID,HOME) DO UPDATE SET LOCATION=excluded.LOCATION, NAME=excluded.NAME";
+            case H2 -> "MERGE INTO " + table + " (UUID,NAME,HOME,LOCATION) KEY(UUID,HOME) VALUES (?,?,?,?)";
+            default -> "INSERT INTO " + table + " (UUID,NAME,HOME,LOCATION) VALUES (?,?,?,?) " +
+                    "ON DUPLICATE KEY UPDATE LOCATION=VALUES(LOCATION), NAME=VALUES(NAME)";
+        };
+    }
+
     //<editor-fold desc="CRUD operations">
-    public static void setHome(OfflinePlayer p, String home, String location) {
-        try (Connection con = getConnection()) {
-            String uuid = p.getUniqueId().toString();
-            String name = p.getName();
-            if (isInTable(p, home)) {
-                try (PreparedStatement ps = con.prepareStatement("UPDATE " + databaseTable() + " SET LOCATION=?, NAME=? WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
-                    ps.setString(1, location);
-                    ps.setString(2, name);
-                    ps.setString(3, uuid);
-                    ps.setString(4, home);
-                    ps.executeUpdate();
-                }
-            } else {
-                String query;
-                switch (type) {
-                    case SQLITE:
-                        query = "INSERT OR IGNORE INTO " + databaseTable() + " (UUID,NAME,HOME,LOCATION) VALUES (?,?,?,?)";
-                        break;
-                    case H2:
-                        query = "MERGE INTO " + databaseTable() + " (UUID, NAME, HOME, LOCATION) KEY(UUID, HOME) VALUES (?, ?, ?, ?)";
-                        break;
-                    case EXTERNAL:
-                    default:
-                        query = "INSERT IGNORE INTO " + databaseTable() + " (UUID,NAME,HOME,LOCATION) VALUES (?,?,?,?)";
-                        break;
-                }
-                try (PreparedStatement ps = con.prepareStatement(query)) {
-                    ps.setString(1, uuid);
-                    ps.setString(2, name);
-                    ps.setString(3, home);
-                    ps.setString(4, location);
-                    ps.executeUpdate();
-                }
-            }
+    /**
+     * Inserts or updates a home for the given player using an atomic upsert.
+     *
+     * @return {@code true} if the row was written successfully, {@code false} on error.
+     */
+    public static boolean setHome(OfflinePlayer p, String home, String location) {
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(upsertSql())) {
+            ps.setString(1, p.getUniqueId().toString());
+            ps.setString(2, p.getName());
+            ps.setString(3, home);
+            ps.setString(4, location);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             zHomes.getInstance().getLoggerInstance().error("Error setting home for player: " + p.getName(), e);
+            return false;
         }
     }
 
-    public static void deleteHome(OfflinePlayer p, String home) {
+    /**
+     * Deletes a specific home for the given player.
+     *
+     * @return {@code true} if at least one row was deleted, {@code false} on error or not found.
+     */
+    public static boolean deleteHome(OfflinePlayer p, String home) {
         try (Connection con = getConnection();
-            PreparedStatement ps2 = con.prepareStatement("DELETE FROM " + databaseTable() + " WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
-            String uuid = p.getUniqueId().toString();
-            ps2.setString(1, uuid);
-            ps2.setString(2, home);
-            ps2.executeUpdate();
+             PreparedStatement ps = con.prepareStatement(
+                     "DELETE FROM " + databaseTable() + " WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
+            ps.setString(1, p.getUniqueId().toString());
+            ps.setString(2, home);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             zHomes.getInstance().getLoggerInstance().error("Error deleting home for player: " + p.getName(), e);
+            return false;
+        }
+    }
+
+    /**
+     * Renames a home atomically within a single transaction.
+     * If any step fails the transaction is rolled back, preserving the original home.
+     *
+     * @return {@code true} on success, {@code false} if the home was not found or a DB error occurred.
+     */
+    public static boolean renameHome(OfflinePlayer p, String home, String newName) {
+        String locS = getHome(p, home);
+        if (locS == null || locS.isEmpty()) return false;
+        try (Connection con = getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                try (PreparedStatement del = con.prepareStatement(
+                        "DELETE FROM " + databaseTable() + " WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
+                    del.setString(1, p.getUniqueId().toString());
+                    del.setString(2, home);
+                    del.executeUpdate();
+                }
+                try (PreparedStatement ins = con.prepareStatement(upsertSql())) {
+                    ins.setString(1, p.getUniqueId().toString());
+                    ins.setString(2, p.getName());
+                    ins.setString(3, newName);
+                    ins.setString(4, locS);
+                    ins.executeUpdate();
+                }
+                con.commit();
+                return true;
+            } catch (SQLException e) {
+                try { con.rollback(); } catch (SQLException ignored) {}
+                zHomes.getInstance().getLoggerInstance().error("Error renaming home for player: " + p.getName(), e);
+                return false;
+            } finally {
+                try { con.setAutoCommit(true); } catch (SQLException ignored) {}
+            }
+        } catch (SQLException e) {
+            zHomes.getInstance().getLoggerInstance().error("Error renaming home for player: " + p.getName(), e);
+            return false;
         }
     }
 
     public static String getHome(OfflinePlayer p, String home) {
-        try (Connection con = getConnection()) {
-            try (PreparedStatement ps = con.prepareStatement("SELECT LOCATION from " + databaseTable() + " WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
-                String uuid = p.getUniqueId().toString();
-                ps.setString(1, uuid);
-                ps.setString(2, home);
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        return rs.getString("LOCATION");
-                    }
-                }
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(
+                     "SELECT LOCATION FROM " + databaseTable() + " WHERE UUID=? AND LOWER(HOME)=LOWER(?)")) {
+            ps.setString(1, p.getUniqueId().toString());
+            ps.setString(2, home);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getString("LOCATION");
             }
         } catch (SQLException e) {
-            zHomes.getInstance().getLoggerInstance().error("Error getting homes for player: " + p.getName(), e);
+            zHomes.getInstance().getLoggerInstance().error("Error getting home for player: " + p.getName(), e);
         }
         return "";
     }
 
     public static List<String> getHomes(OfflinePlayer p) {
         List<String> list = new ArrayList<>();
-        if(p == null) return list;
+        if (p == null) return list;
         try (Connection con = getConnection();
-             PreparedStatement ps = con.prepareStatement("SELECT * FROM " + databaseTable() + " WHERE UUID=?")) {
+             PreparedStatement ps = con.prepareStatement(
+                     "SELECT HOME FROM " + databaseTable() + " WHERE UUID=?")) {
             ps.setString(1, p.getUniqueId().toString());
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    list.add(rs.getString("HOME"));
-                }
+                while (rs.next()) list.add(rs.getString("HOME"));
             }
         } catch (SQLException e) {
             zHomes.getInstance().getLoggerInstance().error("Error getting homes for player: " + p.getName(), e);
         }
         return list;
+    }
+
+    /**
+     * Returns the number of homes the player currently has, using a COUNT query
+     * instead of fetching all home names.
+     */
+    public static int countHomes(OfflinePlayer p) {
+        if (p == null) return 0;
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(
+                     "SELECT COUNT(*) AS total FROM " + databaseTable() + " WHERE UUID=?")) {
+            ps.setString(1, p.getUniqueId().toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            zHomes.getInstance().getLoggerInstance().error("Error counting homes for player: " + p.getName(), e);
+        }
+        return 0;
     }
 
     public static void updatePlayerName(OfflinePlayer p) {
@@ -237,9 +297,7 @@ public class DatabaseEditor extends DatabaseConnection {
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT COUNT(*) AS total FROM " + databaseTable());
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                count = rs.getLong("total");
-            }
+            if (rs.next()) count = rs.getLong("total");
         } catch (SQLException e) {
             zHomes.getInstance().getLoggerInstance().error("Error getting total homes", e);
         }
@@ -251,9 +309,7 @@ public class DatabaseEditor extends DatabaseConnection {
         try (Connection con = getConnection();
              PreparedStatement ps = con.prepareStatement("SELECT COUNT(DISTINCT UUID) AS total FROM " + databaseTable());
              ResultSet rs = ps.executeQuery()) {
-            if (rs.next()) {
-                count = rs.getLong("total");
-            }
+            if (rs.next()) count = rs.getLong("total");
         } catch (SQLException e) {
             zHomes.getInstance().getLoggerInstance().error("Error getting total users", e);
         }
@@ -328,9 +384,9 @@ public class DatabaseEditor extends DatabaseConnection {
             return allowedHomes != null && allowedHomes.contains(homeName);
         }
     }
+
     public static int purgeHomes(PurgeFilter filter) {
         if (filter == null) return 0;
-
         try (Connection con = getConnection()) {
             if (filter.hasInMemoryFilters()) {
                 return purgeWithInMemoryFilter(con, filter);
@@ -351,22 +407,17 @@ public class DatabaseEditor extends DatabaseConnection {
             sql.append(" AND UUID=?");
             params.add(filter.playerUuid.toString());
         }
-
         if (filter.homeStartsWith != null && !filter.homeStartsWith.isEmpty()) {
             sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
             params.add(filter.homeStartsWith + "%");
         }
-
         if (filter.homeEndsWith != null && !filter.homeEndsWith.isEmpty()) {
             sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
             params.add("%" + filter.homeEndsWith);
         }
 
         try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setString(i + 1, params.get(i));
-            }
-
+            for (int i = 0; i < params.size(); i++) ps.setString(i + 1, params.get(i));
             int deleted = ps.executeUpdate();
             zHomes.getInstance().getLoggerInstance().info("Purged " + deleted + " homes with SQL filter");
             return deleted;
@@ -374,7 +425,8 @@ public class DatabaseEditor extends DatabaseConnection {
     }
 
     private static int purgeWithInMemoryFilter(Connection con, PurgeFilter filter) throws SQLException {
-        List<String> toDelete = new ArrayList<>();
+        record HomeKey(String uuid, String home) {}
+        List<HomeKey> toDelete = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder("SELECT UUID, HOME, LOCATION FROM ").append(databaseTable()).append(" WHERE 1=1");
         List<String> params = new ArrayList<>();
@@ -383,86 +435,68 @@ public class DatabaseEditor extends DatabaseConnection {
             sql.append(" AND UUID=?");
             params.add(filter.playerUuid.toString());
         }
-
         if (filter.homeStartsWith != null && !filter.homeStartsWith.isEmpty()) {
             sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
             params.add(filter.homeStartsWith + "%");
         }
-
         if (filter.homeEndsWith != null && !filter.homeEndsWith.isEmpty()) {
             sql.append(" AND LOWER(HOME) LIKE LOWER(?)");
             params.add("%" + filter.homeEndsWith);
         }
 
         try (PreparedStatement ps = con.prepareStatement(sql.toString())) {
-            for (int i = 0; i < params.size(); i++) {
-                ps.setString(i + 1, params.get(i));
-            }
-
+            for (int i = 0; i < params.size(); i++) ps.setString(i + 1, params.get(i));
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     String uuidStr = rs.getString("UUID");
                     String homeName = rs.getString("HOME");
                     String locationStr = rs.getString("LOCATION");
-
                     try {
                         UUID uuid = UUID.fromString(uuidStr);
-
-                        if (filter.customFilter != null && !filter.matchesCustomFilter(uuid, homeName)) {
-                            continue;
-                        }
-
+                        if (filter.customFilter != null && !filter.matchesCustomFilter(uuid, homeName)) continue;
                         if (filter.worldName != null) {
                             Location loc = LocationHandler.deserialize(locationStr);
-                            if (loc == null || loc.getWorld() == null || !loc.getWorld().getName().equalsIgnoreCase(filter.worldName)) {
-                                continue;
-                            }
+                            if (loc == null || loc.getWorld() == null || !loc.getWorld().getName().equalsIgnoreCase(filter.worldName)) continue;
                         }
-
-                        toDelete.add(uuidStr + ":" + homeName);
-                    } catch (Exception ignored) {
-                    }
+                        toDelete.add(new HomeKey(uuidStr, homeName));
+                    } catch (Exception ignored) {}
                 }
             }
         }
 
-        if (toDelete.isEmpty()) {
-            return 0;
-        }
+        if (toDelete.isEmpty()) return 0;
 
         try (PreparedStatement deletePs = con.prepareStatement(
                 "DELETE FROM " + databaseTable() + " WHERE UUID=? AND HOME=?")) {
             con.setAutoCommit(false);
-
-            for (String entry : toDelete) {
-                String[] parts = entry.split(":", 2);
-                deletePs.setString(1, parts[0]);
-                deletePs.setString(2, parts[1]);
-                deletePs.addBatch();
+            try {
+                for (HomeKey key : toDelete) {
+                    deletePs.setString(1, key.uuid());
+                    deletePs.setString(2, key.home());
+                    deletePs.addBatch();
+                }
+                int[] results = deletePs.executeBatch();
+                con.commit();
+                int deleted = 0;
+                for (int result : results) deleted += Math.max(0, result);
+                zHomes.getInstance().getLoggerInstance().info("Purged " + deleted + " homes with in-memory filter");
+                return deleted;
+            } catch (SQLException e) {
+                try { con.rollback(); } catch (SQLException ignored) {}
+                throw e;
+            } finally {
+                try { con.setAutoCommit(true); } catch (SQLException ignored) {}
             }
-
-            int[] results = deletePs.executeBatch();
-            con.commit();
-            con.setAutoCommit(true);
-
-            int deleted = 0;
-            for (int result : results) {
-                deleted += Math.max(0, result);
-            }
-
-            zHomes.getInstance().getLoggerInstance().info("Purged " + deleted + " homes with in-memory filter");
-            return deleted;
         }
     }
     //</editor-fold>
 
     public static boolean isInTable(OfflinePlayer p, String home) {
         try {
-            String uuid = p.getUniqueId().toString();
-            if (existsTableColumnValueDoubleLower(databaseTable(), "UUID", uuid, "HOME", home))
-                return true;
-        } catch (Exception ignored) {}
-        return false;
+            return existsTableColumnValueDoubleLower(databaseTable(), "UUID", p.getUniqueId().toString(), "HOME", home);
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     //<editor-fold desc="Database export/import">
@@ -492,18 +526,13 @@ public class DatabaseEditor extends DatabaseConnection {
              PreparedStatement ps = con.prepareStatement("SELECT UUID, NAME, HOME, LOCATION FROM " + databaseTable());
              ResultSet rs = ps.executeQuery()) {
 
-            int count = 0;
             while (rs.next()) {
                 entries.add(new ExportEntry(rs.getString("UUID"), rs.getString("NAME"), rs.getString("HOME"), rs.getString("LOCATION")));
-                count++;
-                if (sender != null && (count % 50 == 0)) {
-                    // periodic progress update to player every 50 rows
-                    String message = "Exporting data... [" + count + " records]";
-                    LanguageBuilder.sendActionBar(sender, message);
+                if (sender != null && entries.size() % 50 == 0) {
+                    LanguageBuilder.sendActionBar(sender, "Exporting data... [" + entries.size() + " records]");
                 }
             }
 
-            // Write JSON.gz
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             try (GZIPOutputStream gos = new GZIPOutputStream(Files.newOutputStream(outFile.toPath()));
                  Writer writer = new OutputStreamWriter(gos, StandardCharsets.UTF_8)) {
@@ -512,19 +541,16 @@ public class DatabaseEditor extends DatabaseConnection {
             }
 
             if (sender != null) {
-                String message = "Export complete! " + entries.size() + " records exported.";
-                LanguageBuilder.sendActionBar(sender, message);
+                LanguageBuilder.sendActionBar(sender, "Export complete! " + entries.size() + " records exported.");
                 try {
-                    if(sender instanceof Player player) player.playSound(player.getLocation(), Objects.requireNonNull(getEntityLevelUP()), 100.0F, 1.0F);
-                }catch (Exception ignored) {}
+                    if (sender instanceof Player player) player.playSound(player.getLocation(), Objects.requireNonNull(getEntityLevelUP()), 100.0F, 1.0F);
+                } catch (Exception ignored) {}
             }
             zHomes.getInstance().getLoggerInstance().info("Exported " + entries.size() + " records to " + outFile.getAbsolutePath());
             return outFile;
         } catch (Exception e) {
             zHomes.getInstance().getLoggerInstance().error("Error exporting database to " + outFile.getAbsolutePath(), e);
-            if (sender != null) {
-                LanguageBuilder.sendMessage(sender, "<red>Failed to export database. Check console for details.");
-            }
+            if (sender != null) LanguageBuilder.sendMessage(sender, "<red>Failed to export database. Check console for details.");
             return null;
         }
     }
@@ -545,8 +571,7 @@ public class DatabaseEditor extends DatabaseConnection {
         List<ExportEntry> entries;
         try (GZIPInputStream gis = new GZIPInputStream(Files.newInputStream(gzJsonFile.toPath()));
              Reader reader = new InputStreamReader(gis, StandardCharsets.UTF_8)) {
-            Gson gson = new Gson();
-            entries = gson.fromJson(reader, new TypeToken<List<ExportEntry>>() {}.getType());
+            entries = new Gson().fromJson(reader, new TypeToken<List<ExportEntry>>() {}.getType());
             if (entries == null) entries = Collections.emptyList();
         } catch (Exception e) {
             zHomes.getInstance().getLoggerInstance().error("Error reading import file: " + gzJsonFile.getAbsolutePath(), e);
@@ -560,81 +585,56 @@ public class DatabaseEditor extends DatabaseConnection {
             return 0;
         }
 
-        String insertQuery;
-        switch (type) {
-            case H2:
-                insertQuery = "MERGE INTO " + databaseTable() + " (UUID, NAME, HOME, LOCATION) KEY(UUID, HOME) VALUES (?, ?, ?, ?)";
-                break;
-            case SQLITE:
-                insertQuery = "INSERT OR REPLACE INTO " + databaseTable() + " (UUID, NAME, HOME, LOCATION) VALUES (?, ?, ?, ?)";
-                break;
-            case EXTERNAL:
-            default:
-                // MySQL/MariaDB
-                insertQuery = "INSERT INTO " + databaseTable() + " (UUID, NAME, HOME, LOCATION) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE LOCATION = VALUES(LOCATION), NAME = VALUES(NAME)";
-                break;
-        }
-
-        int imported = 0;
         final int BATCH_SIZE = 500;
+        int imported = 0;
         try (Connection con = getConnection();
-             PreparedStatement pstmt = con.prepareStatement(insertQuery)) {
+             PreparedStatement pstmt = con.prepareStatement(upsertSql())) {
             con.setAutoCommit(false);
-            int batchCount = 0;
-            for (int i = 0; i < entries.size(); i++) {
-                ExportEntry e = entries.get(i);
-                // If name is missing (old export format), try to resolve it from usercache
-                if (e.name == null) {
-                    try {
-                        OfflinePlayer p = PlayerHandler.getOfflinePlayer(UUID.fromString(e.uuid));
-                        e.name = p.getName(); // may still be null if not in usercache, that's ok
-                    } catch (Exception ignored) {}
-                }
-                pstmt.setString(1, e.uuid);
-                pstmt.setString(2, e.name); // null-safe, DB allows null here
-                pstmt.setString(3, e.home);
-                pstmt.setString(4, e.location);
-                pstmt.addBatch();
-                batchCount++;
+            try {
+                for (ExportEntry e : entries) {
+                    if (e.name == null) {
+                        try {
+                            OfflinePlayer op = PlayerHandler.getOfflinePlayer(UUID.fromString(e.uuid));
+                            e.name = op.getName();
+                        } catch (Exception ignored) {}
+                    }
+                    pstmt.setString(1, e.uuid);
+                    pstmt.setString(2, e.name);
+                    pstmt.setString(3, e.home);
+                    pstmt.setString(4, e.location);
+                    pstmt.addBatch();
+                    imported++;
 
-                if (batchCount >= BATCH_SIZE) {
-                    pstmt.executeBatch();
-                    con.commit();
-                    pstmt.clearBatch();
-                    imported += batchCount;
-                    batchCount = 0;
-                    updateImportProgressToPlayer(sender, imported, entries.size());
+                    if (imported % BATCH_SIZE == 0) {
+                        pstmt.executeBatch();
+                        con.commit();
+                        if (sender != null) LanguageBuilder.sendActionBar(sender, "Importing data... [" + imported + "/" + entries.size() + " records]");
+                    }
                 }
-            }
-            if (batchCount > 0) {
                 pstmt.executeBatch();
                 con.commit();
-                imported += batchCount;
+            } catch (SQLException e) {
+                try { con.rollback(); } catch (SQLException ignored) {}
+                zHomes.getInstance().getLoggerInstance().error("Error during database import", e);
+                if (sender != null) LanguageBuilder.sendMessage(sender, "<red>Failed to import database. Check console for details.");
+                return -1;
+            } finally {
+                try { con.setAutoCommit(true); } catch (SQLException ignored) {}
             }
-            con.setAutoCommit(true);
-
-            if (sender != null) {
-                String message = "Import complete! " + imported + " records imported.";
-                LanguageBuilder.sendActionBar(sender, message);
-                try {
-                    if(sender instanceof Player player) player.playSound(player.getLocation(), Objects.requireNonNull(getEntityLevelUP()), 100.0F, 1.0F);
-                }catch (Exception ignored) {}
-            }
-            zHomes.getInstance().getLoggerInstance().info("Imported " + imported + " records from " + gzJsonFile.getAbsolutePath());
-            return imported;
         } catch (SQLException e) {
-            zHomes.getInstance().getLoggerInstance().error("Error importing database from " + gzJsonFile.getAbsolutePath(), e);
+            zHomes.getInstance().getLoggerInstance().error("Error getting DB connection during import", e);
             if (sender != null) LanguageBuilder.sendMessage(sender, "<red>Failed to import database. Check console for details.");
             return -1;
         }
-    }
 
-    private static void updateImportProgressToPlayer(CommandSender sender, int count, int total) {
         if (sender != null) {
-            String message = "<green>Importing data... <dark_gray>[<gray>" + count + " / " + total + "<dark_gray>]";
-            LanguageBuilder.sendActionBar(sender, message);
+            LanguageBuilder.sendActionBar(sender, "Import complete! " + imported + " records imported.");
+            try {
+                if (sender instanceof Player player) player.playSound(player.getLocation(), Objects.requireNonNull(getEntityLevelUP()), 100.0F, 1.0F);
+            } catch (Exception ignored) {}
         }
+        zHomes.getInstance().getLoggerInstance().info("Imported " + imported + " records from " + gzJsonFile.getAbsolutePath());
+        return imported;
     }
-    //</editor-fold>
-
 }
+

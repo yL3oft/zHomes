@@ -2,14 +2,14 @@ package me.yleoft.zHomes;
 
 import de.tr7zw.changeme.nbtapi.NBT;
 import me.yleoft.zAPI.configuration.Path;
-import me.yleoft.zAPI.hooks.HookMiniPlaceholders;
-import me.yleoft.zAPI.hooks.HookPlaceholderAPI;
+import me.yleoft.zAPI.hook.HookMiniPlaceholders;
+import me.yleoft.zAPI.hook.HookPlaceholderAPI;
 import me.yleoft.zAPI.libs.bstats.bukkit.Metrics;
 import me.yleoft.zAPI.libs.bstats.charts.SimplePie;
-import me.yleoft.zAPI.logging.Logger;
+import me.yleoft.zAPI.log.Logger;
 import me.yleoft.zAPI.player.PlayerHandler;
-import me.yleoft.zAPI.utility.ExternalDependencyManager;
-import me.yleoft.zAPI.utility.PluginYAML;
+import me.yleoft.zAPI.util.ExternalDependencyManager;
+import me.yleoft.zAPI.util.PluginYAML;
 import me.yleoft.zAPI.zAPI;
 import me.yleoft.zHomes.commands.*;
 import me.yleoft.zHomes.configuration.*;
@@ -35,7 +35,7 @@ import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
-import static me.yleoft.zAPI.utility.TextFormatter.transform;
+import static me.yleoft.zAPI.util.TextFormatter.transform;
 
 public final class zHomes extends JavaPlugin {
 
@@ -171,7 +171,7 @@ public final class zHomes extends JavaPlugin {
         logger.info("<white>Enabling hooks...");
         HookPlaceholderAPI.message = "<yellow>PlaceholderAPI hooked successfully!";
         HookMiniPlaceholders.message = "<yellow>MiniPlaceholders hooked successfully!";
-        me.yleoft.zAPI.hooks.HookRegistry.load();
+        me.yleoft.zAPI.hook.HookRegistry.load();
         zAPI.setPlaceholdersHandler(HookRegistry.PLUGIN_PAPI);
         logger.info("<green>All hooks have been enabled!");
         //</editor-fold>

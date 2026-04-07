@@ -38,6 +38,12 @@ public class zhcnYAML extends LanguageBuilder {
         !警告：需要重启服务器才能生效！
         """);
         t.put(formPath("config", "comment", "general", "debug-mode"), "启用或禁用调试模式以获取更详细的日志输出。");
+        t.put(formPath("config", "comment", "homes-settings"), "与 home 命名规则相关的设置");
+        t.put(formPath("config", "comment", "homes-settings", "homes-regex"), """
+        定义 home 名称必须匹配的正则表达式。
+        注意：':' 仍会被单独拦截，不能用于 home 名称。
+        默认：^[^\\s]{1,20}$
+        """);
         t.put(formPath("config", "comment", "teleport-options"), "与传送行为相关的设置");
         t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "启用或禁用安全传送，以防止玩家被传送到危险位置。");
         t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "启用或禁用跨维度传送，允许玩家在不同世界或维度之间传送。");
@@ -135,6 +141,8 @@ public class zhcnYAML extends LanguageBuilder {
                 "%prefix% <yellow>%player% <red>没有该名称的 home。");
         t.put(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>此命令中不能使用 <yellow>':'。");
+        t.put(formPath("commands", "invalid-home-format"),
+                "%prefix% <red>这个 home 名称不符合允许的格式。");
         t.put(formPath("commands", "cant-find-player"),
                 "%prefix% <red>未找到该玩家。");
         t.put(formPath("commands", "unable-to-find-safe-location"),

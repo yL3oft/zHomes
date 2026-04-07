@@ -70,11 +70,32 @@ jobs:
           NAME: zHomes ${{ steps.get_version.outputs.version }}
           VERSION: ${{ steps.get_version.outputs.version }}
           DESCRIPTION: ${{ steps.changelog.outputs.content }}
-          GAME_VERSIONS: "1.18.2..latest"
+          GAME_VERSIONS: "1.19..latest"
 
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           MODRINTH_PROJECT: veAp6a0M
           MODRINTH_LOADERS: "paper purpur folia"
+          MODRINTH_DEPENDENCIES: |
+            [{
+              "project_id": "HQyibRsN",
+              "dependency_type": "optional"
+            },
+            {
+              "project_id": "O4o4mKaq",
+              "dependency_type": "optional"
+            },
+            {
+              "project_id": "lKEzGugV",
+              "dependency_type": "optional"
+            },
+            {
+              "project_id": "DKY9btbd",
+              "dependency_type": "optional"
+            },
+            {
+              "project_id": "nfGCP9fk",
+              "dependency_type": "embedded"
+            }]
 
           HANGAR_KEY: ${{ secrets.HANGAR_TOKEN }}
           HANGAR_CHANNEL: Release

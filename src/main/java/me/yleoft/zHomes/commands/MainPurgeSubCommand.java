@@ -1,6 +1,6 @@
 package me.yleoft.zHomes.commands;
 
-import me.yleoft.zAPI.command.Parameter;
+import me.yleoft.zAPI.command.parameter.Parameter;
 import me.yleoft.zAPI.command.SubCommand;
 import me.yleoft.zAPI.player.PlayerHandler;
 import me.yleoft.zHomes.storage.DatabaseEditor;

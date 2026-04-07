@@ -2,7 +2,7 @@ package me.yleoft.zHomes.hooks;
 
 import me.ryanhamshire.GriefPrevention.Claim;
 import me.ryanhamshire.GriefPrevention.GriefPrevention;
-import me.yleoft.zAPI.hooks.HookInstance;
+import me.yleoft.zAPI.hook.HookInstance;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 

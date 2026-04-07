@@ -5,10 +5,13 @@ import me.yleoft.zHomes.zHomes;
 
 import java.io.File;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 public class ConfigYAML extends YAMLBuilder {
 
-    private static final String currentVersion = "1.0.1";
+    private static final String currentVersion = "1.0.2";
+
+    private boolean invalidHomesRegexLogged;
 
     public ConfigYAML() {
         super(new File(zHomes.getInstance().getDataFolder(), "config.yml"));
@@ -83,6 +86,13 @@ public class ConfigYAML extends YAMLBuilder {
         addDefault(formPath("general", "metrics"), true);
         comment(false, zHomes.getLanguageYAML().getConfigCommentGeneralDebugMode());
         addDefault(formPath("general", "debug-mode"), false);
+
+        // -------------------------
+        // Homes Settings
+        // -------------------------
+        commentSection("homes-settings", zHomes.getLanguageYAML().getConfigCommentHomesSettings());
+        comment(false, zHomes.getLanguageYAML().getConfigCommentHomesSettingsHomesRegex());
+        addDefault(formPath("homes-settings", "homes-regex"), "^[^\\s]{1,20}$");
 
         // -------------------------
         // Teleport options
@@ -261,6 +271,24 @@ public class ConfigYAML extends YAMLBuilder {
     }
     public boolean isDebugModeEnabled() {
         return getBoolean(formPath("general", "debug-mode"));
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Homes Settings">
+    public String getHomesRegex() {
+        return getString(formPath("homes-settings", "homes-regex"));
+    }
+    public boolean doesHomeNameMatchRegex(String homeName) {
+        try {
+            return homeName.matches(getHomesRegex());
+        } catch (PatternSyntaxException exception) {
+            if (!invalidHomesRegexLogged) {
+                invalidHomesRegexLogged = true;
+                zHomes.getInstance().getLoggerInstance().warn("Invalid homes regex in config.yml at homes-settings.homes-regex: " + getHomesRegex());
+                zHomes.getInstance().getLoggerInstance().warn("Regex validation will be skipped until the config is fixed.");
+            }
+            return true;
+        }
     }
     //</editor-fold>
 

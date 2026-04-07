@@ -37,6 +37,7 @@ commands:
   home-doesnt-exist: "%prefix% <red>Vous n'avez aucune home avec ce nom."
   home-doesnt-exist-others: "%prefix% <yellow>%player% <red>n'a aucune home avec ce nom."
   cant-use-2dot: "%prefix% <red>Vous ne pouvez pas utiliser <yellow>':' <red>dans cette commande."
+  invalid-home-format: "%prefix% <red>Ce nom de home ne correspond pas au format autorisé."
   cant-find-player: "%prefix% <red>Ce joueur est introuvable."
   unable-to-find-safe-location: "%prefix% <red>Impossible de trouver un emplacement sûr pour vous téléporter."
   world-restricted-sethome: "%prefix% <red>Vous ne pouvez pas définir des homes dans ce monde."
@@ -170,4 +171,4 @@ commands:
 
 # !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
 
-config-version: "1.0.1"
+config-version: "1.0.2"

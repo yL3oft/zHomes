@@ -2,11 +2,11 @@ package me.yleoft.zHomes.commands;
 
 import com.zhomes.api.event.player.ExecuteHomesCommandEvent;
 import me.yleoft.zAPI.command.Command;
-import me.yleoft.zAPI.command.Parameter;
+import me.yleoft.zAPI.command.parameter.Parameter;
 import me.yleoft.zAPI.configuration.Path;
 import me.yleoft.zAPI.inventory.InventoryBuilder;
 import me.yleoft.zAPI.player.PlayerHandler;
-import me.yleoft.zAPI.utility.TextFormatter;
+import me.yleoft.zAPI.util.TextFormatter;
 import me.yleoft.zHomes.hooks.HookRegistry;
 import me.yleoft.zHomes.utility.HomesUtils;
 import me.yleoft.zHomes.zHomes;

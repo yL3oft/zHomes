@@ -76,9 +76,14 @@ public class SethomeCommand extends HomesUtils implements Command {
                 message(player, zHomes.getLanguageYAML().getCantUse2Dot());
                 return;
             }
+            if(!zHomes.getConfigYAML().doesHomeNameMatchRegex(home)) {
+                message(player, zHomes.getLanguageYAML().getInvalidHomeFormat());
+                return;
+            }
             if(!hasHome(player, home)) {
                 if (HookRegistry.VAULT.canAfford(player, zHomes.getConfigYAML().getSetHomeCommandPermission(), zHomes.getConfigYAML().getSetHomeCommandCost())) {
-                    addHome(player, home, player.getLocation());
+                    boolean saved = addHome(player, home, player.getLocation());
+                    if (!saved) zHomes.getInstance().getLoggerInstance().warn("Failed to persist home '" + home + "' for " + player.getName());
                     message(player, zHomes.getLanguageYAML().getSethomeOutput(home));
                 }
             } else {

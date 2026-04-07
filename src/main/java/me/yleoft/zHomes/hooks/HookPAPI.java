@@ -1,10 +1,10 @@
 package me.yleoft.zHomes.hooks;
 
-import me.yleoft.zAPI.handlers.PlaceholderDefinition;
-import me.yleoft.zAPI.handlers.PlaceholderType;
-import me.yleoft.zAPI.handlers.PlaceholdersHandler;
+import me.yleoft.zAPI.placeholders.PlaceholderDefinition;
+import me.yleoft.zAPI.placeholders.PlaceholderType;
+import me.yleoft.zAPI.placeholders.PlaceholdersHandler;
 import me.yleoft.zAPI.player.PlayerHandler;
-import me.yleoft.zAPI.utility.TextFormatter;
+import me.yleoft.zAPI.util.TextFormatter;
 import me.yleoft.zHomes.utility.HomesUtils;
 import me.yleoft.zHomes.zHomes;
 import org.bukkit.Location;

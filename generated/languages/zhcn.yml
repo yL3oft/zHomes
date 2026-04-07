@@ -37,6 +37,7 @@ commands:
   home-doesnt-exist: "%prefix% <red>您没有该名称的 home。"
   home-doesnt-exist-others: "%prefix% <yellow>%player% <red>没有该名称的 home。"
   cant-use-2dot: "%prefix% <red>此命令中不能使用 <yellow>':'。"
+  invalid-home-format: "%prefix% <red>这个 home 名称不符合允许的格式。"
   cant-find-player: "%prefix% <red>未找到该玩家。"
   unable-to-find-safe-location: "%prefix% <red>无法找到安全的传送地点。"
   world-restricted-sethome: "%prefix% <red>您无法在此世界设置 home。"
@@ -170,4 +171,4 @@ commands:
 
 # !!! DON'T TOUCH config-version UNLESS YOU KNOW EXACTLY WHAT YOU'RE DOING !!!
 
-config-version: "1.0.1"
+config-version: "1.0.2"

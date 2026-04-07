@@ -1,6 +1,6 @@
 package me.yleoft.zHomes.hooks;
 
-public class HookRegistry extends me.yleoft.zAPI.hooks.HookRegistry {
+public class HookRegistry extends me.yleoft.zAPI.hook.HookRegistry {
 
     public static final HookPAPI PLUGIN_PAPI = new HookPAPI();
     public static final HookVault VAULT = new HookVault();

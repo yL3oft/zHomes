@@ -38,6 +38,12 @@ public class nlYAML extends LanguageBuilder {
         !WAARSCHUWING: Vereist een serverherstart om van kracht te worden!
         """);
         t.put(formPath("config", "comment", "general", "debug-mode"), "Foutopsporingsmodus in- of uitschakelen voor meer gedetailleerde loguitvoer.");
+        t.put(formPath("config", "comment", "homes-settings"), "Instellingen gerelateerd aan regels voor homenamen");
+        t.put(formPath("config", "comment", "homes-settings", "homes-regex"), """
+        Definieer de regex waaraan homenamen moeten voldoen.
+        OPMERKING: ':' wordt nog steeds apart geblokkeerd en kan niet in homenamen worden gebruikt.
+        STANDAARD: ^[^\\s]{1,20}$
+        """);
         t.put(formPath("config", "comment", "teleport-options"), "Instellingen met betrekking tot teleporteergedrag");
         t.put(formPath("config", "comment", "teleport-options", "enable-safe-teleport"), "Veilig teleporteren in- of uitschakelen om te voorkomen dat spelers naar gevaarlijke locaties worden geteleporteerd.");
         t.put(formPath("config", "comment", "teleport-options", "dimensional-teleportation"), "Dimensionaal teleporteren in- of uitschakelen, waardoor spelers tussen verschillende werelden of dimensies kunnen teleporteren.");
@@ -135,6 +141,8 @@ public class nlYAML extends LanguageBuilder {
                 "%prefix% <yellow>%player% <red>heeft geen home met deze naam.");
         t.put(formPath("commands", "cant-use-2dot"),
                 "%prefix% <red>Je kunt <yellow>':' <red>niet gebruiken in dit commando.");
+        t.put(formPath("commands", "invalid-home-format"),
+                "%prefix% <red>Deze homenaam voldoet niet aan het toegestane formaat.");
         t.put(formPath("commands", "cant-find-player"),
                 "%prefix% <red>Deze speler werd niet gevonden.");
         t.put(formPath("commands", "unable-to-find-safe-location"),

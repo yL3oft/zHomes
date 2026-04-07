@@ -66,6 +66,14 @@ public class HomeRenameSubCommand extends HomesUtils implements SubCommand {
             message(player, zHomes.getLanguageYAML().getHomeAlreadyExist());
             return;
         }
+        if(newName.contains(":")) {
+            message(player, zHomes.getLanguageYAML().getCantUse2Dot());
+            return;
+        }
+        if(!zHomes.getConfigYAML().doesHomeNameMatchRegex(newName)) {
+            message(player, zHomes.getLanguageYAML().getInvalidHomeFormat());
+            return;
+        }
 
         RenameHomeEvent event = new RenameHomeEvent(player, home, newName);
         Bukkit.getPluginManager().callEvent(event);
@@ -74,8 +82,12 @@ public class HomeRenameSubCommand extends HomesUtils implements SubCommand {
         newName = event.getNewName();
 
         if (HookRegistry.VAULT.canAfford(player, zHomes.getConfigYAML().getHomeRenamePermission(), zHomes.getConfigYAML().getHomeRenameCommandCost())) {
-            renameHome(player, home, newName);
-            message(player, zHomes.getLanguageYAML().getHomeRenameOutput(home, newName));
+            boolean renamed = renameHome(player, home, newName);
+            if (renamed) {
+                message(player, zHomes.getLanguageYAML().getHomeRenameOutput(home, newName));
+            } else {
+                zHomes.getInstance().getLoggerInstance().warn("Failed to rename home '" + home + "' to '" + newName + "' for " + player.getName());
+            }
         }
     }
 

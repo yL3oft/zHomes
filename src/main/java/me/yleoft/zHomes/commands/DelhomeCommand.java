@@ -106,7 +106,8 @@ public class DelhomeCommand extends HomesUtils implements Command {
 
         if (hasHome(p, home)) {
             if (HookRegistry.VAULT.canAfford(p, zHomes.getConfigYAML().getDelHomeCommandPermission(), zHomes.getConfigYAML().getDelHomeCommandCost())) {
-                delHome(p, home);
+                boolean deleted = delHome(p, home);
+                if (!deleted) zHomes.getInstance().getLoggerInstance().warn("Failed to delete home '" + home + "' for " + p.getName());
                 message(p, zHomes.getLanguageYAML().getDelhomeOutput(home));
             }
         } else {
@@ -136,7 +137,8 @@ public class DelhomeCommand extends HomesUtils implements Command {
         }
         if (hasHome(t, home)) {
             if (!isPlayer(sender) || HookRegistry.VAULT.canAfford((Player) sender, zHomes.getConfigYAML().getDelHomeCommandPermission(), zHomes.getConfigYAML().getDelHomeCommandCost())) {
-                delHome(t, home);
+                boolean deleted = delHome(t, home);
+                if (!deleted) zHomes.getInstance().getLoggerInstance().warn("Failed to delete home '" + home + "' for " + t.getName());
                 message(sender, zHomes.getLanguageYAML().getDelhomeOutput(home));
             }
         } else {
