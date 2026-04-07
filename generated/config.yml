@@ -63,7 +63,7 @@ homes-settings:
   # Define the regex that home names must match.
   # NOTE: ':' is still blocked separately and cannot be used in home names.
   # DEFAULT: ^[^\s]{1,20}$
-  homes-regex: "^[^\\\\s]{1,20}$"
+  homes-regex: "^[^\\s]{1,20}$"
 
 # Settings related to teleportation behavior
 teleport-options:
