@@ -1,14 +1,18 @@
 ## Dependency Changes
-- Updated [zAPI to 2.0.2](https://github.com/yL3oft/zAPI/releases/tag/2.0.2)
+- Updated [zAPI to 2.0.3](https://github.com/yL3oft/zAPI/releases/tag/2.0.3)
+- Updated [NBTAPI to 2.15.7](https://github.com/tr7zw/Item-NBT-API/releases/tag/2.15.7)
+- Updated [PlaceholderAPI to 2.12.2](https://github.com/PlaceholderAPI/PlaceholderAPI/releases/tag/2.12.2)
 
 ## General Changes
-- New purge subcommand to `/zhomes` to purge data from the database, with alot of filters to choose from, you can read more about it in the [wiki](https://docs.yleoft.me/zhomes).
-- Fixed permissions not registering bug in 3.0.1
-- New permission to announce version updates to players, can be configured in the `config.yml`
+- Added support for 26.1.1 and 26.1
+- New regex detection system when setting new home, now supports more formats and is more accurate
+- Better coding practices and code organization
+- New checks for database connection and queries, to ensure better stability and error handling
+- Fixed issues related to database connection and queries, improving overall performance and reliability
 
-## Language Changes
-- Added new messages for the purge subcommand.
-- And removed old keys from 3.0.0 that are no longer used.
+## Config & Language Changes
+- New configurations related to sethome regex detection
+- Update version from both config & language files to `1.0.2`
 
 
-**Full Changelog**: https://github.com/yL3oft/zHomes/compare/3.0.1...3.0.2
+**Full Changelog**: https://github.com/yL3oft/zHomes/compare/3.0.2...3.0.3
