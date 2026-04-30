@@ -230,8 +230,10 @@ public class HookPAPI implements PlaceholdersHandler {
         }
 
         // %zhomes_has_home_<name>% or %zhomes_hashome_<name>%
-        if (params.startsWith("has_home") || params.startsWith("hashome")) {
-            String homeName = split[split.length - 1];
+        if (params.startsWith("has_home_") || params.startsWith("hashome_")) {
+            String prefix = params.startsWith("has_home_") ? "has_home_" : "hashome_";
+            if (params.length() <= prefix.length()) return "";
+            String homeName = params.substring(prefix.length());
             return onPlaceholderRequest(player, "has_home", List.of(homeName));
         }
 
@@ -255,14 +257,9 @@ public class HookPAPI implements PlaceholdersHandler {
         }
 
         // Player prefix: %zhomes_<player>_<placeholder>%
-        if (split.length >= 2) {
-            String tName = split[0];
-            if (player != null && tName.equals(player.getName())) {
-                return applyPlaceholders(player, "%" + getIdentifier() + "_" + params.substring(tName.length() + 1) + "%");
-            }
-            OfflinePlayer t = PlayerHandler.getOfflinePlayer(tName);
-            if (t == null) return "";
-            return applyPlaceholders(t, "%" + getIdentifier() + "_addname_" + params.substring(tName.length() + 1) + "%");
+        String targetedResult = resolveTargetedPlaceholder(player, params);
+        if (targetedResult != null) {
+            return targetedResult;
         }
 
         return "";
@@ -278,6 +275,72 @@ public class HookPAPI implements PlaceholdersHandler {
         List<String> homes = HomesUtils.getHomes(player);
         if (id > homes.size() || id < 1) return null;
         return homes.get(id - 1);
+    }
+
+    private @Nullable String resolveTargetedPlaceholder(@Nullable OfflinePlayer player, @NotNull String params) {
+        for (int i = 0; i < params.length(); i++) {
+            if (params.charAt(i) != '_') continue;
+
+            String targetName = params.substring(0, i);
+            String suffix = params.substring(i + 1);
+            if (targetName.isEmpty() || suffix.isEmpty() || !isSupportedTargetSuffix(suffix)) continue;
+
+            return resolveTargetPlayerPlaceholder(player, targetName, suffix);
+        }
+        return null;
+    }
+
+    private boolean isSupportedTargetSuffix(@NotNull String suffix) {
+        switch (suffix) {
+            case "version":
+            case "numberofhomes":
+            case "set":
+            case "limit":
+            case "max":
+            case "homes":
+            case "numberofhomes/limit":
+            case "set/max":
+                return true;
+        }
+
+        if (suffix.startsWith("has_home_")) {
+            return suffix.length() > "has_home_".length();
+        }
+        if (suffix.startsWith("hashome_")) {
+            return suffix.length() > "hashome_".length();
+        }
+        if (!suffix.startsWith("home_")) {
+            return false;
+        }
+
+        String[] split = suffix.split("_");
+        if (split.length < 2 || !TextFormatter.isInteger(split[1])) {
+            return false;
+        }
+        if (split.length == 2) {
+            return true;
+        }
+        if (!isValidHomeCoordinate(split[2])) {
+            return false;
+        }
+        return split.length == 3 || split.length == 4;
+    }
+
+    private boolean isValidHomeCoordinate(@NotNull String coordinate) {
+        return switch (coordinate) {
+            case "w", "world", "x", "y", "z", "pitch", "yaw" -> true;
+            default -> false;
+        };
+    }
+
+    private @NotNull String resolveTargetPlayerPlaceholder(@Nullable OfflinePlayer player, @NotNull String targetName, @NotNull String suffix) {
+        if (player != null && targetName.equals(player.getName())) {
+            return applyPlaceholders(player, "%" + getIdentifier() + "_" + suffix + "%");
+        }
+
+        OfflinePlayer target = PlayerHandler.getOfflinePlayer(targetName);
+        if (target == null) return "";
+        return applyPlaceholders(target, "%" + getIdentifier() + "_addname_" + suffix + "%");
     }
 
     private @Nullable String getHomeCoordinate(@NotNull OfflinePlayer player, @NotNull String idStr,
