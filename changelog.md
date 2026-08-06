@@ -1,9 +1,8 @@
 ## Dependency Changes
-- Updated [zAPI to 2.0.4](https://github.com/yL3oft/zAPI/releases/tag/2.0.4)
+- Updated [zAPI to 2.0.5](https://github.com/yL3oft/zAPI/releases/tag/2.0.5)
 
 ## General Changes
-- Added support for 26.1.2
-- Fixed a bug where players with "_" in their name wouldn't see the homes menu
+- Added support for 26.2
 
 
-**Full Changelog**: https://github.com/yL3oft/zHomes/compare/3.0.3...3.0.4
+**Full Changelog**: https://github.com/yL3oft/zHomes/compare/3.0.4...3.0.5
