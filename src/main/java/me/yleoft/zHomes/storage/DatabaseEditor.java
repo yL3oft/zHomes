@@ -39,62 +39,6 @@ public class DatabaseEditor extends DatabaseConnection {
         }
     }
 
-    public static void addNameColumn() {
-        boolean justCreated = false;
-        try (Connection con = getConnection();
-             PreparedStatement ps = con.prepareStatement(
-                     "ALTER TABLE " + databaseTable() + " ADD COLUMN NAME VARCHAR(45)")) {
-            ps.executeUpdate();
-            justCreated = true;
-        } catch (SQLException e) {
-            // Column already exists — safe to ignore on all three DB types
-        }
-
-        if (!justCreated) return;
-
-        zAPI.getScheduler().runAsync(task -> {
-            zHomes.getInstance().getLoggerInstance().info("NAME column added to database, backfilling player names...");
-            List<String> uuids = new ArrayList<>();
-            try (Connection con = getConnection();
-                 PreparedStatement ps = con.prepareStatement("SELECT DISTINCT UUID FROM " + databaseTable());
-                 ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) uuids.add(rs.getString("UUID"));
-            } catch (SQLException e) {
-                zHomes.getInstance().getLoggerInstance().error("Error fetching UUIDs for name backfill", e);
-                return;
-            }
-
-            int success = 0, failed = 0;
-            try (Connection con = getConnection();
-                 PreparedStatement ps = con.prepareStatement(
-                         "UPDATE " + databaseTable() + " SET NAME=? WHERE UUID=?")) {
-                con.setAutoCommit(false);
-                for (String uuidStr : uuids) {
-                    try {
-                        OfflinePlayer p = PlayerHandler.getOfflinePlayer(UUID.fromString(uuidStr));
-                        if (p.getName() != null) {
-                            ps.setString(1, p.getName());
-                            ps.setString(2, uuidStr);
-                            ps.addBatch();
-                            success++;
-                        } else {
-                            failed++;
-                        }
-                    } catch (Exception e) {
-                        failed++;
-                    }
-                }
-                ps.executeBatch();
-                con.commit();
-                con.setAutoCommit(true);
-            } catch (SQLException e) {
-                zHomes.getInstance().getLoggerInstance().error("Error during name backfill batch", e);
-                return;
-            }
-            zHomes.getInstance().getLoggerInstance().info("Database Name backfill complete: " + success + " resolved, " + failed + " unresolved (will populate on next players login).");
-        });
-    }
-
     public static String databaseTable() {
         return zHomes.getConfigYAML().getDatabaseTable();
     }

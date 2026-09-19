@@ -163,7 +163,6 @@ public final class zHomes extends JavaPlugin {
         logger.info("<white>Initializing database connection...");
         DatabaseConnection.connect();
         DatabaseEditor.createTable(DatabaseEditor.databaseTable(), "(UUID VARCHAR(36),NAME VARCHAR(45),HOME VARCHAR(100),LOCATION VARCHAR(255),PRIMARY KEY (UUID, HOME))");
-        DatabaseEditor.addNameColumn();
         PlayerHandler.setOfflineUUIDResolver(DatabaseEditor::getUUIDByName);
         logger.info("<green>Database connection has been established!");
         //</editor-fold>
